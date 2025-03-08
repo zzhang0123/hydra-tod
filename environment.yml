@@ -1,0 +1,24 @@
+name: TOD
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pip
+  - cython
+  - numpy
+  - ipykernel
+  - setuptools
+  - scipy
+  - emcee
+  - jax
+  - matplotlib
+  - tqdm
+  - seaborn
+  - astropy
+  - astroquery
+  - healpy
+  - pip:
+    - joblib
+    - mpmath
+    - mpi4py
+
