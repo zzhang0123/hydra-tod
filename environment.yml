@@ -1,4 +1,4 @@
-name: TOD
+name: TODsampler
 channels:
   - conda-forge
   - defaults
@@ -21,4 +21,5 @@ dependencies:
     - joblib
     - mpmath
     - mpi4py
+    - git+https://github.com/telegraphic/pygdsm
 
