@@ -1,7 +1,7 @@
 import numpy as np
 from linear_solver import cg, cg_mpi
 from scipy.linalg import sqrtm, solve
-from linear_sampler import iterative_gls, sample_p
+from linear_sampler import iterative_gls, iterative_gls_mpi_list, sample_p, sample_p_old, sample_p_v2
 
 
 def Tsys_coeff_sampler(data, 
@@ -18,9 +18,23 @@ def Tsys_coeff_sampler(data,
     d_vec = data/gain
     Ncov_inv = np.linalg.inv(Ncov)
     p_GLS, sigma_inv = iterative_gls(d_vec, Tsys_proj, Ncov_inv, mu=mu, tol=tol)
-    return sample_p(d_vec, Tsys_proj, sigma_inv, num_samples=n_samples,  mu=mu, prior_cov_inv=prior_cov_inv, prior_mean=prior_mean, solver=solver)
+    return sample_p_old(d_vec, Tsys_proj, sigma_inv, num_samples=n_samples,  mu=mu, prior_cov_inv=prior_cov_inv, prior_mean=prior_mean, solver=solver)
 
+def Tsky_coeff_sampler_multi_TODs(local_data_list,
+                                  local_gain_list,
+                                  local_Tsys_proj_list,
+                                  local_Ncov_list,
+                                  n_samples=1,
+                                  local_mu_list=0.0,
+                                  tol=1e-13,
+                                  prior_cov_inv=None,
+                                  prior_mean=None,
+                                  solver=None):
+    d_vec_list = [local_data_list[i]/local_gain_list[i] for i in range(len(local_data_list))]
+    Ncov_inv_list = [np.linalg.inv(Ncov) for Ncov in local_Ncov_list]
 
+    p_GLS, A, b =  iterative_gls_mpi_list(d_vec_list, local_Tsys_proj_list, Ncov_inv_list, local_mu_list, tol=tol)
+    return sample_p_v2(A, b, num_samples=n_samples, prior_cov_inv=prior_cov_inv, prior_mean=prior_mean, solver=solver, p_GLS=p_GLS)
 
 def Tsys_model(operator_list, params_vec_list):
     '''
@@ -72,12 +86,6 @@ def overall_operator(operator_list):
             proj = proj.reshape(-1, 1)
         aux_list.append(proj)
     return np.hstack(aux_list)
-
-def Tsys_params_sampler(data_list, gain_list, Ninv, operator_list, prior_cov_inv_list=None, prior_mean_list=None, solver=None):
-    '''
-    This function sample all system temperature parameters for all receivers and all scans.
-    '''
-    d_list = [data_list[i]/gain_list[i] for i in range(len(data_list))]
  
 def Tsy_params_sampler(data, gain, Ninv, operator_list, prior_cov_inv_list=None, prior_mean_list=None, solver=None):
     '''
@@ -125,5 +133,7 @@ def Tsy_params_sampler(data, gain, Ninv, operator_list, prior_cov_inv_list=None,
         return solver(lhs_op, rhs) # Solve the linear system
     else:
         return solve(lhs_op, rhs, assume_a='sym') # Solve the linear system
+
+
         
     

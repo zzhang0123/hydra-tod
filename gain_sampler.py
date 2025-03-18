@@ -17,7 +17,7 @@ def gain_coeff_sampler(data,
     d_vec = data/Tsys
     Ncov_inv = np.linalg.inv(Ncov)
     p_GLS, sigma_inv = iterative_gls(d_vec, gain_proj, Ncov_inv, mu=mu, tol=tol)
-    return sample_p(d_vec, gain_proj, sigma_inv, num_samples=n_samples, mu=mu, prior_cov_inv=prior_cov_inv, prior_mean=prior_mean, solver=solver)
+    return sample_p(d_vec, gain_proj, sigma_inv, num_samples=n_samples, mu=mu, prior_cov_inv=prior_cov_inv, prior_mean=prior_mean, solver=solver, p_GLS=p_GLS)
 
 
 

@@ -15,7 +15,8 @@ def Leg_poly_proj(ndeg, xs):
     for i in range(ndeg):
         proj[:,i] = Legendre.basis(i)(xs_rescaled) 
     
-    return proj
+    return proj 
+
 
 class polyn_proj:
 
@@ -83,3 +84,10 @@ def view_samples(p_samples, true_values):
     plt.tight_layout()
     plt.show()
 
+def pixel_angular_size(nside):
+    """Compute the angular size (in degrees and arcminutes) of a HEALPix pixel."""
+    npix = hp.nside2npix(nside)  # Total number of pixels
+    omega_pix = 4 * np.pi / npix  # Pixel area in steradians
+    theta_pix_deg = np.sqrt(omega_pix) * (180 / np.pi)  # Approximate pixel width in degrees
+    theta_pix_arcmin = theta_pix_deg * 60  # Convert to arcminutes
+    return theta_pix_deg, theta_pix_arcmin

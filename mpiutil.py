@@ -10,11 +10,12 @@ import psutil
 # Get the current process
 process = psutil.Process()
 
-# Check if cpu_affinity() is available (only supported on Linux)
-if hasattr(process, 'cpu_affinity'):
+# Get the number of cores available for the worker process.
+# This will guide how many processes we can parallelize over using joblib.Parallel for each mpi worker.
+if hasattr(process, 'cpu_affinity'): # Check if cpu_affinity() is available (only supported on Linux)
     cpu_affinity = process.cpu_affinity()
 else:
-    # Not supported on this OS
+    # Don't know how many cores available for the process; assume 1
     cpu_affinity = 1
 
 rank = 0
