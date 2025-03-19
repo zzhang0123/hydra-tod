@@ -16,7 +16,7 @@ if hasattr(process, 'cpu_affinity'): # Check if cpu_affinity() is available (onl
     cpu_affinity = process.cpu_affinity()
 else:
     # Don't know how many cores available for the process; assume 1
-    cpu_affinity = 1
+    cpu_affinity = -1
 
 rank = 0
 size = 1

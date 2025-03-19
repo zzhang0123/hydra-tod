@@ -166,7 +166,7 @@ class TOD_sim():
             TOD_Tsys = self.local_Tsky_proj_list[ci] @ self.Tsky + rec_proj@rec_params_list[ci] + TOD_ndiode
             TOD_gain = gain_proj @ gain_params_list[ci]
             logf0, logfc, alpha = noise_params_list[ci]
-            noise = sim_noise(10.**logf0, 10.**logfc, alpha, self.t_list, n_samples=1, white_n_variance=sigma_2)[0]
+            noise = sim_noise(10.**logf0, 10.**logfc, alpha, t_list, n_samples=1, white_n_variance=sigma_2)[0]
             TOD = TOD_Tsys * TOD_gain * (1 + noise)
             local_TOD_list.append(TOD)
         self.local_TOD_list = local_TOD_list
