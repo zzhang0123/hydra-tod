@@ -36,7 +36,7 @@ local_TOD = TOD_sim()
 local_TOD.generate(n_elevation, local_rec_params_list, local_gain_params_list, local_noise_params_list, skymap)
 
 # Save the "local_TOD" objects
-savepath = "~/TOD_simulations"
+savepath = "/scratch3/users/zzhang/TOD_simulations"
 TOD_savename = "local_TOD_{}.pkl".format(mpiutil.rank)
 
 # combind the savepath and savename
