@@ -21,11 +21,15 @@ def log_det_symmetric_toeplitz(r):
     x, reflection_coeff = levinson(a, b)
     
     k = reflection_coeff[1:n]  
+    k = np.clip(k, -0.999999, 0.999999)  # Clip values close to 1 to avoid numerical issues
     
     factors = np.arange(n-1, 0, -1)
     terms = np.log(1 - k**2)
-    
-    return n * np.log(a0) + np.dot(factors, terms) 
+    result=n * np.log(a0) + np.dot(factors, terms) 
+    if np.isnan(result):
+        return -np.inf
+    else:
+        return result
 
     # log_det = n * np.log(a0)
     # for i in range(n-1):
@@ -75,7 +79,7 @@ def flicker_likeli_func(time_list, data, gain, Tsys, wnoise_var=2.5e-6, boundari
     if boundaries is not None:
         def log_like(params):
             logf0, logfc, alpha = params
-            if logf0 < boundaries[0, 0] or logf0 > boundaries[0, 1] or logfc < boundaries[1,0] or logfc > boundaries[1,1] or alpha < boundaries[2,0] or alpha > boundaries[2,1]:
+            if logf0 < boundaries[0][0] or logf0 > boundaries[0][1] or logfc < boundaries[1][0] or logfc > boundaries[1][1] or alpha < boundaries[2][0] or alpha > boundaries[2][1]:
                 return -np.inf  # Log of zero for invalid regions
             corr_list = flicker_cov_vec(tau_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var)
             return log_likeli(corr_list, dvec)
@@ -99,14 +103,14 @@ def flicker_noise_sampler(TOD,
                           num_Jeffrey=False,
                           boundaries=None,):
     if boundaries is None:
-        boundaries = [[-12.,0.], [-12.,0.], [1.01,5.0]]  # Default boundaries
+        boundaries = [[-12., 0.], [-12.,-2], [1.1, 4.]]  # Default boundaries
     
-    log_likeli = flicker_likeli_func(t_list, TOD, gains, Tsys, wnoise_var=wnoise_var, boundaries=None)
+    log_likeli = flicker_likeli_func(t_list, TOD, gains, Tsys, wnoise_var=wnoise_var, boundaries=boundaries)
 
     return mcmc_sampler(log_likeli, 
                         init_params, 
                         p_std=0.05, 
-                        nsteps=50,  # steps for each chain
+                        nsteps=100,  # steps for each chain
                         n_samples=n_samples,
                         prior_func=prior_func,
                         num_Jeffrey=num_Jeffrey,
@@ -195,3 +199,4 @@ def noise_params_sampler(t_list, data, gain, Tsys, wnoise_var,
         return flat_samples[-n_samples:]
 
 # Define Jefferay's prior function
+

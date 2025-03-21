@@ -24,11 +24,14 @@ def example_scan(n_ele, location, delta_elevation=1.0, start_time_sast = "2024-0
     n_local_TOD = len(local_ele_list)
 
     aux = np.linspace(-65, -35, 167)
+    #aux = np.linspace(-60, -40, 111)
     azimuths_a = np.concatenate((aux[1:-1][::-1], aux))
     azimuths_b = np.concatenate((aux, aux[1:-1][::-1]))
     # Generate a number of repeats of the azimuths
     azimuths_a = np.tile(azimuths_a, 25)
     azimuths_b = np.tile(azimuths_b, 25)
+    # azimuths_a = np.tile(azimuths_a, 12)
+    # azimuths_b = np.tile(azimuths_b, 12)
     azimuths_list = [azimuths_a, azimuths_b]*n_ele
     local_az_list = mpiutil.partition_list_mpi(azimuths_list, method="con")
     assert len(local_az_list) == n_local_TOD
@@ -55,6 +58,47 @@ def example_scan(n_ele, location, delta_elevation=1.0, start_time_sast = "2024-0
     local_phi_c_list = [equatorial_coords.ra.radian for equatorial_coords in local_eq_coords_list] # RA is already phi
 
     return [t_list.copy() for _ in range(n_local_TOD)], local_theta_c_list, local_phi_c_list
+
+def example_scan_1(n_ele, location, delta_elevation=1.0, start_time_sast = "2024-02-23 19:54:07.397", dt=2.0, njobs=mpiutil.cpu_affinity):
+    elevation_list = np.arange(n_ele)*delta_elevation + 40.0
+    #elevation_list = np.repeat(elevation_list, 2) # Repeat each elevation twice
+    local_ele_list = mpiutil.partition_list_mpi(elevation_list, method="con")
+    n_local_TOD = len(local_ele_list)
+
+    #aux = np.linspace(-65, -35, 167)
+    aux = np.linspace(-60, -40, 111)
+    azimuths_a = np.concatenate((aux[1:-1][::-1], aux))
+    # Generate a number of repeats of the azimuths
+    # azimuths_a = np.tile(azimuths_a, 25)
+    # azimuths_b = np.tile(azimuths_b, 25)
+    azimuths_a = np.tile(azimuths_a, 12)
+    azimuths_list = [azimuths_a]*n_ele
+    local_az_list = mpiutil.partition_list_mpi(azimuths_list, method="con")
+    assert len(local_az_list) == n_local_TOD
+
+    # Length of TOD
+    ntime = len(azimuths_a)
+    t_list = np.arange(ntime) * dt
+
+    # ---- Convert to UTC (SAST = UTC+2) ----
+    start_time = Time(start_time_sast) - TimeDelta(2 * u.hour)
+    # ---- Generate time list using numpy.arange ----
+    time_list = start_time + TimeDelta(t_list, format='sec') # Time list in UTC
+    # ---- Create AltAz coordinate frame ----
+    altaz_frame = AltAz(obstime=time_list, location=location)
+    # ---- Convert Az/El to Equatorial (RA, Dec) ----
+    def func_az_el_to_eq(i):
+        return SkyCoord(az=local_az_list[i]*u.deg, alt=local_ele_list[i]*u.deg, frame=altaz_frame).transform_to("icrs")
+    num_jobs = np.min([njobs, len(local_az_list)])
+    local_eq_coords_list = Parallel(n_jobs=num_jobs)(delayed(func_az_el_to_eq)(i) \
+                                                  for i in range(len(local_az_list)) )
+    # Convert the equatorial coordinates to pixel indices
+    # Note: healpy expects (theta, phi) in spherical coordinates
+    local_theta_c_list = [np.pi/2 - equatorial_coords.dec.radian for equatorial_coords in local_eq_coords_list]
+    local_phi_c_list = [equatorial_coords.ra.radian for equatorial_coords in local_eq_coords_list] # RA is already phi
+
+    return [t_list.copy() for _ in range(n_local_TOD)], local_theta_c_list, local_phi_c_list
+
 
 
 def example_beam(local_theta_c_list, local_phi_c_list, 
@@ -131,13 +175,17 @@ class TOD_sim():
         self.T_ndiode = T_ndiode 
         self.location = EarthLocation(lat=self.ant_lon*u.deg, lon=self.ant_lat*u.deg, height=self.ant_hei*u.m)
 
-    def generate_T_ndiode(self, ntime, T_nd, T_rec_mean=3.):
+    def generate_T_ndiode(self, ntime, T_nd, T_mean=3.):
         TOD_ndiode = np.zeros(ntime)
         for i in range(0, ntime, 10):
             TOD_ndiode[i] = T_nd
-        return TOD_ndiode + T_rec_mean
+        return TOD_ndiode + T_mean
 
     def generate(self, n_elevation, rec_params_list, gain_params_list, noise_params_list, Tmap, beam_cutoff=5.e-2, sigma_2=1./(4e5)):
+        self.local_gain_params_list = gain_params_list
+        self.local_rec_params_list = rec_params_list
+        self.local_noise_params_list = noise_params_list
+        self.n_elevation = n_elevation
         self.local_t_list, local_theta_c_list, local_phi_c_list = example_scan(n_elevation, self.location)
         self.n_chunks = len(local_theta_c_list)
 
@@ -184,7 +232,7 @@ def Tsky_proj(ntime,
             elevation,
             ant_coords=[-30.7130, 21.4430, 1054], 
             beam_FWHM=1.5,
-            Nside=128,
+            Nside=64,
            ):
     """"
     Simulate the TOD for a given set of parameters
@@ -263,16 +311,17 @@ def Tsky_proj(ntime,
 
     return beam_proj, pixel_indices
 
-def Tsky_params(pixel_indices, freq, NSIDE=128):
+def Tsky_params(pixel_indices, freq, NSIDE=64):
     gsm = GlobalSkyModel()
     gsm.nside =NSIDE
     skymap = gsm.generate(freq)
     true_Tsky = skymap[pixel_indices]
     return true_Tsky
 
-def Tsky_healpix_map(vals, pixel_indices, NSIDE=128):
+def Tsky_healpix_map(vals, pixel_indices, NSIDE=64):
     skymap = np.zeros(hp.nside2npix(NSIDE))
     skymap[pixel_indices] = vals
     return skymap
+
 
 
