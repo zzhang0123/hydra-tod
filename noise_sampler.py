@@ -1,9 +1,8 @@
 import numpy as np
 # from comat import logdet_quad
-from numpy.linalg import slogdet
-from scipy.linalg import toeplitz, solve_toeplitz
+from scipy.linalg import solve_toeplitz
 from utils import lag_list
-from flicker_model import flicker_cov, flicker_cov_vec
+from flicker_model import flicker_cov_vec
 from mcmc_sampler import mcmc_sampler
 import emcee
 
@@ -103,14 +102,14 @@ def flicker_noise_sampler(TOD,
                           num_Jeffrey=False,
                           boundaries=None,):
     if boundaries is None:
-        boundaries = [[-12., 0.], [-12.,-2], [1.1, 4.]]  # Default boundaries
+        boundaries = [[-5, -1. ], [-5.5,-3], [1.1, 4.]]  # Default boundaries
     
     log_likeli = flicker_likeli_func(t_list, TOD, gains, Tsys, wnoise_var=wnoise_var, boundaries=boundaries)
 
     return mcmc_sampler(log_likeli, 
                         init_params, 
-                        p_std=0.05, 
-                        nsteps=100,  # steps for each chain
+                        p_std=0.2, 
+                        nsteps=50,  # steps for each chain
                         n_samples=n_samples,
                         prior_func=prior_func,
                         num_Jeffrey=num_Jeffrey,

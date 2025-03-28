@@ -8,8 +8,8 @@ from pygdsm import GlobalSkyModel
 from astropy.coordinates import EarthLocation, AltAz, SkyCoord
 from astropy.time import Time, TimeDelta
 import astropy.units as u
-from utils import Leg_poly_proj, view_samples
-from flicker_model import sim_noise, flicker_cov
+from utils import Leg_poly_proj
+from flicker_model import sim_noise
 
 from Tsys_sampler import Tsys_model, overall_operator
 from full_Gibbs_sampler import full_Gibbs_sampler_singledish 

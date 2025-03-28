@@ -1,23 +1,28 @@
 import numpy as np
-import matplotlib.pyplot as plt
+import mpiutil
 import pickle, os
-from linear_solver import cg
+from linear_solver import cg, pytorch_lin_solver
 from scipy.linalg import solve
+import healpy as hp
 
 from pygdsm import GlobalSkyModel
-
-from flicker_model import flicker_cov
-
 from full_Gibbs_sampler import full_Gibbs_sampler_multi_TODS
 
-import mpiutil
 from TOD_simulator import TOD_sim
+import time 
+import logging
 
+# Configure logging to print to the console
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# Optionally, configure logging to write to a file
+# logging.basicConfig(filename='/Users/zzhang/Workspace/flicker/logfile.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+start_time = time.time()
 # Antenna position: Latitude: -30.7130° S; Longitude: 21.4430° E.
 
 # Save the "local_TOD" objects
-savepath = "/scratch3/users/zzhang/TOD_simulations"
+savepath = "/Users/zzhang/Dataspace/flicker/"
 # savepath = "/Users/user/TOD_simulations/"
 TOD_savename = "TOD_sim_{}.pkl".format(mpiutil.rank)
 # combind the savepath and savename
@@ -37,18 +42,18 @@ else:
                             for i in range(n_sets)] # add 6 to the first element to make the gain positive
 
 
-    logf0_c, logfc_c, alpha_c =  np.log10(1e-4), np.log10(2e-5), 2.
+    logf0_c, logfc_c, alpha_c =  -3.8, -4.3, 2.
     center_values = np.array([logf0_c, logfc_c, alpha_c])
-    local_noise_params_list = [np.random.uniform(low=-0.1, high=0.1, size=3) + center_values for i in range(n_sets)]
+    local_noise_params_list = [np.random.uniform(low=-0.2, high=0.2, size=3) + center_values for i in range(n_sets)]
 
     # Use a GSM model to generate a sky map
     gsm = GlobalSkyModel()
-    gsm.nside = 64
     skymap = gsm.generate(500)
+    skymap_64 = hp.ud_grade(skymap, nside_out=64)
 
 
     local_TOD = TOD_sim()
-    local_TOD.generate(n_elevation, local_rec_params_list, local_gain_params_list, local_noise_params_list, skymap, beam_cutoff=0.2)
+    local_TOD.generate(n_elevation, local_rec_params_list, local_gain_params_list, local_noise_params_list, skymap_64, beam_cutoff=0.1)
 
 
 
@@ -58,6 +63,7 @@ else:
 
     with open(TOD_savepath, "wb") as f:
         pickle.dump(local_TOD, f)
+
         
 # print local gain, noise, Trec parameters
 if mpiutil.rank0:
@@ -65,9 +71,11 @@ if mpiutil.rank0:
     print("local noise parameters: ", local_TOD.local_noise_params_list)
     print("local Trec parameters: ", local_TOD.local_rec_params_list)
 
+mpiutil.barrier()
+
 init_Tsky_params = local_TOD.Tsky 
 init_Trec_params = np.zeros(3)
-init_noise_params = [-4., -5., 2.]
+init_noise_params = [-3.8, -4.3, 2.]
 
 Tsky_samples, all_gain_samples, all_noise_samples, all_rec_samples = \
     full_Gibbs_sampler_multi_TODS(local_TOD.local_TOD_list,
@@ -87,15 +95,20 @@ Tsky_samples, all_gain_samples, all_noise_samples, all_rec_samples = \
                                   gain_prior_cov_inv=None,
                                   gain_prior_mean=None,
                                   noise_prior_func=None,
-                                  n_samples=2,
+                                  n_samples=100,
                                   tol=1e-15,
-                                  #linear_solver=cg,
-                                  linear_solver=solve,
+                                  linear_solver=cg,
+                                  #linear_solver=solve,
                                   root=None,
                                   )
 
+end_time = time.time()
+
+
 # Save the samples (numpy arraies) to the disk
 if mpiutil.rank0:
+    print("Time taken: ", end_time - start_time)
+
     savename = "Tsky_samples.npy"
     Tsky_savepath = os.path.join(savepath, savename)
     np.save(savepath, Tsky_samples)

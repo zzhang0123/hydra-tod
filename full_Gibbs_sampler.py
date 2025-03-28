@@ -3,17 +3,15 @@
 
 # Full Gibbs sampler
 import numpy as np
+import mpiutil
 from gain_sampler import gain_coeff_sampler
 from noise_sampler import flicker_noise_sampler
 from flicker_model import flicker_cov
 from Tsys_sampler import Tsys_coeff_sampler, Tsky_coeff_sampler_multi_TODs
-import mpiutil
 from linear_solver import cg
 
-from mpi4py import MPI
-
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
+comm = mpiutil.world
+rank = mpiutil.rank
 rank0 = rank == 0
         
 
@@ -42,18 +40,19 @@ def full_Gibbs_sampler_singledish(TOD,
     # Initialize parameters
     Tsys = Tsys_operator@init_Tsys_params + TOD_diode
     noise_params = init_noise_params
-    logf0, logfc, alpha = noise_params
-    Ncov = flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha, white_n_variance=wnoise_var, only_row_0=False)
     
     for i in range(n_samples):
         # Given Tsys and noise parameters, sample gain parameters
-        gain_sample = gain_coeff_sampler(TOD, gain_operator, Tsys, Ncov, mu=gain_mu0, n_samples=1, tol=tol, 
+        gain_sample = gain_coeff_sampler(TOD, t_list, gain_operator, Tsys, noise_params, 
+                                        wnoise_var=wnoise_var,
+                                        mu=gain_mu0, n_samples=1, tol=tol, 
                                         prior_cov_inv=gain_prior_cov_inv, 
                                         prior_mean=gain_prior_mean, 
                                         solver=linear_solver)[0]
         p_gain_samples.append(gain_sample)
         gains = gain_operator@gain_sample + gain_mu0
 
+        mpiutil.barrier()
         # Given Tsys and gain parameters, sample noise parameters
         noise_params = flicker_noise_sampler(TOD,
                                              t_list,
@@ -68,11 +67,8 @@ def full_Gibbs_sampler_singledish(TOD,
                                              boundaries=None,)
 
         p_noise_samples.append(noise_params)
-        logf0, logfc, alpha = noise_params
-        Ncov = flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha, white_n_variance=wnoise_var, only_row_0=False)
-
         # Given gain and noise parameters, sample Tsys parameters
-        Tsys_params = Tsys_coeff_sampler(TOD, gains, Tsys_operator, Ncov, n_samples=1, mu=TOD_diode, tol=tol, prior_cov_inv=Tsys_prior_cov_inv, prior_mean=Tsys_prior_mean, solver=linear_solver)[0]
+        Tsys_params = Tsys_coeff_sampler(TOD, t_list, gains, Tsys_operator, noise_params, wnoise_var=wnoise_var, n_samples=1, mu=TOD_diode, tol=tol, prior_cov_inv=Tsys_prior_cov_inv, prior_mean=Tsys_prior_mean, solver=linear_solver)[0]
         p_sys_samples.append(Tsys_params)
         Tsys = Tsys_operator@Tsys_params + TOD_diode
 
@@ -130,52 +126,62 @@ def full_Gibbs_sampler_multi_TODS(local_TOD_list,
     n_rec_modes = local_Trec_operator_list[0].shape[1]
     local_Trec_samples = np.zeros((num_TODs, n_samples, n_rec_modes))
 
+    n_sky_modes = len(init_Tsky_params)
+    Tsky_samples = np.zeros((n_samples, n_sky_modes))
+
     n_N_modes = len(init_noise_params)
     local_noise_samples = np.zeros((num_TODs, n_samples, n_N_modes))
 
-    Tsky_samples = [] 
-
     # Initialize noise, Tsky, and Trec parameters
-    local_Ncov_list = []
-    logf0, logfc, alpha = init_noise_params
-
-    for di in range(num_TODs):
-        t_list = local_t_lists[di]
-        Ncov = flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha, white_n_variance=wnoise_var, only_row_0=False)
-        local_Ncov_list.append(Ncov)
+    #logf0, logfc, alpha = init_noise_params
 
     Tsky_params=init_Tsky_params
-    Trec_params=init_Trec_params
+    for di in range(num_TODs):
+        t_list = local_t_lists[di]
+        local_noise_samples[di, -1, :] = init_noise_params
+        local_Trec_samples[di, -1, :] = init_Trec_params
+        # Ncov = flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha, white_n_variance=wnoise_var, only_row_0=False)
+        # local_Ncov_list.append(Ncov)
+
+    
+    local_gain_list = [np.zeros_like(local_TOD_list[di]) for di in range(num_TODs)]
+    local_Tsky_mu_list = [np.zeros_like(local_TOD_list[di]) for di in range(num_TODs)]
 
     # Sample the parameters
-    
     for si in range(n_samples):
-        local_gain_list = []
-        local_Tsky_mu_list = []
         for di in range(num_TODs):
             TOD = local_TOD_list[di]
             t_list = local_t_lists[di]
             gain_operator = local_gain_operator_list[di]
             Tsky_operator = local_Tsky_operator_list[di]
-            TOD_sky = Tsky_operator@Tsky_params
             Trec_operator = local_Trec_operator_list[di]
-            TOD_rec = Trec_operator@Trec_params
             TOD_diode = local_TOD_diode_list[di]
 
+            noise_params = local_noise_samples[di, si-1, :] 
+            Trec_params = local_Trec_samples[di, si-1, :]
+
+            TOD_sky = Tsky_operator@Tsky_params
+            TOD_rec = Trec_operator@Trec_params
             Tsys = TOD_sky + TOD_rec + TOD_diode
             
+            
             # Sample gain parameters
-            Ncov =  local_Ncov_list[di]
-            gain_sample = gain_coeff_sampler(TOD, gain_operator, Tsys, Ncov, 
-                                            n_samples=1, tol=tol, prior_cov_inv=gain_prior_cov_inv, 
-                                            prior_mean=gain_prior_mean, solver=linear_solver)[0]
+
+            gain_sample = gain_coeff_sampler(TOD, t_list, gain_operator, Tsys, noise_params, 
+                                            wnoise_var=wnoise_var,
+                                            n_samples=1, 
+                                            tol=tol, 
+                                            prior_cov_inv=gain_prior_cov_inv, 
+                                            prior_mean=gain_prior_mean, 
+                                            solver=linear_solver)[0]
             local_gain_samples[di, si, :] = gain_sample
             gains = gain_operator@gain_sample
-            local_gain_list.append(gains)
+            local_gain_list[di]=gains
             print("Rank: {}, local id: {}, gain_sample {}: {}".format(rank, di, si, gain_sample))
 
             # Sample receiver temperature parameters
-            Trec_params = Tsys_coeff_sampler(TOD, gains, Trec_operator, Ncov, 
+            Trec_params = Tsys_coeff_sampler(TOD, t_list, gains, Trec_operator, noise_params,
+                                            wnoise_var=wnoise_var, 
                                             n_samples=1, 
                                             mu=TOD_sky + TOD_diode,
                                             tol=tol, 
@@ -186,11 +192,11 @@ def full_Gibbs_sampler_multi_TODS(local_TOD_list,
             TOD_rec = Trec_operator@Trec_params
             Tsys = TOD_sky + TOD_rec + TOD_diode
             # Collect mu vectors for Tsky sampler
-            local_Tsky_mu_list.append(TOD_rec + TOD_diode)
+            local_Tsky_mu_list[di]=TOD_rec + TOD_diode
             print("Rank: {}, local id: {}, Trec_sample {}: {}".format(rank, di, si, Trec_params))
 
             # Sample noise parameters
-            noise_params = flicker_noise_sampler(TOD,
+            noise_sample = flicker_noise_sampler(TOD,
                                                 t_list,
                                                 gains,
                                                 Tsys,
@@ -198,25 +204,25 @@ def full_Gibbs_sampler_multi_TODS(local_TOD_list,
                                                 n_samples=1,
                                                 wnoise_var=wnoise_var,
                                                 prior_func=noise_prior_func)
-            local_noise_samples[di, si, :] = noise_params
-            # Update Ncov
-            logf0, logfc, alpha = noise_params
-            local_Ncov_list[di] = flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha, white_n_variance=wnoise_var, only_row_0=False)
-            print("Rank: {}, local id: {}, noise_params {}: {}".format(rank, di, si, noise_params))
+            local_noise_samples[di, si, :] = noise_sample
+            print("Rank: {}, local id: {}, noise_sample {}: {}".format(rank, di, si, noise_sample))
 
 
-        # Given gain and noise parameters, sample Tsys parameters
+        # Given gain, noise and other Tsys components, sample Tsky parameters
         Tsky_params = Tsky_coeff_sampler_multi_TODs(local_TOD_list,
+                                                    local_t_lists,
                                                     local_gain_list,
                                                     local_Tsky_operator_list,
-                                                    local_Ncov_list,
-                                                    local_mu_list=local_Tsky_mu_list,
+                                                    local_noise_samples[:, si, :],
+                                                    local_Tsky_mu_list,
+                                                    wnoise_var=wnoise_var,
                                                     tol=tol,
                                                     prior_cov_inv=Tsky_prior_cov_inv,
                                                     prior_mean=Tsky_prior_mean,
                                                     solver=linear_solver)
         
-        Tsky_samples.append(Tsky_params)
+        Tsky_samples[si, :] = Tsky_params
+
 
 
     # Gather local gain and noise samples
@@ -224,19 +230,19 @@ def full_Gibbs_sampler_multi_TODS(local_TOD_list,
 
     all_gain_samples = None
     all_noise_samples = None
-    all_rec_samples = None
+    all_Trec_samples = None
     if root is None:
         # Gather all results onto all ranks
         all_gain_samples = comm.allgather(local_gain_samples)
         all_noise_samples = comm.allgather(local_noise_samples)
-        all_rec_samples = comm.allgather(local_rec_samples)
+        all_Trec_samples = comm.allgather(local_Trec_samples)
     else:
         # Gather all results onto the specified rank
         all_gain_samples = comm.gather(local_gain_samples, root=root)
         all_noise_samples = comm.gather(local_noise_samples, root=root)
-        all_rec_samples = comm.gather(local_rec_samples, root=root)
+        all_Trec_samples = comm.gather(local_Trec_samples, root=root)
 
-    return Tsky_samples, all_gain_samples, all_noise_samples, all_rec_samples
+    return Tsky_samples, all_gain_samples, all_noise_samples, all_Trec_samples
 
 
       

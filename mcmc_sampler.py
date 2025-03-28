@@ -2,6 +2,7 @@ import numpy as np
 from numpy.linalg import slogdet
 #from scipy.differentiate import hessian
 import emcee
+import logging, warnings
 
 
 def hessian(func, params, epsilon=1e-5):
@@ -70,7 +71,7 @@ def generate_jeffreys_prior_func(log_like_func):
     return log_prior_func
 
 # Define an MCMC sampler
-def mcmc_sampler(log_like, p_guess, p_std=0.05, 
+def mcmc_sampler(log_like, p_guess, p_std=0.3, 
                 nsteps=100, 
                 n_samples=1,
                 prior_func=None,
@@ -97,26 +98,54 @@ def mcmc_sampler(log_like, p_guess, p_std=0.05,
 
     nwalkers=2*ndim
 
-    # Initialize the walkers
+    # Initialize the sampler
     p0 = np.random.randn(nwalkers, ndim)*p_std + p_guess
-
     # Run the MCMC sampler
     sampler = emcee.EnsembleSampler(nwalkers, ndim, log_prob)
-    sampler.run_mcmc(p0, nsteps, progress=True)
 
-    if return_sampler:
-        return sampler
-    
-    # Estimate the autocorrelation time
-    try:
-        tau = sampler.get_autocorr_time()
-        burnin = int(3 * np.max(tau))  # Burn-in time (usually 2-3 times the autocorrelation time)
-        thin = int(0.5 * np.min(tau))  # Thinning factor (usually 1/2 of the autocorrelation time)
-        print(f'Estimated burn-in: {burnin}')
-        print(f'Estimated thinning: {thin}')
-    except:
-        burnin = nsteps // 3
-        thin = 1
+
+    n_rounds = 5
+    for i in range(n_rounds):
+        logging.info(f'Running MCMC sampler for the {i+1}th time...')
+        sampler.run_mcmc(p0, nsteps, progress=True)
+
+        try: # Estimate the autocorrelation time
+            # Catch warnings related to autocorrelation time estimation
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", category=emcee.autocorr.AutocorrError)
+                tau = sampler.get_autocorr_time(tol=3, quiet=True)
+                # tau = emcee.autocorr.integrated_time(sampler.chain, quiet=True)
+
+            # When using MCMC as a step in a Gibbs sampler, especially if you're only interested in drawing a single sample, 
+            # the requirement for the chain length to be significantly longer than the autocorrelation time can be relaxed. 
+            # The primary goal is to ensure that the sample you draw is representative of the target distribution.
+            # For this purpose, the burn-in period is typically chosen to be 2-3 times the autocorrelation time.
+
+            burnin = int(2.5 * np.max(tau))  # Burn-in time (usually 2-3 times the autocorrelation time)
+            thin = int(0.5 * np.min(tau))  # Thinning factor (usually 1/2 of the autocorrelation time)
+            thin = max(thin, 1)  # Ensure thinning is at least 1
+            logging.info(f'Estimated burn-in: {burnin}')
+            logging.info(f'Estimated thinning: {thin}')
+            # if burnin > nsteps - n_samples, then continue with the last sample to run more steps
+            if burnin < nsteps - n_samples:
+                logging.info('Returning sampler after successful run.')
+                if return_sampler:
+                    return sampler
+                break
+            else:
+                logging.warning('Burn-in is greater than nsteps - n_samples, continuing with last sample.')
+                p0 = sampler.chain[:, -1, :]
+        except Exception as e:
+            logging.error(f'Error estimating autocorrelation time: {e}')
+            p0 = sampler.chain[:, -1, :]
+            if i == n_rounds - 1:
+                logging.info('Reached maximum number of iterations, will return last sample.')
+                if return_sampler:
+                    return sampler
+                burnin = nsteps // 3
+                thin = 1
+                logging.info('Using default burn-in and thinning values.')
+
     
     # Get the chain after burn-in
     flat_samples = sampler.get_chain(discard=burnin, thin=thin, flat=True)

@@ -1,28 +1,49 @@
+import mpiutil
 import numpy as np
 from mpmath import gammainc,mp
-from scipy.linalg import toeplitz, solve_toeplitz
-from numpy.linalg import slogdet
+from scipy.linalg import toeplitz
 from utils import lag_list
-from joblib import Parallel, delayed
-import psutil
+from joblib import delayed, Parallel
+import cmath
+from scipy.integrate import quad, IntegrationWarning
+import warnings
 
-# Get the current process
-process = psutil.Process()
+def my_gamma_inc(z, R_vals, epsabs=1e-6, epsrel=1e-6, vectorize=True): 
+    """Calculate the vectorized line integral of the incomplete gamma function.
+    Parameters:
+        z (complex): Complex (or just real) variable.  
+        R (float or array_like): Positive real number or array.
+        epsabs (float): Absolute error tolerance.
+        epsrel (float): Relative error tolerance.
+    Returns:
+        complex or ndarray: Complex result (same shape as R).
+    """
+    R_vals = np.atleast_1d(R_vals)
+    
+    # function for single input R
+    def _integral_single(R_val):
+        if R_val <= 0:
+            raise ValueError("R must be positive")
+        
+        def integrand(t):
+            s = 1j * R_val + t
+            val = cmath.exp(-s) * (s ** (z - 1))
+            return val
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore', category=IntegrationWarning)
+            result, _ = quad(integrand, 0, np.inf, epsabs=epsabs, epsrel=epsrel, complex_func=True)
+        return result
+    
+    # Vectorize the function
+    vfunc = np.vectorize(_integral_single, otypes=[np.complex128])
+    return vfunc(R_vals)
 
-# Check if cpu_affinity() is available (only supported on Linux)
-if hasattr(process, 'cpu_affinity'):
-    cpu_affinity = process.cpu_affinity()
-else:
-    # Not supported on this OS
-    cpu_affinity = -1
+    # # Or Parallelize the function:
+    # results = np.array(mpiutil.local_parallel_func(_integral_single, R_vals))
+    # # Return scalar if input was scalar
+    # return results[0] if results.size == 1 else results
 
-def aux_int_old(mu, u):
-    # Exp[- ( Pi / 2 ) I Mu]  Gamma[Mu, I  u]
-    aux = gammainc(mu, 1j * u)
-    ang = np.pi/2 * mu
-    return float(aux.real)*np.cos(ang)+float(aux.imag)*np.sin(ang)
-
-def aux_int(mu, u):
+def aux_int_v1(mu, u):
     try:
         aux = gammainc(mu, 1j * u)
         ang = np.pi/2 * mu
@@ -30,17 +51,22 @@ def aux_int(mu, u):
     except ValueError as e:
         print(f"Error in aux_int with mu={mu}, u={u}: {e}")
         return np.inf  # or some other default value
+
+def aux_int_v2(mu, u_list):
+    # Exp[- ( Pi / 2 ) I Mu]  Gamma[Mu, I  u]
+    aux = my_gamma_inc(mu, u_list) # This is actually the same as gammainc(mu, 1j * u)
+    cos_ang, sin_ang = np.cos(np.pi/2 * mu), np.sin(np.pi/2 * mu)
+    result = aux.real*cos_ang + aux.imag*sin_ang
+    return result.astype(np.float64)
 
 def aux_calculation(u, mu):
-    mp.dps = 15
     try:
         aux = gammainc(mu, 1j * u)
         ang = np.pi/2 * mu
         return float(aux.real)*np.cos(ang) + float(aux.imag)*np.sin(ang)
     except ValueError as e:
-        print(f"Error in aux_int with mu={mu}, u={u}: {e}")
+        print(f"Error in aux calculation with mu={mu}, u={u}: {e}")
         return np.inf  # or some other default value
-
 
 def flicker_corr(tau, f0, fc, alpha, var_w=0.0):
     '''
@@ -53,47 +79,39 @@ def flicker_corr(tau, f0, fc, alpha, var_w=0.0):
     theta_0 = f0 * tau
     norm = 1/(np.pi * tau)
     mu = 1-alpha
-    result = theta_0**alpha * aux_int(mu, theta_c) 
+    result = theta_0**alpha * aux_int_v1(mu, theta_c) 
     return result*norm
 
-
-# def flicker_corr_vec(taus, f0, fc, alpha, var_w=0.0):
-#     '''
-#     Note that f0 and fc are in unit of angular frequency, differently from that of FFT frequency convention by a factor of 2pi.
-#     '''
-#     theta_c = fc * taus
-#     norm = (f0 * taus)**alpha /(np.pi * taus)
-#     mu = 1-alpha
-#     return np.array([norm[i] * aux_int(mu, theta_c[i]) for i in range(len(taus))])
-
-def flicker_corr_vec(taus, f0, fc, alpha, var_w=0.0, njobs=cpu_affinity):
+def flicker_corr_vec(taus, f0, fc, alpha):
     '''
     Note that f0 and fc are in unit of angular frequency, differently from that of FFT frequency convention by a factor of 2pi.
+    Tau non-zero.
     '''
     theta_c = fc * taus
     norm = (f0 * taus)**alpha /(np.pi * taus)
     mu = 1-alpha
-    result = np.array(Parallel(n_jobs=njobs)(delayed(aux_calculation)(theta_c[i], mu) for i in range(len(taus))))
+    # result = np.array([aux_calculation(theta_c[i], mu) 
+    #                                               for i in range(len(taus))])
+    result = aux_int_v2(mu, theta_c)
     return result * norm
 
+def flicker_cov_vec(tau_list, f0, fc, alpha, white_n_variance=2.5e-6):
+    assert tau_list[0] == 0, "tau_list[0] must be 0"
+    result = np.zeros_like(tau_list)
+    result[0] = fc/np.pi * (f0/fc)**alpha  / (alpha-1) + white_n_variance
+    result[1:] = flicker_corr_vec(tau_list[1:], f0, fc, alpha)
+    return result.astype(np.float64)
+
+    
 # Define the covariance matrix function
-def flicker_cov(time_list, f0, fc, alpha, white_n_variance=5e-6, only_row_0=True):
+def flicker_cov(time_list, f0, fc, alpha, white_n_variance=5e-6, only_row_0=False):
     lags = lag_list(time_list)
     corr_list = [flicker_corr(t, f0, fc, alpha, var_w=white_n_variance) for t in lags]
     corr_list = np.array(corr_list, dtype=np.float64)
+    # corr_list = flicker_cov_vec(lags, f0, fc, alpha, white_n_variance=white_n_variance)
     if only_row_0:
         return corr_list
     return toeplitz(corr_list)
-
-def flicker_cov_vec(tau_list, f0, fc, alpha, white_n_variance=5e-6):
-    if tau_list[0] == 0:
-        result = np.zeros_like(tau_list)
-        result[0] = fc/np.pi * (f0/fc)**alpha  / (alpha-1) + white_n_variance
-        result[1:] = flicker_corr_vec(tau_list[1:], f0, fc, alpha, var_w=white_n_variance)
-        return result
-    else:
-        return flicker_corr_vec(tau_list, f0, fc, alpha, var_w=white_n_variance)
-    
 
 # This is another flicker noise PSD model with non-vanishing DC mode and its adjacent modes.
 def flicker_corr_full(tau, f0, fc, alpha, var_w=0.0):
@@ -156,18 +174,3 @@ class FNoise_traditional:
         return time_series
 
 
-'''
-aux_int_vectorized = np.frompyfunc(aux_int, 2, 1)
-
-def flicker_corr_vectorized(tau, f0, fc, alpha, var_w=0.0):
-    if np.isscalar(tau):
-        tau = np.array([tau])
-    tau = np.abs(tau)
-    theta_c = fc * tau
-    theta_0 = f0 * tau
-    norm = 1/(np.pi * tau)
-    mu = 1-alpha
-    result = theta_0**alpha * aux_int_vectorized(mu, theta_c) * norm
-    result = np.where(tau == 0, fc/np.pi * (f0/fc)**alpha / (alpha-1) + var_w, result)
-    return result
-'''

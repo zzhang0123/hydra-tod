@@ -1,37 +1,33 @@
 import numpy as np
+import mpiutil
 import healpy as hp
-import matplotlib.pyplot as plt
-
+from pygdsm import GlobalSkyModel
 from astropy.coordinates import EarthLocation, AltAz, SkyCoord
 from astropy.time import Time, TimeDelta
 import astropy.units as u
-from utils import Leg_poly_proj, view_samples
-from flicker_model import sim_noise, flicker_cov
-
-import mpiutil
+from utils import Leg_poly_proj
+from flicker_model import sim_noise
 
 from mpi4py import MPI
-from joblib import Parallel, delayed
-
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
+comm = mpiutil.world
+rank = mpiutil.rank
 rank0 = rank == 0
 
-def example_scan(n_ele, location, delta_elevation=1.0, start_time_sast = "2024-02-23 19:54:07.397", dt=2.0, njobs=mpiutil.cpu_affinity):
+def example_scan(n_ele, location, delta_elevation=1.0, start_time_sast = "2024-02-23 19:54:07.397", dt=2.0):
     elevation_list = np.arange(n_ele)*delta_elevation + 40.0
     elevation_list = np.repeat(elevation_list, 2) # Repeat each elevation twice
     local_ele_list = mpiutil.partition_list_mpi(elevation_list, method="con")
     n_local_TOD = len(local_ele_list)
 
-    aux = np.linspace(-65, -35, 167)
-    #aux = np.linspace(-60, -40, 111)
+    #aux = np.linspace(-65, -35, 167)
+    aux = np.linspace(-60, -40, 111)
     azimuths_a = np.concatenate((aux[1:-1][::-1], aux))
     azimuths_b = np.concatenate((aux, aux[1:-1][::-1]))
     # Generate a number of repeats of the azimuths
-    azimuths_a = np.tile(azimuths_a, 25)
-    azimuths_b = np.tile(azimuths_b, 25)
-    # azimuths_a = np.tile(azimuths_a, 12)
-    # azimuths_b = np.tile(azimuths_b, 12)
+    # azimuths_a = np.tile(azimuths_a, 20)
+    # azimuths_b = np.tile(azimuths_b, 20)
+    azimuths_a = np.tile(azimuths_a, 12)
+    azimuths_b = np.tile(azimuths_b, 12)
     azimuths_list = [azimuths_a, azimuths_b]*n_ele
     local_az_list = mpiutil.partition_list_mpi(azimuths_list, method="con")
     assert len(local_az_list) == n_local_TOD
@@ -49,9 +45,10 @@ def example_scan(n_ele, location, delta_elevation=1.0, start_time_sast = "2024-0
     # ---- Convert Az/El to Equatorial (RA, Dec) ----
     def func_az_el_to_eq(i):
         return SkyCoord(az=local_az_list[i]*u.deg, alt=local_ele_list[i]*u.deg, frame=altaz_frame).transform_to("icrs")
-    num_jobs = np.min([njobs, len(local_az_list)])
-    local_eq_coords_list = Parallel(n_jobs=num_jobs)(delayed(func_az_el_to_eq)(i) \
-                                                  for i in range(len(local_az_list)) )
+    # num_jobs = np.min([njobs, len(local_az_list)])
+    # local_eq_coords_list = Parallel(n_jobs=num_jobs, timeout=600)(delayed(func_az_el_to_eq)(i) \
+    #                                               for i in range(len(local_az_list)) )
+    local_eq_coords_list = mpiutil.local_parallel_func(func_az_el_to_eq, np.arange(len(local_az_list)))
     # Convert the equatorial coordinates to pixel indices
     # Note: healpy expects (theta, phi) in spherical coordinates
     local_theta_c_list = [np.pi/2 - equatorial_coords.dec.radian for equatorial_coords in local_eq_coords_list]
@@ -59,7 +56,7 @@ def example_scan(n_ele, location, delta_elevation=1.0, start_time_sast = "2024-0
 
     return [t_list.copy() for _ in range(n_local_TOD)], local_theta_c_list, local_phi_c_list
 
-def example_scan_1(n_ele, location, delta_elevation=1.0, start_time_sast = "2024-02-23 19:54:07.397", dt=2.0, njobs=mpiutil.cpu_affinity):
+def example_scan_1(n_ele, location, delta_elevation=1.0, start_time_sast = "2024-02-23 19:54:07.397", dt=2.0):
     elevation_list = np.arange(n_ele)*delta_elevation + 40.0
     #elevation_list = np.repeat(elevation_list, 2) # Repeat each elevation twice
     local_ele_list = mpiutil.partition_list_mpi(elevation_list, method="con")
@@ -89,9 +86,7 @@ def example_scan_1(n_ele, location, delta_elevation=1.0, start_time_sast = "2024
     # ---- Convert Az/El to Equatorial (RA, Dec) ----
     def func_az_el_to_eq(i):
         return SkyCoord(az=local_az_list[i]*u.deg, alt=local_ele_list[i]*u.deg, frame=altaz_frame).transform_to("icrs")
-    num_jobs = np.min([njobs, len(local_az_list)])
-    local_eq_coords_list = Parallel(n_jobs=num_jobs)(delayed(func_az_el_to_eq)(i) \
-                                                  for i in range(len(local_az_list)) )
+    local_eq_coords_list = mpiutil.local_parallel_func(func_az_el_to_eq, np.arange(len(local_az_list)))
     # Convert the equatorial coordinates to pixel indices
     # Note: healpy expects (theta, phi) in spherical coordinates
     local_theta_c_list = [np.pi/2 - equatorial_coords.dec.radian for equatorial_coords in local_eq_coords_list]
@@ -102,7 +97,7 @@ def example_scan_1(n_ele, location, delta_elevation=1.0, start_time_sast = "2024
 
 
 def example_beam(local_theta_c_list, local_phi_c_list, 
-                FWHM=1.1, NSIDE=64, threshold = 5e-2, root=None, njobs=mpiutil.cpu_affinity):
+                FWHM=1.1, NSIDE=64, threshold = 0.1, root=None):
     sigma = FWHM / (2 * np.sqrt(2 * np.log(2)))  # Convert FWHM to sigma (degrees)
     sigma_rad = np.radians(sigma)  # Convert to radians
 
@@ -142,9 +137,9 @@ def example_beam(local_theta_c_list, local_phi_c_list,
         comm.Reduce(bool_map, full_bool_map, op=MPI.LOR, root=root)
 
     # Count the number of "1" pixels in bool_map
-    num_pixels = np.sum(bool_map)
+    num_pixels = np.sum(full_bool_map)
     # Get the pixel indices of the "1" pixels:
-    pixel_indices = np.where(bool_map)[0]
+    pixel_indices = np.where(full_bool_map)[0]
 
     local_Tsky_proj_list = []
     for ci in range(n_chunks):
@@ -160,7 +155,7 @@ def example_beam(local_theta_c_list, local_phi_c_list,
             # Normalize the beam (optional, ensures peak = 1)
             beam_map /= np.max(beam_map)
             return beam_map[pixel_indices]
-        Tsys_proj = np.array(Parallel(n_jobs=njobs)(delayed(func)(i) for i in range(ntime)))
+        Tsky_proj = np.array( mpiutil.local_parallel_func(func, np.arange(ntime)) )
         # norm=np.sum(beam_proj, axis=1)
         # beam_proj/=norm[:,None]
         local_Tsky_proj_list.append(Tsky_proj)  # Append the beam projection to the list
@@ -181,7 +176,7 @@ class TOD_sim():
             TOD_ndiode[i] = T_nd
         return TOD_ndiode + T_mean
 
-    def generate(self, n_elevation, rec_params_list, gain_params_list, noise_params_list, Tmap, beam_cutoff=5.e-2, sigma_2=1./(4e5)):
+    def generate(self, n_elevation, rec_params_list, gain_params_list, noise_params_list, Tmap, beam_cutoff=0.1, sigma_2=1./(4e5)):
         self.local_gain_params_list = gain_params_list
         self.local_rec_params_list = rec_params_list
         self.local_noise_params_list = noise_params_list
@@ -192,7 +187,7 @@ class TOD_sim():
         # Get the NSIDE of the map
         self.nside = hp.get_nside(Tmap)
         self.local_Tsky_proj_list, self.pixel_indices, self.full_bool_map, self.full_sum_map = example_beam(local_theta_c_list, local_phi_c_list,
-        NSIDE=self.nside, threshold = beam_cutoff)
+        NSIDE=self.nside, threshold=beam_cutoff)
 
         print("Rank: {}, local sky projector list has been generated.".format(mpiutil.rank))
         
@@ -224,101 +219,14 @@ class TOD_sim():
         print("Rank: {}, local TOD list has been generated.".format(mpiutil.rank))
         return None
 
-
-def Tsky_proj(ntime, 
-            dt, 
-            start_time_UTC,
-            azimuths, 
-            elevation,
-            ant_coords=[-30.7130, 21.4430, 1054], 
-            beam_FWHM=1.5,
-            Nside=64,
-           ):
-    """"
-    Simulate the TOD for a given set of parameters
-
-    ant_coords: [latitude (deg), longitude (deg), height (m)]
-
-    """
-
-    t_list = np.arange(ntime) * dt
-    time_list = start_time + TimeDelta(t_list, format='sec')
-
-    telescope_lat, telescope_lon, telescope_height = ant_coords
-    location = EarthLocation(lat=telescope_lat * u.deg, lon=telescope_lon * u.deg, height=telescope_height * u.m)
-
-    # ---- Create AltAz coordinate frame ----
-    altaz_frame = AltAz(obstime=time_list, location=location)
-
-    # ---- Convert Az/El to Equatorial (RA, Dec) ----
-    horizon_coords = SkyCoord(az=azimuths*u.deg, alt=elevation*u.deg, frame=altaz_frame)
-    equatorial_coords = horizon_coords.transform_to("icrs")
-
-    # Convert the equatorial coordinates to pixel coordinates
-    # Note: healpy expects (theta, phi) in spherical coordinates
-    theta_c = np.pi/2 - equatorial_coords.dec.radian  # Convert Dec to theta
-    phi_c = equatorial_coords.ra.radian               # RA is already phi
-
-    # Define beam parameters
-    sigma = beam_FWHM / (2 * np.sqrt(2 * np.log(2)))  # Convert FWHM to sigma (degrees)
-    sigma_rad = np.radians(sigma)  # Convert to radians
-
-    NPIX = hp.nside2npix(NSIDE)  
-
-    # Get HEALPix pixel coordinates (theta, phi)
-    theta, phi = hp.pix2ang(NSIDE, np.arange(NPIX))
-
-    # Generate a initial boolean map with all pixels zero
-    bool_map = np.zeros(NPIX, dtype=bool)
-    sum_map = np.zeros(NPIX, dtype=float)
-
-    # Set the threshold be 3sigma
-    threshold = np.exp(-0.5 * 3 ** 2)
-
-    for ti in range(ntime):
-        # Compute angular separation between each pixel and the beam center
-        cos_sep = np.cos(theta) * np.cos(theta_c[ti]) + np.sin(theta) * np.sin(theta_c[ti]) * np.cos(phi - phi_c[ti])
-        cos_sep = np.clip(cos_sep, -1, 1)  # Ensure within valid range
-        angular_sep = np.arccos(cos_sep)  # Separation in radians
-        # Compute Gaussian beam response centered at (RA_center, Dec_center)
-        beam_map = np.exp(-0.5 * (angular_sep / sigma_rad) ** 2)
-        sum_map += beam_map
-        # Get the "or" map of the bool_map and beam_map
-        bool_map = np.logical_or(bool_map, beam_map > threshold)
-
-    # Get pixels of skymap where corresponding mask value (bool_map) is true 
-    # Count the number of "1" pixels in bool_map
-    num_pixels = np.sum(bool_map)
-    print(f"Number of covered pixels: {num_pixels}")
-
-    # Get the pixel indices of the "1" pixels:
-    pixel_indices = np.where(bool_map)[0]
-
-    beam_proj = np.zeros((ntime, num_pixels))
-
-    for ti in range(ntime):
-        # Compute angular separation between each pixel and the beam center
-        cos_sep = np.cos(theta) * np.cos(theta_c[ti]) + np.sin(theta) * np.sin(theta_c[ti]) * np.cos(phi - phi_c[ti])
-        cos_sep = np.clip(cos_sep, -1, 1)  # Ensure within valid range
-        angular_sep = np.arccos(cos_sep)  # Separation in radians
-        # Compute Gaussian beam response centered at (RA_center, Dec_center)
-        beam_map = np.exp(-0.5 * (angular_sep / sigma_rad) ** 2)
-        beam_proj[ti] = beam_map[pixel_indices]
-
-    # Normalize the beam
-    norm=np.sum(beam_proj, axis=1)
-    beam_proj/=norm[:,None]
-
-    return beam_proj, pixel_indices
-
-def Tsky_params(pixel_indices, freq, NSIDE=64):
+def Tsky_params_GSM(pixel_indices, freq, NSIDE=64):
     gsm = GlobalSkyModel()
     gsm.nside =NSIDE
     skymap = gsm.generate(freq)
     true_Tsky = skymap[pixel_indices]
     return true_Tsky
 
-def Tsky_healpix_map(vals, pixel_indices, NSIDE=64):
+def Tsky_healpix_map(pixel_indices, vals, NSIDE=64):
     skymap = np.zeros(hp.nside2npix(NSIDE))
     skymap[pixel_indices] = vals
     return skymap

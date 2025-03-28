@@ -548,3 +548,57 @@ def cg(
         comm.Bcast(x, root=0)
     return x
 
+
+import torch
+
+# Specify device (MPS, CPU, or CUDA)
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+elif torch.backends.mps.is_available():
+    device = torch.device("mps")
+else:
+    device = torch.device("cpu")
+
+
+# # This least square solver is not quite correct!!! Need to further debug
+# def pytorch_lstsq(A, b, device=device):
+#     """
+#     Solve the linear system using least squares with PyTorch.
+#     Handles MPS backend by falling back to CPU.
+#     """
+#     # Convert numpy arrays to PyTorch tensors
+#     if device.type == "mps":
+#         # Use CPU for lstsq operation
+#         with torch.device('cpu'):
+#             A_torch = torch.tensor(A, dtype=torch.float32)
+#             b_torch = torch.tensor(b, dtype=torch.float32)
+#             x_torch = torch.linalg.lstsq(A_torch, b_torch).solution
+#     else:
+#         # Use specified device
+#         A_torch = torch.tensor(A, dtype=torch.float64).to(device)
+#         b_torch = torch.tensor(b, dtype=torch.float64).to(device)
+#         x_torch = torch.linalg.lstsq(A_torch, b_torch).solution
+    
+#     return x_torch.cpu().numpy()
+
+def pytorch_lin_solver(A, b, device=device):
+    """
+    Solve the linear system using least squares with PyTorch.
+    Handles MPS backend by falling back to CPU.
+    """
+    # Convert numpy arrays to PyTorch tensors
+    if device.type == "mps":
+        # Use CPU for lstsq operation
+        with torch.device('cpu'):
+            A_torch = torch.tensor(A, dtype=torch.float32)
+            b_torch = torch.tensor(b, dtype=torch.float32)
+            x_torch = torch.linalg.solve(A_torch, b_torch)
+    else:
+        # Use specified device
+        A_torch = torch.tensor(A, dtype=torch.float64).to(device)
+        b_torch = torch.tensor(b, dtype=torch.float64).to(device)
+        x_torch = torch.linalg.solve(A_torch, b_torch)
+    
+    return x_torch.cpu().numpy()
+
+

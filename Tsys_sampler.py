@@ -1,14 +1,19 @@
 import numpy as np
-from linear_solver import cg, cg_mpi
-from scipy.linalg import sqrtm, solve
-from linear_sampler import iterative_gls, iterative_gls_mpi_list, sample_p, sample_p_old, sample_p_v2
 import mpiutil
+from flicker_model import flicker_cov
+from linear_solver import cg, pytorch_lin_solver
+from linear_sampler import iterative_gls, iterative_gls_mpi_list, sample_p, sample_p_old, sample_p_v2
+from utils import cho_compute_mat_inv, cho_compute_mat_inv_sqrt
 
+comm = mpiutil.world
+rank0 = mpiutil.rank0
 
 def Tsys_coeff_sampler(data, 
+                       t_list,
                        gain, 
                        Tsys_proj, 
-                       Ncov, 
+                       noise_params, 
+                       wnoise_var=2.5e-6,
                        n_samples=1,
                        mu=0.0,
                        tol=1e-13,
@@ -17,79 +22,50 @@ def Tsys_coeff_sampler(data,
                        solver=cg):
 
     d_vec = data/gain
-    Ncov_inv = np.linalg.inv(Ncov)
+    logf0, logfc, alpha = noise_params
+    Ncov_inv = cho_compute_mat_inv( flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var, only_row_0=False) )
+
     p_GLS, sigma_inv = iterative_gls(d_vec, Tsys_proj, Ncov_inv, mu=mu, tol=tol)
     return sample_p_old(d_vec, Tsys_proj, sigma_inv, num_samples=n_samples,  mu=mu, prior_cov_inv=prior_cov_inv, prior_mean=prior_mean, solver=solver)
 
 def Tsky_coeff_sampler_multi_TODs(local_data_list,
+                                  local_t_list,
                                   local_gain_list,
                                   local_Tsys_proj_list,
-                                  local_Ncov_list,
-                                  local_mu_list=0.0,
+                                  local_Noise_params_list,
+                                  local_mu_list,
+                                  wnoise_var=2.5e-6,
                                   tol=1e-13,
                                   prior_cov_inv=None,
                                   prior_mean=None,
-                                  solver=cg):
-    d_vec_list = [local_data_list[i]/local_gain_list[i] for i in range(len(local_data_list))]
-    Ncov_inv_list = [np.linalg.inv(Ncov) for Ncov in local_Ncov_list]
+                                  solver=pytorch_lin_solver):
+    dim = len(local_data_list)
+    d_vec_list = [local_data_list[i]/local_gain_list[i] for i in range(dim)]
+    # Ncov_inv_list = [np.linalg.inv(Ncov) for Ncov in local_Ncov_list]
 
-    p_GLS, A, b, Asqrt =  iterative_gls_mpi_list(d_vec_list, local_Tsys_proj_list, Ncov_inv_list, local_mu_list, tol=tol)
+    # local_Ncov_inv_list = [np.empty_like(Ncov) for Ncov in local_Noise_params_list]
+    local_Ninv_sqrt_list = []
+    for di in range(dim):
+        logf0, logfc, alpha = local_Noise_params_list[di]
+        t_list = local_t_list[di]
+        Ncov_inv_sqrt = cho_compute_mat_inv_sqrt( flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var, only_row_0=False) )
+        local_Ninv_sqrt_list.append(Ncov_inv_sqrt)
+
+    p_GLS, A, b, Asqrt_wn =  iterative_gls_mpi_list(d_vec_list, local_Tsys_proj_list, local_Ninv_sqrt_list, local_mu_list, tol=tol)
+
+    # Compute on rank 0 only to avoid redundant computation
     if mpiutil.rank0:
-        p_sample = sample_p_v2(A, b, Asqrt, prior_cov_inv=prior_cov_inv, prior_mean=prior_mean, solver=solver)
-    # broadcast p_sample to all ranks
-    p_sample = mpiutil.comm.bcast(p_sample, root=0)
+        p_sample = sample_p_v2(A, b, Asqrt_wn, prior_cov_inv=prior_cov_inv, prior_mean=prior_mean, solver=solver)
+    else:
+        p_sample = None
+
+    # broadcast result to all ranks
+    p_sample = comm.bcast(p_sample, root=0)
     return p_sample
 
-def Tsys_model(operator_list, params_vec_list):
-    '''
-    This function calculates the system temperature.
 
-    Parameters:
-    ----------
-    operator_list : list of ndarray
-        List of projection matrices. For example, [beam_proj, rec_proj, ndiode_proj].
-    params_vec_list : list of ndarray
-        List of parameter vectors. For example, [true_Tsky, rec_params, T_ndiode].
 
-    Returns:
-    -------
-    Tsys : ndarray
-        System temperature.
-    '''
-    assert len(operator_list) == len(params_vec_list), "Operator list and params list must have the same length.."
-    n_components = len(operator_list)
-    n_data = operator_list[0].shape[0]
-    Tsys = np.zeros(n_data)
 
-    for i in range(n_components):
-        # if params_vec_list[i] is a scalar:
-        if len(operator_list[i].shape) == 1:
-            Tsys += operator_list[i] * params_vec_list[i]
-        else:
-            Tsys += operator_list[i] @ params_vec_list[i]
-
-    return Tsys
-
-def overall_operator(operator_list):
-    '''
-    This function calculates the overall operator.
-    Parameters:
-    ----------
-    operator_list : list of ndarray
-        List of projection matrices. For example, [beam_proj, rec_proj, ndiode_proj].
-
-    Returns:
-    -------
-    overall_operator : ndarray
-        Overall operator.
-    '''
-    aux_list = []
-    for proj in operator_list:
-        assert proj.shape[0] == operator_list[0].shape[0], "All projection matrices must have the same length.."
-        if len(proj.shape) == 1:
-            proj = proj.reshape(-1, 1)
-        aux_list.append(proj)
-    return np.hstack(aux_list)
 
 
         
