@@ -30,25 +30,30 @@ def log_det_symmetric_toeplitz(r):
     else:
         return result
 
-    # log_det = n * np.log(a0)
-    # for i in range(n-1):
-    #     factor = (n - (i + 1))  
-    #     term = np.log(1 - k[i]**2)
-    #     log_det += factor * term
-    
-    # return log_det
-
 def log_likeli(corr_list, data):
-    '''
-    This function calculates the negative log likelihood of the data given the correlation list.
-    '''
-
-    result = np.dot(data, solve_toeplitz(corr_list, data)) + log_det_symmetric_toeplitz(corr_list)
-    
-    if np.isnan(result):
+    # Add parameter validation
+    if np.any(np.isnan(corr_list)) or np.any(np.isinf(corr_list)):
         return -np.inf
-    else:
-        return -0.5*result 
+    if np.any(np.isnan(data)) or np.any(np.isinf(data)):
+        return -np.inf
+        
+    try:
+        result = np.dot(data, solve_toeplitz(corr_list, data)) + log_det_symmetric_toeplitz(corr_list)
+        return -0.5 * result
+    except:
+        return -np.inf
+
+# def log_likeli(corr_list, data):
+#     '''
+#     This function calculates the negative log likelihood of the data given the correlation list.
+#     '''
+
+#     result = np.dot(data, solve_toeplitz(corr_list, data)) + log_det_symmetric_toeplitz(corr_list)
+    
+#     if np.isnan(result):
+#         return -np.inf
+#     else:
+#         return -0.5*result 
 
 # def log_likeli_comat(corr_list, data):
 #     '''
@@ -74,6 +79,9 @@ def flicker_likeli_func(time_list, data, gain, Tsys, wnoise_var=2.5e-6, boundari
 
     dvec = data / gain / Tsys - 1.
     dvec = np.asarray(dvec, dtype=np.float64)
+
+    # Let dvec be mean-centered
+    dvec -= np.mean(dvec)
 
     if boundaries is not None:
         def log_like(params):

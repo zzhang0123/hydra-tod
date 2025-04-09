@@ -1,30 +1,30 @@
-
-
-from mpi4py import MPI
 import numpy as np
-from linear_solver import setup_mpi_blocks, collect_linear_sys_blocks, cg_mpi
+import mpiutil
+from mpi4py import MPI
+from full_Gibbs_sampler import get_Tsys_operator
 
-# Initialize MPI
 comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
 
-
-# Define matrix and vector
-N = 1000  # Size of the matrix
-Amat = np.random.rand(N, N)  # Random matrix
-bvec = np.random.rand(N)     # Random RHS vector
-
-# Set up MPI blocks
-split = 2  # Number of blocks per row/column
-comm_groups, block_map, block_shape = setup_mpi_blocks(comm, (N, N), split)
-
-# Distribute matrix and vector blocks
-my_Amat, my_bvec = collect_linear_sys_blocks(comm, block_map, block_shape, Amat, bvec)
-
-# Solve the linear system
-x = cg_mpi(comm_groups, my_Amat, my_bvec, N, block_map, maxiters=1000, abs_tol=1e-8)
-
-# Gather the solution
-if comm.Get_rank() == 0:
-    print(block_shape)
-    print("Solution vector:", x)
+def test_get_Tsys_operator():
+    # Create test data based on rank
+    if rank == 0:
+        # Rank 0 has 2 TODs
+        U_list = [np.zeros((3, 2)), np.zeros((3, 2))]  # Tsky operators
+        R_list = [np.ones((3, 1)), np.ones((3, 2))]  # Trec operators
+    else:
+        # Rank 1 has 1 TOD
+        U_list = [np.zeros((4, 2))]
+        R_list = [np.ones((4, 3))]
+    
+    # Get combined Tsys operators
+    Tsys_ops = get_Tsys_operator(U_list, R_list)
+    
+    # Verify results
+    if rank == 1:
+        print("Tsys_ops: \n", Tsys_ops[0])
+       
+if __name__ == "__main__":
+    test_get_Tsys_operator()
 

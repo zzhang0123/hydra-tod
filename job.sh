@@ -8,4 +8,5 @@ export VECLIB_MAXIMUM_THREADS=13
 
 conda activate TOD
 
-mpiexec -n 2 python sim_and_test_multi_TOD.py
+nohup mpiexec -n 2 python sim_and_test_multi_TOD.py > output.log 2>&1 &
+echo $! > pid.file  # Save the process ID

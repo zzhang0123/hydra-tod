@@ -75,7 +75,7 @@ def mcmc_sampler(log_like, p_guess, p_std=0.3,
                 nsteps=100, 
                 n_samples=1,
                 prior_func=None,
-                num_Jeffrey=True,
+                num_Jeffrey=False,
                 return_sampler=False):
     '''
     This function samples the noise parameters using MCMC.
@@ -107,7 +107,7 @@ def mcmc_sampler(log_like, p_guess, p_std=0.3,
     n_rounds = 5
     for i in range(n_rounds):
         logging.info(f'Running MCMC sampler for the {i+1}th time...')
-        sampler.run_mcmc(p0, nsteps, progress=True)
+        sampler.run_mcmc(p0, nsteps, progress=False)
 
         try: # Estimate the autocorrelation time
             # Catch warnings related to autocorrelation time estimation
@@ -128,7 +128,7 @@ def mcmc_sampler(log_like, p_guess, p_std=0.3,
             logging.info(f'Estimated thinning: {thin}')
             # if burnin > nsteps - n_samples, then continue with the last sample to run more steps
             if burnin < nsteps - n_samples:
-                logging.info('Returning sampler after successful run.')
+                logging.info('Enough steps for burnin..')
                 if return_sampler:
                     return sampler
                 break
@@ -150,7 +150,10 @@ def mcmc_sampler(log_like, p_guess, p_std=0.3,
     # Get the chain after burn-in
     flat_samples = sampler.get_chain(discard=burnin, thin=thin, flat=True)
     
-    if n_samples == 1:
+    if n_samples == 0:
+        # Return mean of the samples
+        return np.mean(flat_samples, axis=0)
+    elif n_samples == 1:
         # Randomly select one sample
         # idx = np.random.randint(len(flat_samples))
         # return flat_samples[idx]

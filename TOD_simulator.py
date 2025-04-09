@@ -13,21 +13,21 @@ comm = mpiutil.world
 rank = mpiutil.rank
 rank0 = rank == 0
 
-def example_scan(n_ele, location, delta_elevation=1.0, start_time_sast = "2024-02-23 19:54:07.397", dt=2.0):
+def example_scan(n_ele, location, delta_elevation=5.0, start_time_sast = "2024-02-23 19:54:07.397", dt=2.0):
     elevation_list = np.arange(n_ele)*delta_elevation + 40.0
     elevation_list = np.repeat(elevation_list, 2) # Repeat each elevation twice
     local_ele_list = mpiutil.partition_list_mpi(elevation_list, method="con")
     n_local_TOD = len(local_ele_list)
 
-    #aux = np.linspace(-65, -35, 167)
-    aux = np.linspace(-60, -40, 111)
+    aux = np.linspace(-65, -35, 167)
+    #aux = np.linspace(-60, -40, 111)
     azimuths_a = np.concatenate((aux[1:-1][::-1], aux))
     azimuths_b = np.concatenate((aux, aux[1:-1][::-1]))
     # Generate a number of repeats of the azimuths
     # azimuths_a = np.tile(azimuths_a, 20)
     # azimuths_b = np.tile(azimuths_b, 20)
-    azimuths_a = np.tile(azimuths_a, 12)
-    azimuths_b = np.tile(azimuths_b, 12)
+    azimuths_a = np.tile(azimuths_a, 20)
+    azimuths_b = np.tile(azimuths_b, 20)
     azimuths_list = [azimuths_a, azimuths_b]*n_ele
     local_az_list = mpiutil.partition_list_mpi(azimuths_list, method="con")
     assert len(local_az_list) == n_local_TOD
@@ -231,5 +231,54 @@ def Tsky_healpix_map(pixel_indices, vals, NSIDE=64):
     skymap[pixel_indices] = vals
     return skymap
 
+def Tsys_model(operator_list, params_vec_list):
+    '''
+    This function calculates the system temperature.
 
+    Parameters:
+    ----------
+    operator_list : list of ndarray
+        List of projection matrices. For example, [beam_proj, rec_proj, ndiode_proj].
+    params_vec_list : list of ndarray
+        List of parameter vectors. For example, [true_Tsky, rec_params, T_ndiode].
+
+    Returns:
+    -------
+    Tsys : ndarray
+        System temperature.
+    '''
+    assert len(operator_list) == len(params_vec_list), "Operator list and params list must have the same length.."
+    n_components = len(operator_list)
+    n_data = operator_list[0].shape[0]
+    Tsys = np.zeros(n_data)
+
+    for i in range(n_components):
+        # if params_vec_list[i] is a scalar:
+        if len(operator_list[i].shape) == 1:
+            Tsys += operator_list[i] * params_vec_list[i]
+        else:
+            Tsys += operator_list[i] @ params_vec_list[i]
+
+    return Tsys
+
+def overall_operator(operator_list):
+    '''
+    This function calculates the overall operator.
+    Parameters:
+    ----------
+    operator_list : list of ndarray
+        List of projection matrices. For example, [beam_proj, rec_proj, ndiode_proj].
+
+    Returns:
+    -------
+    overall_operator : ndarray
+        Overall operator.
+    '''
+    aux_list = []
+    for proj in operator_list:
+        assert proj.shape[0] == operator_list[0].shape[0], "All projection matrices must have the same length.."
+        if len(proj.shape) == 1:
+            proj = proj.reshape(-1, 1)
+        aux_list.append(proj)
+    return np.hstack(aux_list)
 

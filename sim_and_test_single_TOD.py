@@ -1,7 +1,5 @@
 import numpy as np
 import healpy as hp
-import matplotlib.pyplot as plt
-
 from pygdsm import GlobalSkyModel
 
 
@@ -11,8 +9,8 @@ import astropy.units as u
 from utils import Leg_poly_proj
 from flicker_model import sim_noise
 
-from Tsys_sampler import Tsys_model, overall_operator
-from full_Gibbs_sampler import full_Gibbs_sampler_singledish 
+from TOD_simulator import Tsys_model, overall_operator
+from full_Gibbs_sampler import full_Gibbs_sampler_single_TOD
 
 
 # Antenna position: Latitude: -30.7130° S; Longitude: 21.4430° E.
@@ -28,11 +26,12 @@ location = EarthLocation(lat=telescope_lat * u.deg, lon=telescope_lon * u.deg, h
 # ---- Define observation parameters ----
 
 # Antenna pointings: Azimuth list and Elevation, in degrees
-azimuths = np.linspace(-60, -40, 111)
+# azimuths = np.linspace(-60, -40, 111)
+azimuths = np.linspace(-65, -35, 168)
 azimuths = np.concatenate((azimuths, azimuths[1:-1][::-1]))
 
 # Generate 13 repeats of the azimuths
-azimuths = np.tile(azimuths, 15)
+azimuths = np.tile(azimuths, 25)
 
 elevation = 41.7    # Elevation in degrees
 
@@ -72,18 +71,6 @@ FWHM = 1.1  # Full Width at Half Maximum in degrees
 sigma = FWHM / (2 * np.sqrt(2 * np.log(2)))  # Convert FWHM to sigma (degrees)
 sigma_rad = np.radians(sigma)  # Convert to radians
 
-def pixel_angular_size(nside):
-    """Compute the angular size (in degrees and arcminutes) of a HEALPix pixel."""
-    npix = hp.nside2npix(nside)  # Total number of pixels
-    omega_pix = 4 * np.pi / npix  # Pixel area in steradians
-    theta_pix_deg = np.sqrt(omega_pix) * (180 / np.pi)  # Approximate pixel width in degrees
-    theta_pix_arcmin = theta_pix_deg * 60  # Convert to arcminutes
-    return theta_pix_deg, theta_pix_arcmin
-
-# Example usage
-nside = 64 # Change NSIDE as needed
-theta_deg, theta_arcmin = pixel_angular_size(nside)
-
 # Define HEALPix resolution
 NSIDE = 64
 NPIX = hp.nside2npix(NSIDE)  
@@ -117,9 +104,6 @@ print(f"Number of covered pixels: {num_pixels}")
 # Get the pixel indices of the "1" pixels:
 pixel_indices = np.where(bool_map)[0]
 
-# Save HEALPix map to file
-hp.write_map("gaussian_beam_pointing.fits", beam_map, overwrite=True)
-
 # Get pixels of skymap where corresponding mask value (bool_map) is true 
 
 beam_proj = np.zeros((ntime, num_pixels))
@@ -139,8 +123,7 @@ norm=np.sum(beam_proj, axis=1)
 beam_proj/=norm[:,None]
 
 gsm = GlobalSkyModel()
-gsm.nside =NSIDE
-skymap = gsm.generate(500)
+skymap = hp.ud_grade(gsm.generate(500), nside_out=NSIDE)
 true_Tsky = skymap[pixel_indices]
 
 # generate a vector of length ntime, every 10 elements there is a 1, the rest is 0
@@ -159,7 +142,7 @@ rec_params=np.array([1, 0.5, 1])
 
 gain_proj = Leg_poly_proj(4, t_list)
 gain_params=np.array([2, 0.5, 1.5, 0.5])*2
-mu0 = np.sin(2*np.pi*0.1*t_list)
+mu0 = 0.
 gains = gain_proj @ gain_params + mu0
 
 f0, fc, alpha = 1e-4, 2e-5, 2.0
@@ -175,7 +158,7 @@ Tsys_proj = overall_operator([beam_proj, rec_proj])
 
 logn_params = [np.log10(f0), np.log10(fc), alpha]
 
-p_gain_samples, p_sys_samples, p_noise_samples = full_Gibbs_sampler_singledish(TOD_sim, 
+p_gain_samples, p_sys_samples, p_noise_samples = full_Gibbs_sampler_single_TOD(TOD_sim, 
                                   t_list,
                                   TOD_ndiode,
                                   Tsys_proj,
@@ -196,6 +179,6 @@ p_gain_samples, p_sys_samples, p_noise_samples = full_Gibbs_sampler_singledish(T
 
 # Save 500 samples of gain, Tsys, and noise
 
-np.save('gain_samples.npy', np.array(p_gain_samples))
-np.save('Tsys_samples.npy', np.array(p_sys_samples))
-np.save('noise_samples.npy', np.array(p_noise_samples))
+np.save('single_TOD_gain_samples.npy', np.array(p_gain_samples))
+np.save('single_TOD_Tsys_samples.npy', np.array(p_sys_samples))
+np.save('single_TOD_noise_samples.npy', np.array(p_noise_samples))

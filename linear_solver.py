@@ -419,7 +419,7 @@ def cg(
     Amat,
     bvec,
     maxiters=1000,
-    abs_tol=1e-8,
+    abs_tol=1e-18,
     use_norm_tol=False,
     x0=None,
     linear_op=None,
@@ -602,3 +602,38 @@ def pytorch_lin_solver(A, b, device=device):
     return x_torch.cpu().numpy()
 
 
+def pytorch_nnls(A, b, device=device, max_iter=1000):
+    """
+    Solve non-negative least squares using PyTorch with gradient descent.
+    
+    Parameters:
+        A (array_like): Coefficient matrix
+        b (array_like): Right-hand side vector
+        device: Torch device (cpu, cuda, mps)
+        max_iter (int): Maximum number of iterations
+        
+    Returns:
+        x (array_like): Non-negative solution vector
+    """
+    A_torch = torch.tensor(A, dtype=torch.float32).to(device)
+    b_torch = torch.tensor(b, dtype=torch.float32).to(device)
+    
+    # Initialize with zeros
+    x = torch.zeros(A.shape[1], dtype=torch.float32, 
+                   device=device, requires_grad=True)
+    
+    optimizer = torch.optim.LBFGS([x], lr=0.1, max_iter=max_iter)
+    
+    def closure():
+        optimizer.zero_grad()
+        loss = torch.sum((A_torch @ x - b_torch) ** 2)
+        loss.backward()
+        return loss
+    
+    optimizer.step(closure)
+    
+    # Apply non-negativity constraint
+    with torch.no_grad():
+        x = torch.clamp(x, min=0)
+    
+    return x.cpu().numpy()
