@@ -22,7 +22,7 @@ start_time = time.time()
 # Antenna position: Latitude: -30.7130° S; Longitude: 21.4430° E.
 
 # Save the "local_TOD" objects
-savepath = "/Users/zzhang/Dataspace/flicker/"
+savepath = "/Users/zzhang/Dataspace/flicker/slower_scan/"
 # savepath = "/Users/user/TOD_simulations/"
 TOD_savename = "TOD_sim_{}.pkl".format(mpiutil.rank)
 # combind the savepath and savename
@@ -33,13 +33,16 @@ if os.path.exists(TOD_savepath):
     with open(TOD_savepath, 'rb') as f:
         local_TOD = pickle.load(f)
 else:
-    n_elevation = mpiutil.size # set the number of elevations to be the number of processes
+    # n_elevation = mpiutil.size # set the number of elevations to be the number of processes
+    delta_elevation = 5.0
+    elevation_list = np.arange(mpiutil.size)*delta_elevation + 40.0
+    elevation_list = np.repeat(elevation_list, 2) 
     n_sets = 2 # set the number of local TOD sets 
     
     # set the random prameters for simulation
     local_rec_params_list = [np.random.uniform(low=0.0, high=1.0, size=3) for i in range(n_sets)]
     local_gain_params_list = [np.random.uniform(low=0.0, high=1.0, size=4) + np.array([6., 0., 0., 0.]) 
-                            for i in range(n_sets)] # add 6 to the first element to make the gain positive
+                            for i in range(n_sets)] 
 
 
     logf0_c, logfc_c, alpha_c =  -3.8, -4.3, 2.
@@ -53,7 +56,8 @@ else:
 
 
     local_TOD = TOD_sim()
-    local_TOD.generate(n_elevation, local_rec_params_list, local_gain_params_list, local_noise_params_list, skymap_64, beam_cutoff=0.1)
+    local_TOD.generate(elevation_list, local_rec_params_list, local_gain_params_list, local_noise_params_list, 
+    skymap_64, beam_cutoff=0.1, scan_azimuth_s=-60, scan_azimuth_e=-40)
 
 
 
@@ -73,6 +77,10 @@ if mpiutil.rank0:
 
 mpiutil.barrier()
 
+# Debugging - check the shapes
+
+# print rank, the shape of each element array in local_TOD.local_Tsky_proj_list
+print("rank: ", mpiutil.rank, "the shape of each element array in local_TOD.local_Tsky_proj_list: ", [arr.shape for arr in local_TOD.local_Tsky_proj_list])
 
 
 init_Tsky_params = local_TOD.Tsky 
@@ -148,15 +156,15 @@ end_time = time.time()
 if mpiutil.rank0:
     print("Time taken: ", end_time - start_time)
 
-    savename = "Tsys_samples_v2.npy"
+    savename = "Tsys_samples_sl.npy"
     Tsys_savepath = os.path.join(savepath, savename)
     np.save(Tsys_savepath, Tsys_samples)
 
-    savename = "gain_samples_v2.npy"
+    savename = "gain_samples_sl.npy"
     gain_savepath = os.path.join(savepath, savename)
     np.save(gain_savepath, np.concatenate(all_gain_samples, axis=0))
 
-    savename = "noise_samples_v2.npy"
+    savename = "noise_samples_sl.npy"
     noise_savepath = os.path.join(savepath, savename)
     np.save(noise_savepath, np.concatenate(all_noise_samples, axis=0))
 

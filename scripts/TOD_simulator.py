@@ -13,7 +13,7 @@ comm = mpiutil.world
 rank = mpiutil.rank
 rank0 = rank == 0
 
-def example_scan(n_ele, location, delta_elevation=5.0, start_time_sast = "2024-02-23 19:54:07.397", dt=2.0):
+def example_scan(n_ele, location, delta_elevation=5.0, start_time_utc = "2019-04-23 20:41:56.397", dt=2.0):
     elevation_list = np.arange(n_ele)*delta_elevation + 40.0
     elevation_list = np.repeat(elevation_list, 2) # Repeat each elevation twice
     local_ele_list = mpiutil.partition_list_mpi(elevation_list, method="con")
@@ -37,7 +37,7 @@ def example_scan(n_ele, location, delta_elevation=5.0, start_time_sast = "2024-0
     t_list = np.arange(ntime) * dt
 
     # ---- Convert to UTC (SAST = UTC+2) ----
-    start_time = Time(start_time_sast) - TimeDelta(2 * u.hour)
+    start_time = Time(start_time_utc) - TimeDelta(2 * u.hour)
     # ---- Generate time list using numpy.arange ----
     time_list = start_time + TimeDelta(t_list, format='sec') # Time list in UTC
     # ---- Create AltAz coordinate frame ----
@@ -56,19 +56,21 @@ def example_scan(n_ele, location, delta_elevation=5.0, start_time_sast = "2024-0
 
     return [t_list.copy() for _ in range(n_local_TOD)], local_theta_c_list, local_phi_c_list
 
-def example_scan_1(n_ele, location, delta_elevation=1.0, start_time_sast = "2024-02-23 19:54:07.397", dt=2.0):
-    elevation_list = np.arange(n_ele)*delta_elevation + 40.0
+def example_scan_general(elevation_list, location, start_time_utc = "2019-04-23 20:41:56.397", dt=2.0, 
+                        scan_azimuth_s=-65, scan_azimuth_e=-35, num_azimuth=167, num_repeats=20):
+    n_ele = len(elevation_list)
     #elevation_list = np.repeat(elevation_list, 2) # Repeat each elevation twice
     local_ele_list = mpiutil.partition_list_mpi(elevation_list, method="con")
     n_local_TOD = len(local_ele_list)
 
-    #aux = np.linspace(-65, -35, 167)
-    aux = np.linspace(-60, -40, 111)
+
+    aux = np.linspace(scan_azimuth_s, scan_azimuth_e, num_azimuth)
     azimuths_a = np.concatenate((aux[1:-1][::-1], aux))
+
     # Generate a number of repeats of the azimuths
     # azimuths_a = np.tile(azimuths_a, 25)
     # azimuths_b = np.tile(azimuths_b, 25)
-    azimuths_a = np.tile(azimuths_a, 12)
+    azimuths_a = np.tile(azimuths_a, num_repeats)
     azimuths_list = [azimuths_a]*n_ele
     local_az_list = mpiutil.partition_list_mpi(azimuths_list, method="con")
     assert len(local_az_list) == n_local_TOD
@@ -77,8 +79,7 @@ def example_scan_1(n_ele, location, delta_elevation=1.0, start_time_sast = "2024
     ntime = len(azimuths_a)
     t_list = np.arange(ntime) * dt
 
-    # ---- Convert to UTC (SAST = UTC+2) ----
-    start_time = Time(start_time_sast) - TimeDelta(2 * u.hour)
+    start_time = Time(start_time_utc) 
     # ---- Generate time list using numpy.arange ----
     time_list = start_time + TimeDelta(t_list, format='sec') # Time list in UTC
     # ---- Create AltAz coordinate frame ----
@@ -176,12 +177,17 @@ class TOD_sim():
             TOD_ndiode[i] = T_nd
         return TOD_ndiode + T_mean
 
-    def generate(self, n_elevation, rec_params_list, gain_params_list, noise_params_list, Tmap, beam_cutoff=0.1, sigma_2=1./(4e5)):
+    # def generate(self, n_elevation, rec_params_list, gain_params_list, noise_params_list, Tmap, beam_cutoff=0.1, sigma_2=1./(4e5)):
+    def generate(self, elevation_list, rec_params_list, gain_params_list, noise_params_list, Tmap, beam_cutoff=0.1, sigma_2=1./(4e5),
+                scan_azimuth_s=-65, scan_azimuth_e=-35, num_azimuth=167, num_repeats=20):
         self.local_gain_params_list = gain_params_list
         self.local_rec_params_list = rec_params_list
         self.local_noise_params_list = noise_params_list
-        self.n_elevation = n_elevation
-        self.local_t_list, local_theta_c_list, local_phi_c_list = example_scan(n_elevation, self.location)
+        self.elevation_list = elevation_list
+        #self.local_t_list, local_theta_c_list, local_phi_c_list = example_scan(n_elevation, self.location)
+        self.local_t_list, local_theta_c_list, local_phi_c_list = example_scan_general(elevation_list, 
+                        self.location, start_time_utc = "2024-02-23 19:54:07.397", dt=2.0, 
+                        scan_azimuth_s=scan_azimuth_s, scan_azimuth_e=scan_azimuth_e, num_azimuth=num_azimuth, num_repeats=num_repeats)
         self.n_chunks = len(local_theta_c_list)
 
         # Get the NSIDE of the map

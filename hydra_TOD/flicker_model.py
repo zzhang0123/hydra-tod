@@ -8,7 +8,7 @@ import cmath
 from scipy.integrate import quad, IntegrationWarning
 import warnings
 
-def my_gamma_inc(z, R_vals, epsabs=1e-6, epsrel=1e-6, vectorize=True): 
+def my_gamma_inc(z, R_vals, epsabs=1e-6, epsrel=1e-6, para_run=True): 
     """Calculate the vectorized line integral of the incomplete gamma function.
     Parameters:
         z (complex): Complex (or just real) variable.  
@@ -34,14 +34,17 @@ def my_gamma_inc(z, R_vals, epsabs=1e-6, epsrel=1e-6, vectorize=True):
             result, _ = quad(integrand, 0, np.inf, epsabs=epsabs, epsrel=epsrel, complex_func=True)
         return result
     
+    # Or Parallelize the function:
+    if para_run:
+        results = np.array(mpiutil.local_parallel_func(_integral_single, R_vals))
+        # Return scalar if input was scalar
+        return results[0] if results.size == 1 else results
+
     # Vectorize the function
     vfunc = np.vectorize(_integral_single, otypes=[np.complex128])
     return vfunc(R_vals)
 
-    # # Or Parallelize the function:
-    # results = np.array(mpiutil.local_parallel_func(_integral_single, R_vals))
-    # # Return scalar if input was scalar
-    # return results[0] if results.size == 1 else results
+
 
 def aux_int_v1(mu, u):
     try:
@@ -122,7 +125,7 @@ def flicker_corr_full(tau, f0, fc, alpha, var_w=0.0):
     theta_0 = f0 * tau
     norm = 1/(np.pi * tau)
     mu = 1 - alpha
-    result = theta_0**alpha * aux_int(mu, theta_c) + (f0/fc)**alpha * np.sin(theta_c)
+    result = theta_0**alpha * aux_int_v1(mu, theta_c) + (f0/fc)**alpha * np.sin(theta_c)
     return result*norm
 
 def sim_noise(f0, fc, alpha, time_list, n_samples=1, white_n_variance=5e-6):
@@ -130,7 +133,8 @@ def sim_noise(f0, fc, alpha, time_list, n_samples=1, white_n_variance=5e-6):
     corr_list = [flicker_corr(t, f0, fc, alpha, var_w=white_n_variance) for t in lags]
     covmat = toeplitz(corr_list)
     return np.random.multivariate_normal(np.zeros_like(time_list), covmat, n_samples)
-    
+
+
 class FNoise_traditional:
     def __init__(self, dtime, alpha, fknee=1.0):
         """
