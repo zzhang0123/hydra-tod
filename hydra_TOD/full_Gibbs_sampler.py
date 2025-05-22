@@ -10,6 +10,8 @@ from flicker_model import flicker_cov
 from Tsys_sampler import Tsys_coeff_sampler, Tsky_coeff_sampler_multi_TODs, Tsys_sampler_multi_TODs
 from linear_solver import cg
 from mpi4py import MPI
+from scipy.linalg import block_diag
+
 
 comm = mpiutil.world
 rank = mpiutil.rank
@@ -319,15 +321,17 @@ def get_Tsys_operator(local_Tsky_operator_list, local_Trec_operator_list):
 
 def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list, 
                                     local_t_lists,
-                                    local_TOD_diode_list,
+                                    # local_TOD_diode_list,
                                     local_gain_operator_list,
                                     local_Tsky_operator_list,
                                     local_Trec_operator_list,
                                     init_Tsys_params,
                                     init_noise_params, 
                                     wnoise_var=2.5e-6,
-                                    Tsys_prior_cov_inv=None,
-                                    Tsys_prior_mean=None,
+                                    Tsky_prior_cov_inv=None,
+                                    Tsky_prior_mean=None,
+                                    local_Trec_prior_cov_inv_list=None,
+                                    local_Trec_prior_mean_list=None,
                                     gain_prior_cov_inv=None,
                                     gain_prior_mean=None,
                                     noise_prior_func=None,
@@ -349,14 +353,19 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
     # Synchronize the processes
     mpiutil.barrier()
 
+    Trec_prior_cov_inv_list = comm.allgather(local_Trec_prior_cov_inv_list)
+    Trec_prior_mean_list = comm.allgather(local_Trec_prior_mean_list)
+
+    Tsys_prior_cov_inv = block_diag(Tsky_prior_cov_inv, *Trec_prior_cov_inv_list)
+    Tsys_prior_mean = np.hstack([Tsky_prior_mean]+Trec_prior_mean_list)
+
     # Check the length of the input lists
     num_TODs = len(local_TOD_list)
 
     if num_TODs != len(local_t_lists) \
         or num_TODs != len(local_Tsky_operator_list) \
             or num_TODs != len(local_Trec_operator_list) \
-                or num_TODs != len(local_gain_operator_list) \
-                    or num_TODs != len(local_TOD_diode_list) :
+                or num_TODs != len(local_gain_operator_list):
         raise ValueError("The length of the input lists must be the same.")
     
     n_g_modes = local_gain_operator_list[0].shape[1]
@@ -396,11 +405,12 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
             t_list = local_t_lists[di]
             gain_operator = local_gain_operator_list[di]
             Tsys_operator = local_Tsys_operator_list[di]
-            TOD_diode = local_TOD_diode_list[di]
+            # TOD_diode = local_TOD_diode_list[di]
             
             noise_params = local_noise_samples[di, si-1, :] 
 
-            Tsys = Tsys_operator@Tsys_samples[si-1, :] + TOD_diode
+            # Tsys = Tsys_operator@Tsys_samples[si-1, :] + TOD_diode
+            Tsys = Tsys_operator@Tsys_samples[si-1, :] 
             
             
             # Sample gain parameters
@@ -435,7 +445,7 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
                                                     local_gain_list,
                                                     local_Tsys_operator_list,
                                                     local_noise_samples[:, si, :],
-                                                    local_TOD_diode_list,
+                                                    # local_TOD_diode_list,
                                                     wnoise_var=wnoise_var,
                                                     tol=tol,
                                                     prior_cov_inv=Tsys_prior_cov_inv,

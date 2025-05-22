@@ -85,7 +85,7 @@ def iterative_gls(d,
     Sigma_inv = N_inv * np.outer(D_p_inv, D_p_inv)
     return p_new, Sigma_inv
 
-def params_space_oper_and_data_list(d_list, U_list, p, Ninv_sqrt_list, mu_list, draw=True, root=None):
+def params_space_oper_and_data_list(d_list, U_list, p, Ninv_sqrt_list, mu_list=None, draw=True, root=None):
 
     dim = len(d_list)
     n_params = U_list[0].shape[1]
@@ -100,7 +100,10 @@ def params_space_oper_and_data_list(d_list, U_list, p, Ninv_sqrt_list, mu_list, 
     for i in range(dim):
         U_i = U_list[i]
         d_i = d_list[i]
-        mu_i = mu_list[i]
+        if mu_list is None:
+            mu_i = 0.0
+        else:
+            mu_i = mu_list[i]
 
         D_p_inv = 1.0 / (U_i @ p + mu_i)
         Sigma_inv_sqrt_i = D_p_inv[:, np.newaxis] * Ninv_sqrt_list[i]
@@ -139,7 +142,7 @@ def params_space_oper_and_data_list(d_list, U_list, p, Ninv_sqrt_list, mu_list, 
 def iterative_gls_mpi_list(local_d_list, 
                            local_U_list, 
                            local_Ninv_sqrt_list, 
-                           local_mu_list, 
+                           local_mu_list=None, 
                            tol=1e-10, 
                            min_iter=5, 
                            max_iter=100, 
@@ -148,32 +151,11 @@ def iterative_gls_mpi_list(local_d_list,
                            ):
     """
     Iteratively solves for p using GLS with heteroskedastic noise.
-
-    Data model: d = U p (1 + n), where n ~ Gaussian(0, N).
-    
-    Parameters:
-    U : ndarray (M, N) or a list of ndarrays [..., (M_i, N), ...]
-        Projection matrix
-    d : ndarray (M,) or a list of ndarrays [..., (M_i,), ...]
-        Observed data
-    N : ndarray (M, M) or a list of ndarrays [..., (M_i, M_i), ...]
-        Covariance matrix of noise (assumed positive definite)
-    tol : float
-        Convergence tolerance
-    max_iter : int
-        Maximum number of iterations
-
-    Returns:
-    p_gls : ndarray (N,)
-        Estimated parameter vector p
-    Sigma_inv : ndarray (M, M)
-        Covariance matrix for sampling
     """
 
     dim = len(local_U_list)
-    assert dim==len(local_Ninv_sqrt_list) and dim==len(local_mu_list) and dim==len(local_d_list), \
+    assert dim==len(local_Ninv_sqrt_list) and dim==len(local_d_list), \
         "U, d and N must have the same length if they are lists."
-
     
 
     n_params = local_U_list[0].shape[-1]

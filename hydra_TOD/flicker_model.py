@@ -132,7 +132,10 @@ def sim_noise(f0, fc, alpha, time_list, n_samples=1, white_n_variance=5e-6):
     lags = lag_list(time_list)
     corr_list = [flicker_corr(t, f0, fc, alpha, var_w=white_n_variance) for t in lags]
     covmat = toeplitz(corr_list)
-    return np.random.multivariate_normal(np.zeros_like(time_list), covmat, n_samples)
+    if n_samples == 1:
+        return np.random.multivariate_normal(np.zeros_like(time_list), covmat)
+    else:
+        return np.random.multivariate_normal(np.zeros_like(time_list), covmat, n_samples)
 
 
 class FNoise_traditional:

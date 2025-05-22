@@ -70,7 +70,7 @@ def Tsys_sampler_multi_TODs(local_data_list,
                             local_gain_list,
                             local_Tsys_proj_list,
                             local_Noise_params_list,
-                            local_mu_list,
+                            # local_mu_list,
                             wnoise_var=2.5e-6,
                             tol=1e-13,
                             prior_cov_inv=None,
@@ -88,7 +88,8 @@ def Tsys_sampler_multi_TODs(local_data_list,
         Ncov_inv_sqrt = cho_compute_mat_inv_sqrt( flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var, only_row_0=False) )
         local_Ninv_sqrt_list.append(Ncov_inv_sqrt)
 
-    p_GLS, A, b, Asqrt_wn =  iterative_gls_mpi_list(d_vec_list, local_Tsys_proj_list, local_Ninv_sqrt_list, local_mu_list, tol=tol, p_init=init_Tsys)
+    # p_GLS, A, b, Asqrt_wn =  iterative_gls_mpi_list(d_vec_list, local_Tsys_proj_list, local_Ninv_sqrt_list, local_mu_list, tol=tol, p_init=init_Tsys)
+    p_GLS, A, b, Asqrt_wn =  iterative_gls_mpi_list(d_vec_list, local_Tsys_proj_list, local_Ninv_sqrt_list, tol=tol, p_init=init_Tsys)
 
     # Compute on rank 0 only to avoid redundant computation
     if mpiutil.rank0:
