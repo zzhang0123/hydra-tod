@@ -332,9 +332,9 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
                                     Tsky_prior_mean=None,
                                     local_Trec_prior_cov_inv_list=None,
                                     local_Trec_prior_mean_list=None,
-                                    gain_prior_cov_inv=None,
-                                    gain_prior_mean=None,
-                                    noise_prior_func=None,
+                                    local_gain_prior_cov_inv_list=None,
+                                    local_gain_prior_mean_list=None,
+                                    local_noise_prior_func_list=None,
                                     n_samples=100,
                                     tol=1e-12,
                                     linear_solver=cg,
@@ -353,10 +353,16 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
     # Synchronize the processes
     mpiutil.barrier()
 
-    Trec_prior_cov_inv_list = comm.allgather(local_Trec_prior_cov_inv_list)
-    Trec_prior_mean_list = comm.allgather(local_Trec_prior_mean_list)
+    Trec_prior_cov_inv_list = [item for sublist in comm.allgather(local_Trec_prior_cov_inv_list) 
+                                for item in sublist]
+    Trec_prior_mean_list = [item for sublist in comm.allgather(local_Trec_prior_mean_list)
+                            for item in sublist]
 
-    Tsys_prior_cov_inv = block_diag(Tsky_prior_cov_inv, *Trec_prior_cov_inv_list)
+    if Tsky_prior_cov_inv.ndim==1: 
+        # The prior covariance matrices are diagonal, the inputs are the diagonal elements
+        Tsys_prior_cov_inv = np.hstack([Tsky_prior_cov_inv]+Trec_prior_cov_inv_list)
+    else:
+        Tsys_prior_cov_inv = block_diag(Tsky_prior_cov_inv, *Trec_prior_cov_inv_list)
     Tsys_prior_mean = np.hstack([Tsky_prior_mean]+Trec_prior_mean_list)
 
     # Check the length of the input lists
@@ -418,8 +424,8 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
                                             wnoise_var=wnoise_var,
                                             n_samples=num_sample, 
                                             tol=tol, 
-                                            prior_cov_inv=gain_prior_cov_inv, 
-                                            prior_mean=gain_prior_mean, 
+                                            prior_cov_inv=local_gain_prior_cov_inv_list[di], 
+                                            prior_mean=local_gain_prior_mean_list[di], 
                                             solver=linear_solver)
             local_gain_samples[di, si, :] = gain_sample
             gains = gain_operator@gain_sample
@@ -434,7 +440,7 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
                                                 init_noise_params, # using the input init_noise_params as fixed initial point for MCMC sampling
                                                 n_samples=num_sample,
                                                 wnoise_var=wnoise_var,
-                                                prior_func=noise_prior_func)
+                                                prior_func=local_noise_prior_func_list[di])
             local_noise_samples[di, si, :] = noise_sample
             print("Rank: {}, local id: {}, noise_sample {}: {}".format(rank, di, si, noise_sample))
 

@@ -13,6 +13,7 @@ def Tsys_coeff_sampler(data,
                        gain, 
                        Tsys_proj, 
                        noise_params, 
+                       logfc=None,
                        wnoise_var=2.5e-6,
                        n_samples=1,
                        mu=0.0,
@@ -22,7 +23,10 @@ def Tsys_coeff_sampler(data,
                        solver=cg):
 
     d_vec = data/gain
-    logf0, logfc, alpha = noise_params
+    if logfc is None:
+        logf0, logfc, alpha = noise_params
+    else:
+        logf0, alpha = noise_params
     Ncov_inv = cho_compute_mat_inv( flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var, only_row_0=False) )
 
     p_GLS, sigma_inv = iterative_gls(d_vec, Tsys_proj, Ncov_inv, mu=mu, tol=tol)

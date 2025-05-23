@@ -352,12 +352,20 @@ def sample_p_v2(A,
     
     if prior_cov_inv is not None:
         assert prior_mean is not None, "Prior mean must be provided if prior covariance is provided.."
-        left_op += prior_cov_inv
-        if Est_mode:
-            right_vec += prior_cov_inv @ prior_mean
+        # if prior_cov_inv is 1D, then diagonalize it
+        if prior_cov_inv.ndim == 1:
+            left_op += np.diag(prior_cov_inv)
+            if Est_mode:
+                right_vec += prior_cov_inv * prior_mean
+            else:
+                right_vec += prior_cov_inv * prior_mean + np.diag(np.sqrt(prior_cov_inv)) @ np.random.normal(size=prior_mean.shape)
         else:
-            right_vec += prior_cov_inv @ prior_mean + cholesky(prior_cov_inv) @ np.random.normal(size=prior_mean.shape)
-    
+            left_op += prior_cov_inv
+            if Est_mode:
+                right_vec += prior_cov_inv @ prior_mean
+            else:
+                right_vec += prior_cov_inv @ prior_mean + cholesky(prior_cov_inv) @ np.random.normal(size=prior_mean.shape)
+        
     if solver is None:
         p_sample = solve(left_op, right_vec, assume_a='sym')
     else:

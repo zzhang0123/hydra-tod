@@ -89,6 +89,15 @@ def reduce_bool_maps_LOR(bool_maps):
     pixel_indices = np.where(reduced_map)[0]
     return reduced_map, pixel_indices
 
+def reduce_bool_maps_LAND(bool_maps):
+    """
+    Reduce a list of boolean maps using the "logical and" operation.
+    """
+    reduced_map = np.logical_and.reduce(bool_maps)
+    # Get the pixel indices of the "1" pixels:
+    pixel_indices = np.where(reduced_map)[0]
+    return reduced_map, pixel_indices
+
 def gaussian(x, mu=0, sigma=1):
     """
     Calculate normalized 1D Gaussian function values
