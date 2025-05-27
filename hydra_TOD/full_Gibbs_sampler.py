@@ -4,8 +4,9 @@
 # Full Gibbs sampler
 import numpy as np
 import mpiutil
-from gain_sampler import gain_coeff_sampler
-from noise_sampler import flicker_noise_sampler
+from gain_sampler import gain_coeff_sampler, gain_coeff_sampler_v2
+#from noise_sampler import flicker_noise_sampler
+from noise_sampler_fixed_fc import flicker_noise_sampler
 from flicker_model import flicker_cov
 from Tsys_sampler import Tsys_coeff_sampler, Tsky_coeff_sampler_multi_TODs, Tsys_sampler_multi_TODs
 from linear_solver import cg
@@ -327,6 +328,8 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
                                     local_Trec_operator_list,
                                     init_Tsys_params,
                                     init_noise_params, 
+                                    local_logfc_list,
+                                    num_Jeffrey=False,
                                     wnoise_var=2.5e-6,
                                     Tsky_prior_cov_inv=None,
                                     Tsky_prior_mean=None,
@@ -335,6 +338,7 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
                                     local_gain_prior_cov_inv_list=None,
                                     local_gain_prior_mean_list=None,
                                     local_noise_prior_func_list=None,
+                                    log_linear_gain=False,
                                     n_samples=100,
                                     tol=1e-12,
                                     linear_solver=cg,
@@ -404,6 +408,9 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
     else:
         num_sample = 1
 
+    if local_noise_prior_func_list is None:
+        local_noise_prior_func_list = [None for di in range(num_TODs)]
+
     # Sample the parameters
     for si in range(n_samples):
         for di in range(num_TODs):
@@ -418,17 +425,31 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
             # Tsys = Tsys_operator@Tsys_samples[si-1, :] + TOD_diode
             Tsys = Tsys_operator@Tsys_samples[si-1, :] 
             
-            
+            logfc = local_logfc_list[di]
             # Sample gain parameters
-            gain_sample = gain_coeff_sampler(TOD, t_list, gain_operator, Tsys, noise_params, 
-                                            wnoise_var=wnoise_var,
-                                            n_samples=num_sample, 
-                                            tol=tol, 
-                                            prior_cov_inv=local_gain_prior_cov_inv_list[di], 
-                                            prior_mean=local_gain_prior_mean_list[di], 
-                                            solver=linear_solver)
+            if log_linear_gain:
+                gain_sample = gain_coeff_sampler_v2(TOD, t_list, gain_operator, Tsys, noise_params,
+                                                logfc=logfc, 
+                                                wnoise_var=wnoise_var,
+                                                n_samples=num_sample, 
+                                                tol=tol, 
+                                                prior_cov_inv=local_gain_prior_cov_inv_list[di], 
+                                                prior_mean=local_gain_prior_mean_list[di], 
+                                                solver=linear_solver)
+                gains = 10**(gain_operator@gain_sample)
+            else:
+                gain_sample = gain_coeff_sampler(TOD, t_list, gain_operator, Tsys, noise_params,
+                                                logfc=logfc, 
+                                                wnoise_var=wnoise_var,
+                                                n_samples=num_sample, 
+                                                tol=tol, 
+                                                prior_cov_inv=local_gain_prior_cov_inv_list[di], 
+                                                prior_mean=local_gain_prior_mean_list[di], 
+                                                solver=linear_solver)
+                
+                gains = gain_operator@gain_sample
+
             local_gain_samples[di, si, :] = gain_sample
-            gains = gain_operator@gain_sample
             local_gain_list[di]=gains
             print("Rank: {}, local id: {}, gain_sample {}: {}".format(rank, di, si, gain_sample))
 
@@ -438,9 +459,11 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
                                                 gains,
                                                 Tsys,
                                                 init_noise_params, # using the input init_noise_params as fixed initial point for MCMC sampling
+                                                logfc,
                                                 n_samples=num_sample,
                                                 wnoise_var=wnoise_var,
-                                                prior_func=local_noise_prior_func_list[di])
+                                                prior_func=local_noise_prior_func_list[di],
+                                                num_Jeffrey=num_Jeffrey)
             local_noise_samples[di, si, :] = noise_sample
             print("Rank: {}, local id: {}, noise_sample {}: {}".format(rank, di, si, noise_sample))
 
@@ -451,6 +474,7 @@ def full_Gibbs_sampler_multi_TODS_v2(local_TOD_list,
                                                     local_gain_list,
                                                     local_Tsys_operator_list,
                                                     local_noise_samples[:, si, :],
+                                                    local_logfc_list,
                                                     # local_TOD_diode_list,
                                                     wnoise_var=wnoise_var,
                                                     tol=tol,

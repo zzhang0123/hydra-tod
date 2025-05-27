@@ -74,6 +74,7 @@ def Tsys_sampler_multi_TODs(local_data_list,
                             local_gain_list,
                             local_Tsys_proj_list,
                             local_Noise_params_list,
+                            local_logfc_list,
                             # local_mu_list,
                             wnoise_var=2.5e-6,
                             tol=1e-13,
@@ -87,7 +88,11 @@ def Tsys_sampler_multi_TODs(local_data_list,
 
     local_Ninv_sqrt_list = []
     for di in range(dim):
-        logf0, logfc, alpha = local_Noise_params_list[di]
+        if local_logfc_list[di] is None:
+            logf0, logfc, alpha = local_Noise_params_list[di]
+        else:
+            logf0, alpha = local_Noise_params_list[di]
+            logfc = local_logfc_list[di]
         t_list = local_t_list[di]
         Ncov_inv_sqrt = cho_compute_mat_inv_sqrt( flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var, only_row_0=False) )
         local_Ninv_sqrt_list.append(Ncov_inv_sqrt)

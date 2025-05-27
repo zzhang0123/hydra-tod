@@ -358,7 +358,8 @@ def sample_p_v2(A,
             if Est_mode:
                 right_vec += prior_cov_inv * prior_mean
             else:
-                right_vec += prior_cov_inv * prior_mean + np.diag(np.sqrt(prior_cov_inv)) @ np.random.normal(size=prior_mean.shape)
+                # right_vec += prior_cov_inv * prior_mean + np.diag(np.sqrt(prior_cov_inv)) @ np.random.normal(size=prior_mean.shape)
+                right_vec += prior_cov_inv * prior_mean + np.sqrt(prior_cov_inv) * np.random.normal(size=prior_mean.shape)
         else:
             left_op += prior_cov_inv
             if Est_mode:
@@ -397,8 +398,12 @@ def sample_p_old(d,
 
     if prior_cov_inv is not None:
         assert prior_mean is not None, "Prior mean must be provided if prior covariance is provided.."
-        A += prior_cov_inv
-        prior_cov_sqrt_inv = cholesky(prior_cov_inv, upper=False) # Careful with the convention of cholesky decomposition!
+        if prior_cov_inv.ndim == 1:
+            A += np.diag(prior_cov_inv)
+            prior_cov_sqrt_inv = np.diag(np.sqrt(prior_cov_inv))
+        else:
+            A += prior_cov_inv
+            prior_cov_sqrt_inv = cholesky(prior_cov_inv, upper=False) # Careful with the convention of cholesky decomposition!
         aux += prior_cov_inv @ prior_mean 
 
     if solver is None:

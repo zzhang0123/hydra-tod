@@ -61,7 +61,7 @@ def flicker_likeli_func(time_list, data, gain, Tsys, logfc, wnoise_var=2.5e-6, b
     if boundaries is not None:
         def log_like(params):
             logf0, alpha = params
-            if logf0 < boundaries[0][0] or logf0 > boundaries[0][1] or alpha < boundaries[2][0] or alpha > boundaries[2][1]:
+            if logf0 < boundaries[0][0] or logf0 > boundaries[0][1] or alpha < boundaries[1][0] or alpha > boundaries[1][1]:
                 return -np.inf  # Log of zero for invalid regions
             corr_list = flicker_cov_vec(tau_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var)
             return log_likeli(corr_list, dvec)

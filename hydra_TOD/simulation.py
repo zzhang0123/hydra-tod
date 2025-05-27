@@ -15,7 +15,8 @@ def sim_MeerKAT_scan(telescope_lat=-30.7130,
                      az_s=-60.3, 
                      az_e=-42.3, 
                      start_time_utc = "2019-04-23 20:41:56.397", 
-                     dt=2.0):
+                     dt=2.0,
+                     return_eq_coords=False):
 
     location = EarthLocation(lat=telescope_lat * u.deg, lon=telescope_lon * u.deg, height=telescope_height * u.m)
 
@@ -36,10 +37,14 @@ def sim_MeerKAT_scan(telescope_lat=-30.7130,
 
     # ---- Convert Az/El to Equatorial (RA, Dec) ----
     eq_coords = SkyCoord(az=azimuths*u.deg, alt=elevation*u.deg, frame=altaz_frame).transform_to("icrs")
-    theta_c = np.pi/2 - eq_coords.dec.radian  # Convert Dec to theta
-    phi_c = eq_coords.ra.radian               # RA is already phi
-    
-    return t_list, theta_c, phi_c
+
+    if return_eq_coords:
+        return t_list, eq_coords
+    else:
+        theta_c = np.pi/2 - eq_coords.dec.radian  # Convert Dec to theta
+        phi_c = eq_coords.ra.radian               # RA is already phi
+        
+        return t_list, theta_c, phi_c
 
 def stacked_beam_map(theta_c, phi_c, 
                      FWHM=1.1, 
@@ -145,15 +150,7 @@ def generate_Tsky_proj(full_bool_map, theta_c, phi_c, FWHM=1.1):
     return Tsky_proj
 
 
-def sky_vector(pixel_indices, freq, Nside=64, sky_model=None):
-    if sky_model is None:
-        from pygdsm import GlobalSkyModel
-        gsm = GlobalSkyModel()
-        skymap = gsm.generate(500)
-    else:
-        skymap = sky_model(freq)
-    skymap = hp.ud_grade(skymap, nside_out=Nside)
-    return skymap[pixel_indices]
+
 
 
 

@@ -8,6 +8,7 @@ import cmath
 from scipy.integrate import quad, IntegrationWarning
 import warnings
 
+
 def my_gamma_inc(z, R_vals, epsabs=1e-6, epsrel=1e-6, para_run=True): 
     """Calculate the vectorized line integral of the incomplete gamma function.
     Parameters:
@@ -139,17 +140,20 @@ def sim_noise(f0, fc, alpha, time_list, n_samples=1, white_n_variance=5e-6):
 
 
 class FNoise_traditional:
-    def __init__(self, dtime, alpha, fknee=1.0):
+    def __init__(self, alpha, dtime=2, dnu=2e5, fknee=0.001):
         """
         Initialize the FNoise generator.
 
         Parameters:
-        - dtime: Time step for the time series.
+        - dtime: Time step for the time series. (Also the integration time for each data point)
         - alpha: Scaling exponent in the frequency power law.
+        - fknee: Knee frequency for the frequency power law. Unit of angular frequency: 2*Pi*Cycle/Time.
+        - dnu: Frequency resolution for the time series.
         """
         self.dtime = dtime
         self.alpha = alpha
         self.fknee = fknee
+        self.sigma_2 = 1./(dtime*dnu) # dtime is also the integration time.
 
     def generate(self, ntime):
         """
@@ -162,22 +166,25 @@ class FNoise_traditional:
         - Time sequence of 1/f noise.
         """
         # Frequency axis for the rFFT
-        freqs = np.fft.fftfreq(ntime, d=self.dtime)
+        freqs = np.fft.fftfreq(ntime, d=self.dtime) * 2 * np.pi # Note that fftfreq is not in unit of angular frequency.
         freqs[0] = np.inf  # Avoid division by zero at f=0
         
         # Define the power spectrum scaling as 1/f^alpha plus white noise
-        psd = (self.fknee/np.abs(freqs))**self.alpha #+ 1  # Adding white noise component
+        psd_sqrt = (self.fknee/np.abs(freqs))**(self.alpha/2) #+ 1  # Adding white noise component
 
-        # Generate random white noise in the frequency domain
-        white_noise = np.random.normal(size=len(freqs)) + 1j * np.random.normal(size=len(freqs))
+        # Generate random white noise 
+        white_noise = np.random.normal(size=len(freqs)) * np.sqrt(self.sigma_2)
+        white_noise_fft = np.fft.fft(white_noise)
 
         # Weight the white noise by the power spectrum
-        weighted_noise = white_noise * np.sqrt(psd) / np.sqrt(2)
+        weighted_noise_fft = white_noise_fft * psd_sqrt 
 
         # Transform back to the time domain using irfft
-        time_series = np.fft.irfft(weighted_noise, n=ntime)
+        time_series = np.fft.ifft(weighted_noise_fft)
 
         # Normalize the time series
-        return time_series
+        return time_series.real
+
+
 
 

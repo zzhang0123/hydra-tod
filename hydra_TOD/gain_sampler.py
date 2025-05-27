@@ -1,3 +1,4 @@
+import numpy as np
 from linear_solver import cg
 from utils import cho_compute_mat_inv
 from flicker_model import flicker_cov
@@ -24,5 +25,27 @@ def gain_coeff_sampler(data,
     Ncov_inv = cho_compute_mat_inv( flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var, only_row_0=False) )
     p_GLS, sigma_inv = iterative_gls(d_vec, gain_proj, Ncov_inv, mu=mu, tol=tol)
     return sample_p_old(d_vec, gain_proj, sigma_inv, num_samples=n_samples, mu=mu, prior_cov_inv=prior_cov_inv, prior_mean=prior_mean, solver=solver)
+
+def gain_coeff_sampler_v2(data, 
+                       t_list,
+                       gain_proj, 
+                       Tsys, 
+                       noise_params,
+                       logfc=None,
+                       wnoise_var=2.5e-6, 
+                       mu=0.0,
+                       n_samples=1,
+                       tol=1e-13,
+                       prior_cov_inv=None, 
+                       prior_mean=None, 
+                       solver=cg):
+    d_vec = np.log10(data/Tsys)
+    if logfc is None:
+        logf0, logfc, alpha = noise_params
+    else:
+        logf0, alpha = noise_params
+    Ncov_inv = cho_compute_mat_inv( flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var, only_row_0=False) )
+    return sample_p_old(d_vec, gain_proj, Ncov_inv, num_samples=n_samples, mu=mu, prior_cov_inv=prior_cov_inv, prior_mean=prior_mean, solver=solver)
+
 
 
