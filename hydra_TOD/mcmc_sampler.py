@@ -151,8 +151,10 @@ def mcmc_sampler(log_like, p_guess, p_std=0.3,
     flat_samples = sampler.get_chain(discard=burnin, thin=thin, flat=True)
     
     if n_samples == 0:
-        # Return mean of the samples
-        return np.mean(flat_samples, axis=0)
+        # # Return mean of the samples
+        # return np.mean(flat_samples, axis=0)
+        log_probs = np.array([log_prob(p) for p in flat_samples])
+        return flat_samples[np.argmax(log_probs)]
     elif n_samples == 1:
         # Randomly select one sample
         # idx = np.random.randint(len(flat_samples))

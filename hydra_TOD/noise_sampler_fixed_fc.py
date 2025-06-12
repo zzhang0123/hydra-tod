@@ -86,7 +86,7 @@ def flicker_noise_sampler(TOD,
                           num_Jeffrey=False,
                           boundaries=None,):
     if boundaries is None:
-        boundaries = [[-6, -1. ], [1.1, 4.]]  # Default boundaries
+        boundaries = [[-6, -3. ], [1.3, 4.]]  # Default boundaries
     
     log_likeli = flicker_likeli_func(t_list, TOD, gains, Tsys, logfc, wnoise_var=wnoise_var, boundaries=boundaries)
 

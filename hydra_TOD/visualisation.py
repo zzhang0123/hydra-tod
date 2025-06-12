@@ -38,6 +38,7 @@ def view_patch_map(map, pixel_indices, nside=64,
 
 def plot_residual_histogram(residuals, 
                             binwidth=0.05, # Adjust this value as needed for your applicatio
+                            kde=False,
                             save_path=None):
     """
     Plots a styled histogram with KDE of residuals,
@@ -52,7 +53,7 @@ def plot_residual_histogram(residuals,
 
     # Plot histogram with KDE
     ax = sns.histplot(residuals, bins=50, binwidth=binwidth, # Adjust binwidth as needed for your applicatio
-                      kde=True,
+                      kde=kde,
                       color='#2ecc71', edgecolor='w',
                       linewidth=0.9, alpha=0.8)
 
