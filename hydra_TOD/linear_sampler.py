@@ -29,7 +29,7 @@ def iterative_gls(d,
                   tol=1e-10, 
                   min_iter=5, 
                   max_iter=100, 
-                  solver=pytorch_lin_solver,
+                  solver=cg,
                   ):
     """
     Iteratively solves for p using GLS with heteroskedastic noise.

@@ -6,6 +6,7 @@ import numpy as np
 import mpiutil
 from gain_sampler import gain_coeff_sampler, gain_coeff_sampler_v2
 #from noise_sampler import flicker_noise_sampler
+from flicker_model import FlickerCorrEmulator
 from noise_sampler_fixed_fc import flicker_noise_sampler
 from flicker_model import flicker_cov
 from Tsys_sampler import Tsys_coeff_sampler, Tsky_coeff_sampler_multi_TODs, Tsys_sampler_multi_TODs
@@ -35,7 +36,7 @@ def full_Gibbs_sampler_single_TOD(TOD,
                                   noise_prior_func=None,
                                   n_samples=100,
                                   tol=1e-15,
-                                  linear_solver=cg,
+                                  linear_solver=None,
                                   Est_mode=False):   
 
     p_gain_samples = []

@@ -2,11 +2,34 @@ import numpy as np
 # from comat import logdet_quad
 from scipy.linalg import solve_toeplitz
 from utils import lag_list
-from flicker_model import flicker_cov_vec
 from mcmc_sampler import mcmc_sampler
 import emcee
 
 from scipy.linalg._solve_toeplitz import levinson
+
+# if the emulator of the correlation function exists, load it
+# otherwise, use flicker_cov_vec
+try:
+    import pickle
+    import os
+    
+    # Get the directory where this module is located
+    module_dir = os.path.dirname(os.path.abspath(__file__))
+    emulator_path = os.path.join(module_dir, 'flicker_corr_emulator.pkl')
+    
+    # Import the class definition before unpickling
+    from flicker_model import FlickerCorrEmulator
+
+    # Load the emulator
+    with open(emulator_path, 'rb') as f:
+        flicker_cov = pickle.load(f)
+    use_emulator = True
+    print("Using the emulator for flicker noise correlation function.")
+except (FileNotFoundError, ImportError, AttributeError) as e:
+    print(f"Emulator for flicker noise correlation function not found or failed to load: {e}")
+    print("Using flicker_cov_vec instead.")
+    from flicker_model import flicker_cov_vec
+    use_emulator = False
 
 def log_det_symmetric_toeplitz(r):
     r = np.asarray(r)
@@ -59,17 +82,31 @@ def flicker_likeli_func(time_list, data, gain, Tsys, logfc, wnoise_var=2.5e-6, b
     dvec -= np.mean(dvec)
 
     if boundaries is not None:
-        def log_like(params):
-            logf0, alpha = params
-            if logf0 < boundaries[0][0] or logf0 > boundaries[0][1] or alpha < boundaries[1][0] or alpha > boundaries[1][1]:
-                return -np.inf  # Log of zero for invalid regions
-            corr_list = flicker_cov_vec(tau_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var)
-            return log_likeli(corr_list, dvec)
+        if use_emulator:
+            def log_like(params):
+                logf0, alpha = params
+                if logf0 < boundaries[0][0] or logf0 > boundaries[0][1] or alpha < boundaries[1][0] or alpha > boundaries[1][1]:
+                    return -np.inf  # Log of zero for invalid regions
+                corr_list = flicker_cov(logf0, alpha)
+                return log_likeli(corr_list, dvec)
+        else:
+            def log_like(params):
+                logf0, alpha = params
+                if logf0 < boundaries[0][0] or logf0 > boundaries[0][1] or alpha < boundaries[1][0] or alpha > boundaries[1][1]:
+                    return -np.inf  # Log of zero for invalid regions
+                corr_list = flicker_cov_vec(tau_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var)
+                return log_likeli(corr_list, dvec)
     else:
-        def log_like(params):
-            logf0, alpha = params
-            corr_list = flicker_cov_vec(tau_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var)
-            return log_likeli(corr_list, dvec)
+        if use_emulator:
+            def log_like(params):
+                logf0, alpha = params
+                corr_list = flicker_cov(logf0, alpha)
+                return log_likeli(corr_list, dvec)
+        else:
+            def log_like(params):
+                logf0, alpha = params
+                corr_list = flicker_cov_vec(tau_list, 10.**logf0, 10.**logfc, alpha,  white_n_variance=wnoise_var)
+                return log_likeli(corr_list, dvec)
 
     return log_like
 
@@ -86,11 +123,11 @@ def flicker_noise_sampler(TOD,
                           num_Jeffrey=False,
                           boundaries=None,):
     if boundaries is None:
-        boundaries = [[-6, -3. ], [1.3, 4.]]  # Default boundaries
+        boundaries = [[-6, -3. ], [1.1, 4.]]  # Default boundaries
     
-    log_likeli = flicker_likeli_func(t_list, TOD, gains, Tsys, logfc, wnoise_var=wnoise_var, boundaries=boundaries)
+    log_likeli_func = flicker_likeli_func(t_list, TOD, gains, Tsys, logfc, wnoise_var=wnoise_var, boundaries=boundaries)
 
-    return mcmc_sampler(log_likeli, 
+    return mcmc_sampler(log_likeli_func, 
                         init_params, 
                         p_std=0.2, 
                         nsteps=50,  # steps for each chain
@@ -99,83 +136,83 @@ def flicker_noise_sampler(TOD,
                         num_Jeffrey=num_Jeffrey,
                         return_sampler=False)
 
-def generate_log_prob_func(t_list, data, gain, Tsys, fc, wnoise_var=2.5e-6, log_scale=True):
+# def generate_log_prob_func(t_list, data, gain, Tsys, fc, wnoise_var=2.5e-6, log_scale=True):
 
-    dvec = data / gain / Tsys - 1
-    dvec = np.asarray(dvec, dtype=np.float64)
-    tau_list = lag_list(t_list)
-    var_white = wnoise_var
+#     dvec = data / gain / Tsys - 1
+#     dvec = np.asarray(dvec, dtype=np.float64)
+#     tau_list = lag_list(t_list)
+#     var_white = wnoise_var
 
 
-    def log_prob(params, prior_func=None, log_scale=log_scale):
-        if log_scale:
-            f0, alpha = 10**params[0], params[2]
-        else:
-            f0, alpha = params
+#     def log_prob(params, prior_func=None, log_scale=log_scale):
+#         if log_scale:
+#             f0, alpha = 10**params[0], params[2]
+#         else:
+#             f0, alpha = params
 
-        if alpha < 1.001 or alpha > 5 or f0 < 1e-10 or f0 > 1e3:
-            return -np.inf  # Log of zero for invalid regions
-        else: 
-            corr_list = flicker_cov_vec(tau_list, 
-                                    f0, fc, alpha,  
-                                    white_n_variance=var_white)
+#         if alpha < 1.001 or alpha > 5 or f0 < 1e-10 or f0 > 1e3:
+#             return -np.inf  # Log of zero for invalid regions
+#         else: 
+#             corr_list = flicker_cov_vec(tau_list, 
+#                                     f0, fc, alpha,  
+#                                     white_n_variance=var_white)
 
-            if prior_func is None:
-                return log_likeli(corr_list, dvec)
-            else:
-                return log_likeli(corr_list, dvec) + prior_func(params)
+#             if prior_func is None:
+#                 return log_likeli(corr_list, dvec)
+#             else:
+#                 return log_likeli(corr_list, dvec) + prior_func(params)
 
-    return log_prob
+#     return log_prob
 
-# Define an MCMC sampler
-def noise_params_sampler(t_list, data, gain, Tsys, wnoise_var, fc,
-                        initial_guess=np.array([-3 , 2]),
-                        nwalkers=4, 
-                        nsteps=200, 
-                        n_samples=1,
-                        log_scale=True, 
-                        prior_func=None,
-                        return_sampler=False):
-    '''
-    This function samples the noise parameters using MCMC.
+# # Define an MCMC sampler
+# def noise_params_sampler(t_list, data, gain, Tsys, wnoise_var, fc,
+#                         initial_guess=np.array([-3 , 2]),
+#                         nwalkers=4, 
+#                         nsteps=200, 
+#                         n_samples=1,
+#                         log_scale=True, 
+#                         prior_func=None,
+#                         return_sampler=False):
+#     '''
+#     This function samples the noise parameters using MCMC.
 
-    Output:
-        a single sample of [f0, alpha]
-    '''
-    log_prob = generate_log_prob_func(t_list, data, gain, Tsys, fc,
-                                      wnoise_var=wnoise_var, 
-                                      log_scale=log_scale)
-    ndim = 2
+#     Output:
+#         a single sample of [f0, alpha]
+#     '''
+#     log_prob = generate_log_prob_func(t_list, data, gain, Tsys, fc,
+#                                       wnoise_var=wnoise_var, 
+#                                       log_scale=log_scale)
+#     ndim = 2
 
-    # Initialize the walkers
-    p0 = np.random.randn(nwalkers, ndim)*0.05 + initial_guess
+#     # Initialize the walkers
+#     p0 = np.random.randn(nwalkers, ndim)*0.05 + initial_guess
 
-    # Run the MCMC sampler
-    sampler = emcee.EnsembleSampler(nwalkers, ndim, log_prob, args=(prior_func, log_scale))
-    sampler.run_mcmc(p0, nsteps, progress=True)
+#     # Run the MCMC sampler
+#     sampler = emcee.EnsembleSampler(nwalkers, ndim, log_prob, args=(prior_func, log_scale))
+#     sampler.run_mcmc(p0, nsteps, progress=True)
 
-    if return_sampler:
-        return sampler
+#     if return_sampler:
+#         return sampler
     
-    # Estimate the autocorrelation time
-    try:
-        tau = sampler.get_autocorr_time()
-        burnin = int(3 * np.max(tau))  # Burn-in time (usually 2-3 times the autocorrelation time)
-        thin = int(0.5 * np.min(tau))  # Thinning factor (usually 1/2 of the autocorrelation time)
-    except:
-        burnin = nsteps // 3
-        thin = 1
+#     # Estimate the autocorrelation time
+#     try:
+#         tau = sampler.get_autocorr_time()
+#         burnin = int(3 * np.max(tau))  # Burn-in time (usually 2-3 times the autocorrelation time)
+#         thin = int(0.5 * np.min(tau))  # Thinning factor (usually 1/2 of the autocorrelation time)
+#     except:
+#         burnin = nsteps // 3
+#         thin = 1
     
-    # Get the chain after burn-in
-    flat_samples = sampler.get_chain(discard=burnin, thin=thin, flat=True)
+#     # Get the chain after burn-in
+#     flat_samples = sampler.get_chain(discard=burnin, thin=thin, flat=True)
     
-    if n_samples == 1:
-        # Randomly select one sample
-        idx = np.random.randint(len(flat_samples))
-        return flat_samples[idx]
-    else:
-        # Pick the last n_samples from the chain
-        return flat_samples[-n_samples:]
+#     if n_samples == 1:
+#         # Randomly select one sample
+#         idx = np.random.randint(len(flat_samples))
+#         return flat_samples[idx]
+#     else:
+#         # Pick the last n_samples from the chain
+#         return flat_samples[-n_samples:]
 
-# Define Jefferay's prior function
+# # Define Jefferay's prior function
 

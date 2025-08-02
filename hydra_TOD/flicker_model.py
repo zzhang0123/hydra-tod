@@ -185,6 +185,33 @@ class FNoise_traditional:
         # Normalize the time series
         return time_series.real
 
-
+class FlickerCorrEmulator:
+    def __init__(self, logfc, tau_list, wnoise_var):
+        self.ref_logf0 = -4.  # Reference logf0 for the emulator
+        self.wnoise_var = wnoise_var
+        self.logfc = logfc
+        self.tau_list = tau_list
+        
+        # Generate training data
+        alpha_list = np.linspace(1.1, 4, 3000)
+        from tqdm import tqdm
+        corr_list = np.array([flicker_cov_vec(tau_list, 10.**self.ref_logf0, 10.**logfc, alpha, white_n_variance=0.)
+                            for alpha in tqdm(alpha_list)])
+        
+        # Train the emulator
+        from MomentEmu import PolyEmu
+        self.emulator = PolyEmu(alpha_list.reshape(-1,1), corr_list, forward=True, backward=False, 
+                               max_degree_forward=20, test_size=0.3, RMSE_tol=1e-5)
+    
+    def __call__(self, logf0, alpha, indices=None):
+        """
+        Emulate the flicker correlation function for given logf0 and alpha.
+        """
+        correction_factor = 10.**((logf0 - self.ref_logf0) * alpha)
+        result = self.emulator.forward_emulator(np.array([[alpha]]))[0] * correction_factor
+        result[0] += self.wnoise_var  # Add white noise variance to the first element
+        if indices is None:
+            return result
+        return result[indices]
 
 
