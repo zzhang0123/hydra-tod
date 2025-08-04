@@ -81,7 +81,9 @@ def mcmc_sampler(log_like, p_guess, p_std=0.3,
     This function samples the noise parameters using MCMC.
 
     Output:
-        a single sample of [f0, fc, alpha]
+        a single sample of the parameters if n_samples=1,
+        a list of samples if n_samples > 1,
+        or the last sample of the chain if n_samples=0 (estimator mode).
     '''
     ndim = len(p_guess)
 
