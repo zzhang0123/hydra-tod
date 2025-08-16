@@ -158,6 +158,7 @@ def plot_residual_histogram(type_str,
                             residuals_common,
                             binwidth=0.05,
                             fts=24,  # Increased from 19 to 24
+                            density=False,
                             kde=False,
                             save_path=None,
                             figsize=(12, 7),
@@ -217,7 +218,7 @@ def plot_residual_histogram(type_str,
     n_all, bins_all, patches_all = plt.hist(residuals, bins=bins, 
                                             color=colors['all'], 
                                             alpha=0.8, 
-                                            density=True,
+                                            density=density,
                                             edgecolor='white', 
                                             linewidth=0.5,
                                             label='All residuals')
@@ -226,7 +227,7 @@ def plot_residual_histogram(type_str,
     n_common, bins_common, patches_common = plt.hist(residuals_common, bins=bins,
                                                      color=colors['common'], 
                                                      alpha=0.5, 
-                                                     density=True,
+                                                     density=density,
                                                      edgecolor='white', 
                                                      linewidth=0.5,
                                                      label='Common residuals')
@@ -297,7 +298,7 @@ def plot_residual_histogram(type_str,
         plt.xlabel(r'$T_{\mathrm{residual}} = \langle T^{\mathrm{sample}}_{\mathrm{sky}} \rangle - T_{\mathrm{sky}}^{\mathrm{true}}$ [K]', 
                 fontsize=fts)
     if print_ylabel:
-        plt.ylabel('Probability Density', fontsize=fts)
+        plt.ylabel('Histogram', fontsize=fts)
 
     if title:
         plt.title(title, fontsize=fts+4, pad=20)  # Increased from +2 to +4
