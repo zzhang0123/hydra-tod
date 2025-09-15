@@ -52,7 +52,6 @@ def Leg_poly_proj(ndeg, xs):
     
     return proj 
 
-
 class polyn_proj:
 
     def __init__(self, t_list):
@@ -81,43 +80,6 @@ def cov_conjugate(cov, time_to_freq=True):
 def lag_list(time_list):
     time_list = np.array(time_list)
     return time_list - time_list[0]
-
-
-def view_samples(p_samples, true_values):
-    n_params = p_samples.shape[1]
-    mean = np.mean(p_samples, axis=0)
-    std = np.std(p_samples, axis=0)
-
-    # Create subplots for four parameters
-    # Set figure size according to number of parameters
-    fig, axes = plt.subplots(n_params, 1, figsize=(8, 4*n_params))
-    axes = axes.ravel()
-
-    for i in range(n_params):
-        # Plot histogram of samples for each parameter
-        axes[i].hist(p_samples[:, i], bins=50, density=True, alpha=0.6, label='Samples')
-        
-        # Plot true value line
-        axes[i].axvline(x=true_values[i], color='r', linestyle='-', label='True Value', linewidth=2, alpha=0.7)
-        
-        # Plot mean value line
-        axes[i].axvline(x=mean[i], color='g', linestyle='--', label='Mean')
-        
-        # Add labels and title
-        axes[i].set_xlabel('Coefficient')
-        axes[i].set_ylabel('Density')
-        axes[i].set_title(f'Parameter {i+1}')
-        axes[i].legend()
-        
-        # Print numerical comparison for each parameter
-        print(f"\n Parameter {i+1}:")
-        print(f"True value: {true_values[i]:.6f}")
-        print(f"Mean sampled: {mean[i]:.6f}")
-        print(f"Standard deviation: {std[i]:.6f}")
-        print(f"Relative error: {abs(mean[i] - true_values[i])/true_values[i]*100:.2f}%")
-
-    plt.tight_layout()
-    plt.show()
 
 def pixel_angular_size(nside):
     """Compute the angular size (in degrees and arcminutes) of a HEALPix pixel."""
@@ -148,7 +110,6 @@ def overall_operator(operator_list):
         aux_list.append(proj)
     return np.hstack(aux_list)
 
-
 def linear_model(operator_list, params_vec_list):
     '''
     This function calculates the system temperature.
@@ -178,3 +139,4 @@ def linear_model(operator_list, params_vec_list):
             Tsys += operator_list[i] @ params_vec_list[i]
 
     return Tsys
+

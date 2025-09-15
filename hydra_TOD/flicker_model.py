@@ -1,5 +1,6 @@
 import mpiutil
 import numpy as np
+import jax.numpy as jnp
 from mpmath import gammainc,mp
 from scipy.linalg import toeplitz
 from utils import lag_list
@@ -7,6 +8,7 @@ from joblib import delayed, Parallel
 import cmath
 from scipy.integrate import quad, IntegrationWarning
 import warnings
+
 
 
 def my_gamma_inc(z, R_vals, epsabs=1e-6, epsrel=1e-6, para_run=True): 
@@ -185,33 +187,125 @@ class FNoise_traditional:
         # Normalize the time series
         return time_series.real
 
+
 class FlickerCorrEmulator:
-    def __init__(self, logfc, tau_list, wnoise_var):
+    def __init__(self, logfc, tau_list, wnoise_var=2.5e-6, 
+                 alpha_training=None, corr_training=None, alpha_test=None, corr_test=None):
         self.ref_logf0 = -4.  # Reference logf0 for the emulator
         self.wnoise_var = wnoise_var
         self.logfc = logfc
         self.tau_list = tau_list
         
         # Generate training data
-        alpha_list = np.linspace(1.1, 4, 3000)
-        from tqdm import tqdm
-        corr_list = np.array([flicker_cov_vec(tau_list, 10.**self.ref_logf0, 10.**logfc, alpha, white_n_variance=0.)
-                            for alpha in tqdm(alpha_list)])
-        
+        if alpha_training is None:
+            alpha_training = np.linspace(1.1, 4, 3000)
+        if corr_training is None:
+            corr_training = np.array([flicker_cov_vec(tau_list, 10.**self.ref_logf0, 10.**logfc, alpha, white_n_variance=0.)
+                                        for alpha in tqdm(alpha_training)])
+        if alpha_test is None:
+            alpha_test = np.random.uniform(1.1, 4, 500)
+        if corr_test is None:
+            corr_test = np.array([flicker_cov_vec(tau_list, 10.**self.ref_logf0, 10.**logfc, alpha, white_n_variance=0.)
+                                  for alpha in tqdm(alpha_test)])
+
         # Train the emulator
         from MomentEmu import PolyEmu
-        self.emulator = PolyEmu(alpha_list.reshape(-1,1), corr_list, forward=True, backward=False, 
-                               max_degree_forward=20, test_size=0.3, RMSE_tol=1e-5)
-    
+
+        ind = 5  # Index separating lag=0 and lag>0
+        print("Training emulator for lag>0 ...")
+        self.lag_emulator = PolyEmu(alpha_training.reshape(-1,1), 
+                                    corr_training[:, ind:], 
+                                    X_test=alpha_test.reshape(-1,1), 
+                                    Y_test=corr_test[:, ind:],
+                                    RMSE_upper=1e-1,
+                                    RMSE_lower=1e-7, 
+                                    fRMSE_tol=0.1,
+                                    forward=True, backward=False, 
+                                    max_degree_forward=20,
+                                    return_max_frac_err=True)
+
+        print("Training emulator for lag=0 ...")
+        self.auto_emulator = PolyEmu(alpha_training.reshape(-1,1), 
+                                     np.log(corr_training[:, :ind]).reshape(-1,ind), 
+                                     X_test=alpha_test.reshape(-1,1), 
+                                     Y_test=np.log(corr_test[:, :ind]).reshape(-1,ind),
+                                     RMSE_upper=1e-1,
+                                     RMSE_lower=1e-5, 
+                                     fRMSE_tol=1e-1,
+                                     forward=True, backward=False, 
+                                     max_degree_forward=20,
+                                     return_max_frac_err=True)
+        
+
+
     def __call__(self, logf0, alpha, indices=None):
         """
         Emulate the flicker correlation function for given logf0 and alpha.
         """
         correction_factor = 10.**((logf0 - self.ref_logf0) * alpha)
-        result = self.emulator.forward_emulator(np.array([[alpha]]))[0] * correction_factor
+        corr = np.concatenate([np.exp(self.auto_emulator.forward_emulator(np.array([alpha]))), 
+                               self.lag_emulator.forward_emulator(np.array([alpha]))])
+        result = corr * correction_factor
         result[0] += self.wnoise_var  # Add white noise variance to the first element
         if indices is None:
             return result
         return result[indices]
 
+    def create_jax(self, ):
+        """
+        JAX autodifferentiable version to emulate the flicker correlation function.
+        """
 
+        print("Get the JAX version of the emulators")
+        from MomentEmu.jax_momentemu import create_jax_emulator
+        lag_emulator_jax = create_jax_emulator(self.lag_emulator)
+        auto_emulator_jax = create_jax_emulator(self.auto_emulator)
+        wn_var = self.wnoise_var
+
+        def jax_emu(logf0, alpha, indices=None):
+            correction_factor = 10.0 ** ((logf0 - self.ref_logf0) * alpha)
+
+            # Get emulator outputs (these need to be JAX-compatible)
+            auto_output = jnp.exp(auto_emulator_jax(alpha))
+            lag_output = lag_emulator_jax(alpha)
+
+        
+            corr = jnp.concatenate([auto_output, lag_output])
+            result = corr * correction_factor
+        
+            # Add white noise variance to the first element
+            result = result.at[0].add(wn_var)
+
+            # Handle indices selection
+            return jnp.where(indices is None, result, result[indices])
+
+        return jax_emu
+
+
+class LogDetEmulator:
+
+    def __init__(self, params_list, log_det_list, X_test, Y_test):
+
+        from MomentEmu import PolyEmu
+
+        self.log_det_emulator = PolyEmu(params_list, log_det_list, 
+                                        X_test=X_test, Y_test=Y_test,
+                                        forward=True, backward=False, 
+                                        max_degree_forward=20, 
+                                        RMSE_upper=1e-1,
+                                        RMSE_lower=1e-5,
+                                        fRMSE_tol=1e-1,
+                                        return_max_frac_err=True)
+
+    def __call__(self, logf0, alpha):
+        return self.log_det_emulator.forward_emulator(np.array([[logf0, alpha]]))
+
+    def create_jax(self, ):
+        print("Get the JAX version of the log-det emulator")
+        from MomentEmu.jax_momentemu import create_jax_emulator
+        log_det_emulator_jax = create_jax_emulator(self.log_det_emulator)
+
+        def jax_emu(logf0, alpha):
+            return log_det_emulator_jax(jnp.array([logf0, alpha]))
+
+        return jax_emu

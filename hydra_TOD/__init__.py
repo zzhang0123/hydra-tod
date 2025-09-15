@@ -23,7 +23,7 @@ __author__ = "Zheng Zhang"
 from . import flicker_model
 from . import mcmc_sampler
 from . import gain_sampler
-from . import noise_sampler
+from . import noise_sampler_old
 from . import linear_sampler
 from . import TOD_simulator
 from . import utils
@@ -48,7 +48,7 @@ __all__ = [
     'flicker_model',
     'mcmc_sampler', 
     'gain_sampler',
-    'noise_sampler',
+    'noise_sampler_old',
     'linear_sampler',
     'TOD_simulator',
     'utils',

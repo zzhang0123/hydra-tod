@@ -7,6 +7,43 @@ import os
 
 
 
+def view_samples(p_samples, true_values):
+    n_params = p_samples.shape[1]
+    mean = np.mean(p_samples, axis=0)
+    std = np.std(p_samples, axis=0)
+
+    # Create subplots for four parameters
+    # Set figure size according to number of parameters
+    fig, axes = plt.subplots(n_params, 1, figsize=(8, 4*n_params))
+    axes = axes.ravel()
+
+    for i in range(n_params):
+        # Plot histogram of samples for each parameter
+        axes[i].hist(p_samples[:, i], bins=50, density=True, alpha=0.6, label='Samples')
+        
+        # Plot true value line
+        axes[i].axvline(x=true_values[i], color='r', linestyle='-', label='True Value', linewidth=2, alpha=0.7)
+        
+        # Plot mean value line
+        axes[i].axvline(x=mean[i], color='g', linestyle='--', label='Mean')
+        
+        # Add labels and title
+        axes[i].set_xlabel('Coefficient')
+        axes[i].set_ylabel('Density')
+        axes[i].set_title(f'Parameter {i+1}')
+        axes[i].legend()
+        
+        # Print numerical comparison for each parameter
+        print(f"\n Parameter {i+1}:")
+        print(f"True value: {true_values[i]:.6f}")
+        print(f"Mean sampled: {mean[i]:.6f}")
+        print(f"Standard deviation: {std[i]:.6f}")
+        print(f"Relative error: {abs(mean[i] - true_values[i])/true_values[i]*100:.2f}%")
+
+    plt.tight_layout()
+    plt.show()
+
+
 def combine_pdfs_to_panels(pdf_files, rows, cols, figsize=(16, 12), 
                           output_file=None, 
                           titles=None, suptitle=None, dpi=300, 
@@ -153,7 +190,7 @@ def combine_pdfs_to_panels(pdf_files, rows, cols, figsize=(16, 12),
 
     pass
 
-def plot_residual_histogram(type_str,
+def plot_residual_histogram_old(type_str,
                             residuals, 
                             residuals_common,
                             binwidth=0.05,
@@ -409,13 +446,6 @@ def plot_corner(samples, labels=[r'$a_0$', r'$a_1$', r'$a_2$',r'$a_3$', r'$T_{\m
     return figure
 
 
-def view_patch_map(map, pixel_indices):
-    # Create a new map with just the patch (other pixels set to UNSEEN)
-    patch_only_map = np.full(len(map), hp.UNSEEN)
-    patch_only_map[pixel_indices] = map[pixel_indices]
-    return patch_only_map
-
-
 def generate_post_map(sim, Tsys_samples, save_root='outputs/GS1'):
 
     pixel_indices = sim.pixel_indices
@@ -510,3 +540,279 @@ def generate_post_map(sim, Tsys_samples, save_root='outputs/GS1'):
     plt.gca().set_facecolor('gray')  # Set background to white
     plt.savefig(save_root + "/std_map.pdf", bbox_inches='tight', 
                 pad_inches=0.1)
+
+def view_patch_map(map, pixel_indices):
+    # Create a new map with just the patch (other pixels set to UNSEEN)
+    patch_only_map = np.full(len(map), hp.UNSEEN)
+    patch_only_map[pixel_indices] = map[pixel_indices]
+    return patch_only_map
+
+def gnomview_patch(map, 
+                   pixel_indices, 
+                   lon_center, 
+                   lat_center,
+                   res,
+                   sky_min, 
+                   sky_max,
+                   title=" ",
+                   save_path=None, 
+                   cmap='jet',
+                   cbar=True,
+                   xtick=False,
+                   ytick=False,
+                   unit='K',
+                   turn_into_map=True,
+                   fts=16,
+                   xlabel=None, 
+                   ylabel=None):
+    NPIX = hp.nside2npix(64)
+    if turn_into_map:
+        aux_map = np.zeros(NPIX, dtype=float)
+        aux_map[pixel_indices] = map
+    else:
+        aux_map = map
+    patch_only_map = view_patch_map(aux_map, pixel_indices)
+    hp.gnomview( patch_only_map, rot=(lon_center, lat_center), 
+           xsize=520, ysize=220, reso=res, title=title, 
+           unit=unit, cmap=cmap, min=sky_min, max=sky_max,
+           notext=True,
+           coord=['C'], 
+           cbar=cbar, 
+           badcolor='gray')
+    cb = plt.gcf().axes[-1]  # Get the colorbar axis (usually the last one)
+    cb.tick_params(labelsize=fts)  # Set the font size to 18 (adjust as needed)
+    hp.graticule(dpar=10, dmer=10, coord=['C'], local=True)  # Add graticule lines; separation in degrees
+    plt.gca().set_facecolor('gray')  # Set background to gray
+
+    # Add axis labels using plt.text
+    fig = plt.gcf()
+    ax = plt.gca()
+    if title and title.strip():  # Only if title is not empty
+        ax.set_title(title, fontsize=fts-1, pad=5)
+
+    if cbar:
+        if xtick:
+            fig.text(0.5, 0.185, str(lon_center)[:7], ha='center', fontsize=fts-1)
+        if ytick:
+            fig.text(0.045, 0.37, str(lat_center)[:5], va='center', rotation='vertical', fontsize=fts-1)
+        if xlabel is not None:
+            fig.text(0.5, 0.155, xlabel, ha='center', fontsize=fts-1)
+        if ylabel is not None:
+            fig.text(0.01, 0.4, ylabel, va='center', rotation='vertical', fontsize=fts-1)
+    else:
+        if xtick:
+            fig.text(0.5, 0.31, str(lon_center)[:7], ha='center', fontsize=fts-1)
+        if ytick:
+            fig.text(0.045, 0.5, str(lat_center)[:5], va='center', rotation='vertical', fontsize=fts-1)
+        if xlabel is not None:
+            fig.text(0.5, 0.28, xlabel, ha='center', fontsize=fts-1)
+        if ylabel is not None:
+            fig.text(0.01, 0.5, ylabel, va='center', rotation='vertical', fontsize=fts-1)
+
+    plt.tight_layout()
+
+    if save_path is not None:
+        plt.savefig(save_path, bbox_inches='tight', 
+                pad_inches=0.1)
+    
+    pass
+
+
+def plot_residual_histogram(type_str,
+                            residuals, 
+                            residuals_common,
+                            binwidth=0.05,
+                            fts=28,  # Increased from 19 to 27
+                            kde=False,
+                            save_path=None,
+                            figsize=(12, 7),
+                            show_mean=False,
+                            show_std=True,
+                            colors=None,
+                            title=None,
+                            print_xlabel=False,
+                            print_ylabel=False,
+                            xlim=None,
+                            legend=False):
+    """
+    Plots two histograms: one of all residuals as the gray background and, on top of it, one of common residuals in red,
+    including mean and 16th–84th percentile annotations.
+
+    Parameters:
+        residuals (array-like): Array of all residual values (in gray).
+        residuals_common (array-like): Array of common residual values (in red).
+        binwidth (float): Width of histogram bins
+        fts (int): Font size for labels
+        kde (bool): Whether to show KDE overlay
+        save_path (str): Path to save the figure
+        figsize (tuple): Figure size (width, height)
+        show_mean (bool): Whether to show mean lines
+        show_std (bool): Whether to show standard deviation in text
+        colors (dict): Custom color scheme
+        title (str): Plot title
+        xlim (tuple): x-axis limits
+    """
+    # Default colors
+    if colors is None:
+        colors = {
+            'all': '#7f8c8d',      # Sophisticated gray
+            'common': '#e74c3c',    # Red
+            'all_lines': '#2980b9', # Blue
+            'common_lines': '#c0392b', # Dark red
+            'mean_all': '#34495e',   # Dark gray
+            'mean_common': '#a93226' # Dark red
+        }
+    
+    # Set up the plot with better styling
+    plt.figure(figsize=figsize)
+    sns.set_theme(style='white')  # Changed from 'whitegrid' to 'white' to remove grid
+    
+    # Calculate common bin edges for consistent comparison
+    all_data = np.concatenate([residuals, residuals_common])
+    if xlim is None:
+        data_range = np.max(all_data) - np.min(all_data)
+        margin = 0.1 * data_range
+        xlim = (np.min(all_data) - margin, np.max(all_data) + margin)
+    
+    # Calculate bins
+    n_bins = int((xlim[1] - xlim[0]) / binwidth)
+    bins = np.linspace(xlim[0], xlim[1], n_bins)
+
+    # Plot histogram of all pixels as background
+    ax = plt.gca()
+    n_all, bins_all, patches_all = plt.hist(residuals, bins=bins, 
+                                            color=colors['all'], 
+                                            alpha=0.8, 
+                                            density=False,
+                                            edgecolor='white', 
+                                            linewidth=0.5,
+                                            label='All pixels')
+
+    # Plot histogram of common residuals on top
+    n_common, bins_common, patches_common = plt.hist(residuals_common, bins=bins,
+                                                     color=colors['common'], 
+                                                     alpha=0.5, 
+                                                     density=False,
+                                                     edgecolor='white', 
+                                                     linewidth=0.5,
+                                                     label='Internal pixels')
+
+    # Add KDE if requested
+    if kde:
+        from scipy.stats import gaussian_kde
+        
+        # KDE for all residuals
+        kde_all = gaussian_kde(residuals)
+        x_kde = np.linspace(xlim[0], xlim[1], 300)
+        y_kde_all = kde_all(x_kde)
+        plt.plot(x_kde, y_kde_all, color=colors['all'], linestyle='-', 
+                linewidth=2, alpha=0.8)
+        
+        # KDE for common residuals
+        kde_common = gaussian_kde(residuals_common)
+        y_kde_common = kde_common(x_kde)
+        plt.plot(x_kde, y_kde_common, color=colors['common'], linestyle='-', 
+                linewidth=2, alpha=0.9)
+
+    # Compute comprehensive statistics
+    stats_all = {
+        'mean': np.mean(residuals),
+        'std': np.std(residuals),
+        'median': np.median(residuals),
+        'p16': np.percentile(residuals, 16),
+        'p84': np.percentile(residuals, 84),
+        'rms': np.sqrt(np.mean(residuals**2))
+    }
+    
+    stats_common = {
+        'mean': np.mean(residuals_common),
+        'std': np.std(residuals_common),
+        'median': np.median(residuals_common),
+        'p16': np.percentile(residuals_common, 16),
+        'p84': np.percentile(residuals_common, 84),
+        'rms': np.sqrt(np.mean(residuals_common**2))
+    }
+
+    # Print statistics
+    print(f"All pixels - Mean: {stats_all['mean']:.4f}, Std: {stats_all['std']:.4f}, RMS: {stats_all['rms']:.4f}")
+    print(f"All pixels - 16th-84th percentile: [{stats_all['p16']:.4f}, {stats_all['p84']:.4f}]")
+    print(f"Internal pixels - Mean: {stats_common['mean']:.4f}, Std: {stats_common['std']:.4f}, RMS: {stats_common['rms']:.4f}")
+    print(f"Internal pixels - 16th-84th percentile: [{stats_common['p16']:.4f}, {stats_common['p84']:.4f}]")
+
+    # Add vertical lines for percentiles
+    plt.axvline(stats_all['p16'], color=colors['all_lines'], linestyle=':', 
+               lw=3, alpha=0.8, label='All: 16th–84th percentile')  # Increased linewidth
+    plt.axvline(stats_all['p84'], color=colors['all_lines'], linestyle=':', lw=3, alpha=0.8)
+    
+    plt.axvline(stats_common['p16'], color=colors['common_lines'], linestyle='--', 
+               lw=3, alpha=0.9, label='Internal: 16th–84th percentile')  # Increased linewidth
+    plt.axvline(stats_common['p84'], color=colors['common_lines'], linestyle='--', lw=3, alpha=0.9)
+    
+    # Add mean lines if requested
+    if show_mean:
+        plt.axvline(stats_all['mean'], color=colors['mean_all'], linestyle='-', 
+                   lw=3, alpha=0.7, label='All: Mean')  # Increased linewidth
+        plt.axvline(stats_common['mean'], color=colors['mean_common'], linestyle='-', 
+                   lw=3, alpha=0.8, label='Internal: Mean')  # Increased linewidth
+
+    # Set axis limits
+    plt.xlim(xlim)
+    
+    # Enhanced annotations with larger font sizes
+    if print_xlabel:
+        plt.xlabel(r'$T_{\mathrm{residual}} = \langle T^{\mathrm{sample}}_{\mathrm{sky}} \rangle - T_{\mathrm{sky}}^{\mathrm{true}}$ [K]', 
+                fontsize=fts)
+    if print_ylabel:
+        plt.ylabel('Histogram', fontsize=fts)
+
+    if title:
+        plt.title(title, fontsize=fts+4, pad=20)  # Increased from +2 to +4
+    
+    # plt.grid(True, alpha=0.3, linestyle='-', linewidth=0.5)
+
+    # Enhanced text annotation with larger font size
+    text_lines = [
+        f'{type_str}',
+        f'',
+        f'All pixels (n={len(residuals)}):',
+        f'   16th–84th pct: [{stats_all["p16"]:.3f}, {stats_all["p84"]:.3f}] K',
+        f'   Mean ± Std: {stats_all["mean"]:.3f} ± {stats_all["std"]:.3f} K',
+        f'',
+        f'Internal pixels (n={len(residuals_common)}):',
+        f'   16th–84th pct: [{stats_common["p16"]:.3f}, {stats_common["p84"]:.3f}] K',
+        f'   Mean ± Std: {stats_common["mean"]:.3f} ± {stats_common["std"]:.3f} K'
+    ]
+    
+    text_str = '\n'.join(text_lines)
+    
+    plt.text(0.01, 0.97, text_str,
+             transform=ax.transAxes, va='top', ha='left',
+             bbox=dict(facecolor='white', alpha=0.5, pad=8),  # Reduced opacity and padding, removed frame
+             fontsize=fts-4, fontfamily='sans-serif', color='#555555')  # Changed to sans-serif font and gray text color
+
+    # Enhanced legend with larger font size
+    handles, labels = ax.get_legend_handles_labels()
+    # Remove duplicate labels
+    by_label = dict(zip(labels, handles))
+    if legend:
+        plt.legend(by_label.values(), by_label.keys(), 
+                  loc='upper right', fontsize=fts-3,  # Changed from fts-3 to fts-4, but still larger
+                  frameon=False, # framealpha=0.9, edgecolor='gray'
+                  )
+
+    # Set tick parameters with larger font sizes
+    plt.tick_params(axis='both', which='major', labelsize=fts-2)  # Increased tick label size
+    plt.tick_params(axis='both', which='minor', labelsize=fts-4)
+
+    plt.tight_layout()
+
+    # Save plot if save_path is provided
+    if save_path is not None:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight', 
+                   facecolor='white', edgecolor='none')
+        print(f"Plot saved to: {save_path}")
+
+    plt.show()
+    
+    # Return statistics for further analysis
+    pass

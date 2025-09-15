@@ -3,10 +3,9 @@ import healpy as hp
 from astropy.coordinates import EarthLocation, AltAz, SkyCoord
 from astropy.time import Time, TimeDelta
 import astropy.units as u
-from utils import Leg_poly_proj, view_samples
+from utils import Leg_poly_proj
 from flicker_model import sim_noise, flicker_cov
 import mpiutil
-
 
 def sim_MeerKAT_scan(telescope_lat=-30.7130, 
                      telescope_lon=21.4430, 
@@ -84,7 +83,6 @@ def stacked_beam_map(theta_c, phi_c,
     
     return bool_map, sum_map
 
-
 def reduce_bool_maps_LOR(bool_maps):
     """
     Reduce a list of boolean maps using the "logical or" operation.
@@ -148,10 +146,6 @@ def generate_Tsky_proj(full_bool_map, theta_c, phi_c, FWHM=1.1):
         return beam_map
     Tsky_proj = np.array( mpiutil.local_parallel_func(func, np.arange(ntime)) )
     return Tsky_proj
-
-
-
-
 
 
 class TODSimulation:
@@ -642,3 +636,11 @@ class MultiTODSimulation:
         }
 
 
+
+
+def eq_coordinates():
+    # Get the timestream of beam centers (theta_c, phi_c) for each scan
+    _, eq_coords_setting = sim_MeerKAT_scan(elevation=41.5, az_s=-60.3, az_e=-42.3, start_time_utc="2019-04-23 20:41:56.397", return_eq_coords=True)
+
+    _, eq_coords_rising = sim_MeerKAT_scan(elevation=40.5, az_s=43.7, az_e=61.7, start_time_utc="2019-03-30 17:19:02.397", return_eq_coords=True)
+    return eq_coords_setting, eq_coords_rising

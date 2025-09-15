@@ -49,7 +49,7 @@ def hessian(func, params, epsilon=1e-5):
     return hessian_matrix
 
 
-def generate_jeffreys_prior_func(log_like_func):
+def generate_jeffreys_prior_func(log_like_func, Hess=hessian):
     """
     Compute the Jeffreys prior using the Hessian of the log-probability function.
 
@@ -62,7 +62,7 @@ def generate_jeffreys_prior_func(log_like_func):
     - The Jeffreys prior value.
     """
     def log_prior_func(params):
-        hess = - hessian(log_like_func, params)
+        hess = - Hess(log_like_func, params)
         sign, val = slogdet(hess)
         if sign <= 0 or np.isnan(val):
             return -np.inf
@@ -71,12 +71,12 @@ def generate_jeffreys_prior_func(log_like_func):
     return log_prior_func
 
 # Define an MCMC sampler
-def mcmc_sampler(log_like, p_guess, p_std=0.3, 
-                nsteps=100, 
-                n_samples=1,
-                prior_func=None,
-                num_Jeffrey=False,
-                return_sampler=False):
+def mcmc_sampler(log_like, p_guess, 
+                 p_std=0.3, 
+                 nsteps=1000, 
+                 prior_func=None,
+                 n_samples=1,
+                 return_sampler=False):
     '''
     This function samples the noise parameters using MCMC.
 
@@ -88,10 +88,7 @@ def mcmc_sampler(log_like, p_guess, p_std=0.3,
     ndim = len(p_guess)
 
     if prior_func is None:
-        if num_Jeffrey: # Numerical Jeffrey prior
-            prior_function = generate_jeffreys_prior_func(log_like)
-        else:
-            prior_function = lambda x: 0
+        prior_function = lambda x: 0
     else:
         prior_function = prior_func
 
@@ -106,7 +103,7 @@ def mcmc_sampler(log_like, p_guess, p_std=0.3,
     sampler = emcee.EnsembleSampler(nwalkers, ndim, log_prob)
 
 
-    n_rounds = 5
+    n_rounds = 10
     for i in range(n_rounds):
         logging.info(f'Running MCMC sampler for the {i+1}th time...')
         sampler.run_mcmc(p0, nsteps, progress=False)

@@ -171,6 +171,10 @@ def iterative_gls_mpi_list(local_d_list,
             local_UT_d += Ui.T @ di
             #local_Ninv_sqrt_list.append(cholesky(local_N_inv_list[i], upper=False))
                 
+        # Ensure NumPy float64, contiguous buffers for MPI
+        local_UT_U = np.ascontiguousarray(np.asarray(local_UT_U, dtype=np.float64))
+        local_UT_d = np.ascontiguousarray(np.asarray(local_UT_d, dtype=np.float64))
+
         # initialize receive buffer on the root process
         if rank0:
             UT_U = np.zeros((n_params, n_params), dtype=np.float64)
