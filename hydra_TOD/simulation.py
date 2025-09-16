@@ -48,15 +48,10 @@ def sim_MeerKAT_scan(telescope_lat=-30.7130,
         return t_list, theta_c, phi_c
 
 
-def sim_MeerKAT_scan_v2(telescope_lat=-30.7130, 
-                        telescope_lon=21.4430, 
-                        telescope_height=1054, 
-                        az_s=-60.3, 
+def sim_MeerKAT_scan_v2(az_s=-60.3, 
                         az_e=-42.3, 
                         dt=2.0
                         ):
-
-    location = EarthLocation(lat=telescope_lat * u.deg, lon=telescope_lon * u.deg, height=telescope_height * u.m)
 
     aux = np.linspace(az_s, az_e, 111)
     azimuths = np.concatenate((aux[1:-1][::-1], aux))
@@ -67,7 +62,6 @@ def sim_MeerKAT_scan_v2(telescope_lat=-30.7130,
     t_list = np.arange(ntime) * dt
 
     return t_list, azimuths
-
 
 
 def stacked_beam_map(theta_c, phi_c, 
@@ -109,21 +103,20 @@ def stacked_beam_map(theta_c, phi_c,
     return bool_map, sum_map
 
 
-
 from scipy.spatial.transform import Rotation as R
 
-def zyzy2zxz(alpha, beta, gamma, delta):
+def zyzy2zyz(alpha, beta, gamma, delta):
     # Create the combined rotation matrix
-    # Angules are in radians
+    # Input angles are in radians
     r = (
     R.from_euler("z", alpha) *
     R.from_euler("y", beta) *
     R.from_euler("z", gamma) *
     R.from_euler("y", delta)
     )
-    M = r.as_matrix()
-    psi, theta, phi = r.as_euler("zxz", degrees=False)
-    return psi, theta, phi
+    # M = r.as_matrix()
+    psi, theta, phi = r.as_euler("zyz", degrees=False)
+    return psi, theta, phi # in radians
 
 def rotate_beam_map(alm, ant_lat, ant_ele, ant_azi, LST, facing_north=True, nside=64, return_alm=False):
     # ant_lat, ant_ele, ant_azi, LST are in radians
@@ -135,8 +128,12 @@ def rotate_beam_map(alm, ant_lat, ant_ele, ant_azi, LST, facing_north=True, nsid
     delta = np.pi/2 - ant_ele
     if facing_north:
         delta = - delta
-    psi, theta, phi = zyzy2zxz(alpha, beta, gamma, delta) # in radians
-    alm_rot = hp.rotate_alm(alm, psi, theta, phi)
+    psi, theta, phi = zyzy2zyz(alpha, beta, gamma, delta) # in radians
+    
+    # Make a copy of alm since hp.rotate_alm operates in-place
+    alm_rot = alm.copy()
+    hp.rotate_alm(alm_rot, psi, theta, phi)
+    
     if return_alm:
         return alm_rot
     beam_pointed = hp.alm2map(alm_rot, nside)
@@ -150,18 +147,21 @@ def integrated_beam_map_single_TOD(
         LST_list, 
         lmax=200, 
         facing_north=True, 
-        nside=64
+        nside=64,
+        return_alm=False
     ):
-    # ant_lat, ant_ele, ant_azi, LST are in radians
+    # ant_lat, ant_ele, ant_azi, LST are all in radians
     # facing_north: if True, the antenna is facing north, otherwise south
     # return_alm: if True, return the rotated alm coefficients, otherwise return the rotated beam
 
     alm = hp.map2alm(beam, lmax=lmax)
     # initialize the integrated beam map
-    NPIX=hp.nside2npix(nside)
-    stacked_beam = np.zeros(NPIX)
+    stacked_beam_lm = np.zeros_like(alm, dtype=alm.dtype)
     for ant_azi, LST in zip(ant_azi_list, LST_list):
-        stacked_beam += rotate_beam_map(alm, ant_lat, ant_ele, ant_azi, LST, facing_north=facing_north, nside=nside, return_alm=False)
+        stacked_beam_lm += rotate_beam_map(alm, ant_lat, ant_ele, ant_azi, LST, facing_north=facing_north, nside=nside, return_alm=True)
+    if return_alm:
+        return stacked_beam_lm
+    stacked_beam = hp.alm2map(stacked_beam_lm, nside)
     return stacked_beam
 
 # Gather stacked beam maps from multiple TODs using mpi
