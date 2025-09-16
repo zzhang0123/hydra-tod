@@ -6,6 +6,8 @@ import astropy.units as u
 from utils import Leg_poly_proj
 from flicker_model import sim_noise, flicker_cov
 import mpiutil
+from mpi4py import MPI
+_comm = MPI.COMM_WORLD
 
 def sim_MeerKAT_scan(telescope_lat=-30.7130, 
                      telescope_lon=21.4430, 
@@ -45,6 +47,29 @@ def sim_MeerKAT_scan(telescope_lat=-30.7130,
         
         return t_list, theta_c, phi_c
 
+
+def sim_MeerKAT_scan_v2(telescope_lat=-30.7130, 
+                        telescope_lon=21.4430, 
+                        telescope_height=1054, 
+                        az_s=-60.3, 
+                        az_e=-42.3, 
+                        dt=2.0
+                        ):
+
+    location = EarthLocation(lat=telescope_lat * u.deg, lon=telescope_lon * u.deg, height=telescope_height * u.m)
+
+    aux = np.linspace(az_s, az_e, 111)
+    azimuths = np.concatenate((aux[1:-1][::-1], aux))
+    azimuths = np.tile(azimuths, 13)
+
+    # Length of TOD
+    ntime = len(azimuths)
+    t_list = np.arange(ntime) * dt
+
+    return t_list, azimuths
+
+
+
 def stacked_beam_map(theta_c, phi_c, 
                      FWHM=1.1, 
                      NSIDE=64, 
@@ -82,6 +107,123 @@ def stacked_beam_map(theta_c, phi_c,
         bool_map = np.logical_or(bool_map, beam_map > threshold)
     
     return bool_map, sum_map
+
+
+
+from scipy.spatial.transform import Rotation as R
+
+def zyzy2zxz(alpha, beta, gamma, delta):
+    # Create the combined rotation matrix
+    # Angules are in radians
+    r = (
+    R.from_euler("z", alpha) *
+    R.from_euler("y", beta) *
+    R.from_euler("z", gamma) *
+    R.from_euler("y", delta)
+    )
+    M = r.as_matrix()
+    psi, theta, phi = r.as_euler("zxz", degrees=False)
+    return psi, theta, phi
+
+def rotate_beam_map(alm, ant_lat, ant_ele, ant_azi, LST, facing_north=True, nside=64, return_alm=False):
+    # ant_lat, ant_ele, ant_azi, LST are in radians
+    # facing_north: if True, the antenna is facing north, otherwise south
+    # return_alm: if True, return the rotated alm coefficients, otherwise return the rotated beam
+    alpha = LST
+    beta = np.pi/2 - ant_lat
+    gamma = - ant_azi
+    delta = np.pi/2 - ant_ele
+    if facing_north:
+        delta = - delta
+    psi, theta, phi = zyzy2zxz(alpha, beta, gamma, delta) # in radians
+    alm_rot = hp.rotate_alm(alm, psi, theta, phi)
+    if return_alm:
+        return alm_rot
+    beam_pointed = hp.alm2map(alm_rot, nside)
+    return beam_pointed
+
+def integrated_beam_map_single_TOD(
+        beam, 
+        ant_lat, 
+        ant_ele,    # constant elevation for each TOD
+        ant_azi_list, 
+        LST_list, 
+        lmax=200, 
+        facing_north=True, 
+        nside=64
+    ):
+    # ant_lat, ant_ele, ant_azi, LST are in radians
+    # facing_north: if True, the antenna is facing north, otherwise south
+    # return_alm: if True, return the rotated alm coefficients, otherwise return the rotated beam
+
+    alm = hp.map2alm(beam, lmax=lmax)
+    # initialize the integrated beam map
+    NPIX=hp.nside2npix(nside)
+    stacked_beam = np.zeros(NPIX)
+    for ant_azi, LST in zip(ant_azi_list, LST_list):
+        stacked_beam += rotate_beam_map(alm, ant_lat, ant_ele, ant_azi, LST, facing_north=facing_north, nside=nside, return_alm=False)
+    return stacked_beam
+
+# Gather stacked beam maps from multiple TODs using mpi
+def integrated_beam_map_multi_TOD(
+        local_beams,
+        local_ant_lats,
+        local_ant_eles,
+        local_ant_azi_lists,
+        local_LST_lists,
+        facing_list,
+        lmax=200,
+        nside=64,
+        root=None,
+    ):
+    # local_beams: list of beam maps for each TOD
+    # local_ant_lats: list of antenna latitudes for each TOD
+    # local_ant_eles: list of antenna elevations for each TOD
+    # local_ant_azi_lists: list of antenna azimuths for each TOD
+    # local_LST_lists: list of LSTs for each TOD
+    # facing_list: list of facing directions for each TOD
+
+    # Initialize the integrated beam map
+    local_integrated_beam = np.zeros(hp.nside2npix(nside))
+
+    for beam, ant_lat, ant_ele, ant_azi_list, LST_list, facing in zip(local_beams, local_ant_lats, local_ant_eles, local_ant_azi_lists, local_LST_lists, facing_list):
+        local_integrated_beam += integrated_beam_map_single_TOD(beam, ant_lat, ant_ele, ant_azi_list, LST_list, lmax=lmax, facing_north=facing, nside=nside)
+
+    rsum = None
+    if root is None:
+        # Reduce all results onto all ranks
+        _comm.Allreduce(local_integrated_beam, rsum, op=MPI.SUM)
+    else:
+        # Reduce all results onto the specified rank
+        rsum = _comm.reduce(local_integrated_beam, op=MPI.SUM, root=root)
+
+    return rsum
+
+def cut_beam_sky(beam_sky_map, threshold=0.01):
+    bool_map = beam_sky_map > threshold
+    pixel_indices = np.where(bool_map)[0]
+    return bool_map, pixel_indices
+
+def generate_sky_operator(
+        alm,  # beam spherical harmonic coefficients
+        ant_lat, 
+        ant_ele,    # constant elevation for each TOD
+        ant_azi_list, 
+        LST_list, 
+        pix_inds,
+        facing_north=True, 
+        nside=64
+    ):
+    # ant_lat, ant_ele, ant_azi, LST are in radians
+    # facing_north: if True, the antenna is facing north, otherwise south
+    # return_alm: if True, return the rotated alm coefficients, otherwise return the rotated beam
+
+    ntime = len(LST_list)
+    npix = len(pix_inds)
+    proj = np.zeros((ntime, npix))
+    for ti, (ant_azi, LST) in enumerate(zip(ant_azi_list, LST_list)):
+        proj[ti] = rotate_beam_map(alm, ant_lat, ant_ele, ant_azi, LST, facing_north=facing_north, nside=nside, return_alm=False)[pix_inds]
+    return proj
 
 def reduce_bool_maps_LOR(bool_maps):
     """
