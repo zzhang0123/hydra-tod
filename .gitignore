@@ -39,6 +39,8 @@ pid.file
 
 test/outputs/
 test/figures/
+draft/
+archived/
 
 # IDE
 .vscode/
@@ -49,9 +51,6 @@ test/figures/
 # OS
 .DS_Store
 Thumbs.db
-
-# Archived
-archived/
 
 # Environment
 .env
