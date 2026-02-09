@@ -1,3 +1,6 @@
+# Claude Code
+CLAUDE.md
+
 # Python
 __pycache__/
 *.py[cod]
@@ -46,6 +49,9 @@ test/figures/
 # OS
 .DS_Store
 Thumbs.db
+
+# Archived
+archived/
 
 # Environment
 .env
