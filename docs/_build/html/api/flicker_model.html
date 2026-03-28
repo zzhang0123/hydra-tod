@@ -1,0 +1,790 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flicker Noise Model &mdash; hydra_tod 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Parameter Samplers" href="samplers.html" />
+    <link rel="prev" title="Gibbs Sampler" href="gibbs_sampler.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            hydra_tod
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#conda-environment">Conda Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/data_model.html">Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory/data_model.html#observation-model">Observation Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/data_model.html#system-temperature">System Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/data_model.html#gain-model">Gain Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/data_model.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory/flicker_noise.html">Flicker Noise Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory/flicker_noise.html#power-spectral-density">Power Spectral Density</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/flicker_noise.html#correlation-function">Correlation Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/flicker_noise.html#covariance-matrix">Covariance Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/flicker_noise.html#emulator">Emulator</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="simulation.html">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gibbs_sampler.html">Gibbs Sampler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Flicker Noise Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.flicker_cov_general"><code class="docutils literal notranslate"><span class="pre">flicker_cov_general()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="samplers.html">Parameter Samplers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="linear_algebra.html">Linear Algebra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html#module-hydra_tod.utils">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="diagnostics.html">MCMC Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="visualization.html">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../citation.html">Citation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../citation.html#plain-text">Plain text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../citation.html#bibtex">BibTeX</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">hydra_tod</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Flicker Noise Model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/flicker_model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-hydra_tod.flicker_model">
+<span id="flicker-noise-model"></span><h1>Flicker Noise Model<a class="headerlink" href="#module-hydra_tod.flicker_model" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.my_gamma_inc">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">my_gamma_inc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><span class="pre">complex</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_vals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsabs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsrel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">para_run</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><span class="pre">complex</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.complexfloating" title="(in NumPy v2.4)"><span class="pre">complexfloating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#my_gamma_inc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.my_gamma_inc" title="Link to this definition"></a></dt>
+<dd><p>Compute the upper incomplete gamma function via line-integral representation.</p>
+<p>Evaluates <span class="math notranslate nohighlight">\(\Gamma(z, iR)\)</span> by numerically integrating along the
+contour <span class="math notranslate nohighlight">\(s = iR + t\)</span> for <span class="math notranslate nohighlight">\(t \in [0, \infty)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\Gamma(z, iR) = \int_0^\infty e^{-(iR + t)} (iR + t)^{z-1} \, dt\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Complex (or real) order of the incomplete gamma function.</p></li>
+<li><p><strong>R_vals</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>array_like</em>) – Positive real shift(s) defining the imaginary starting point of the
+contour. Must be strictly positive.</p></li>
+<li><p><strong>epsabs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Absolute error tolerance for <code class="docutils literal notranslate"><span class="pre">scipy.integrate.quad</span></code>.
+Default is <code class="docutils literal notranslate"><span class="pre">1e-6</span></code>.</p></li>
+<li><p><strong>epsrel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Relative error tolerance for <code class="docutils literal notranslate"><span class="pre">scipy.integrate.quad</span></code>.
+Default is <code class="docutils literal notranslate"><span class="pre">1e-6</span></code>.</p></li>
+<li><p><strong>para_run</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> (default), evaluate entries in parallel using
+<code class="docutils literal notranslate"><span class="pre">mpiutil.local_parallel_func</span></code>. Otherwise, use <code class="docutils literal notranslate"><span class="pre">np.vectorize</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result with the same shape as <em>R_vals</em>. Scalar input yields a scalar
+output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)">complex</a> or NDArray[np.complexfloating]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This is a numerically robust alternative to <code class="docutils literal notranslate"><span class="pre">mpmath.gammainc</span></code> for
+moderate-precision requirements where vectorised evaluation is needed.</p>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.aux_int_v1">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">aux_int_v1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#aux_int_v1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.aux_int_v1" title="Link to this definition"></a></dt>
+<dd><p>Evaluate the auxiliary integral for the flicker correlation at a single lag.</p>
+<p>Computes:</p>
+<div class="math notranslate nohighlight">
+\[\operatorname{Re}\!\bigl[e^{-i\pi\mu/2}\,\Gamma(\mu, iu)\bigr]
+= \operatorname{Re}(\Gamma(\mu, iu))\cos\!\bigl(\tfrac{\pi}{2}\mu\bigr)
+  + \operatorname{Im}(\Gamma(\mu, iu))\sin\!\bigl(\tfrac{\pi}{2}\mu\bigr)\]</div>
+<p>Uses <code class="docutils literal notranslate"><span class="pre">mpmath.gammainc</span></code> for arbitrary-precision evaluation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Order parameter, typically <span class="math notranslate nohighlight">\(\mu = 1 - \alpha\)</span>.</p></li>
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Dimensionless lag argument <span class="math notranslate nohighlight">\(u = \omega_c \tau\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Real-valued result of the auxiliary integral.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.aux_int_v2">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">aux_int_v2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#aux_int_v2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.aux_int_v2" title="Link to this definition"></a></dt>
+<dd><p>Vectorised auxiliary integral for the flicker correlation function.</p>
+<p>Computes the same quantity as <a class="reference internal" href="#hydra_tod.flicker_model.aux_int_v1" title="hydra_tod.flicker_model.aux_int_v1"><code class="xref py py-func docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a> but for an array of lag
+arguments, using <a class="reference internal" href="#hydra_tod.flicker_model.my_gamma_inc" title="hydra_tod.flicker_model.my_gamma_inc"><code class="xref py py-func docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a> for parallel evaluation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Order parameter, typically <span class="math notranslate nohighlight">\(\mu = 1 - \alpha\)</span>.</p></li>
+<li><p><strong>u_list</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – Array of dimensionless lag arguments <span class="math notranslate nohighlight">\(u = \omega_c \tau\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Real-valued results with the same shape as <em>u_list</em>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NDArray[np.float64]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.aux_calculation">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">aux_calculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#aux_calculation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.aux_calculation" title="Link to this definition"></a></dt>
+<dd><p>Compute the auxiliary integral (single-lag, argument-order swapped).</p>
+<p>Identical to <a class="reference internal" href="#hydra_tod.flicker_model.aux_int_v1" title="hydra_tod.flicker_model.aux_int_v1"><code class="xref py py-func docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a> but with swapped argument order for
+compatibility with legacy call sites.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Dimensionless lag argument <span class="math notranslate nohighlight">\(u = \omega_c \tau\)</span>.</p></li>
+<li><p><strong>mu</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Order parameter, typically <span class="math notranslate nohighlight">\(\mu = 1 - \alpha\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Real-valued result of the auxiliary integral.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.flicker_corr">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">flicker_corr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">f0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#flicker_corr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.flicker_corr" title="Link to this definition"></a></dt>
+<dd><p>Compute the flicker-noise correlation at a single time lag.</p>
+<p>Evaluates the analytic covariance function of <span class="math notranslate nohighlight">\(1/f^\alpha\)</span> noise with
+a low-frequency cutoff:</p>
+<div class="math notranslate nohighlight">
+\[C(\tau) = \frac{(\omega_0 \tau)^\alpha}{\pi \tau}
+          \operatorname{Re}\!\bigl[e^{-i\pi\mu/2}\,
+          \Gamma(\mu, i\omega_c\tau)\bigr],
+\quad \mu = 1 - \alpha\]</div>
+<p>At zero lag (<span class="math notranslate nohighlight">\(\tau = 0\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[C(0) = \frac{\omega_c}{\pi}
+       \left(\frac{\omega_0}{\omega_c}\right)^\alpha
+       \frac{1}{\alpha - 1} + \sigma_w^2\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Time lag in seconds.</p></li>
+<li><p><strong>f0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Knee angular frequency <span class="math notranslate nohighlight">\(\omega_0 = 2\pi f_{\mathrm{knee}}\)</span>
+(rad/s).</p></li>
+<li><p><strong>fc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cutoff angular frequency <span class="math notranslate nohighlight">\(\omega_c = 2\pi / (N \Delta t)\)</span>
+(rad/s).</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Spectral index of the <span class="math notranslate nohighlight">\(1/f^\alpha\)</span> noise (<span class="math notranslate nohighlight">\(\alpha &gt; 1\)</span>).</p></li>
+<li><p><strong>var_w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – White-noise variance added at zero lag. Default is <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Correlation value <span class="math notranslate nohighlight">\(C(\tau)\)</span>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The angular frequency convention (<span class="math notranslate nohighlight">\(\omega = 2\pi f\)</span>) is used
+throughout, which differs from the FFT frequency convention by a factor
+of <span class="math notranslate nohighlight">\(2\pi\)</span>.</p>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.flicker_corr_vec">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">flicker_corr_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">taus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#flicker_corr_vec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.flicker_corr_vec" title="Link to this definition"></a></dt>
+<dd><p>Vectorised flicker-noise correlation for an array of non-zero lags.</p>
+<p>Computes the same quantity as <a class="reference internal" href="#hydra_tod.flicker_model.flicker_corr" title="hydra_tod.flicker_model.flicker_corr"><code class="xref py py-func docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a> but for multiple lags
+simultaneously, using the vectorised auxiliary integral <a class="reference internal" href="#hydra_tod.flicker_model.aux_int_v2" title="hydra_tod.flicker_model.aux_int_v2"><code class="xref py py-func docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>taus</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – Array of <strong>strictly positive</strong> time lags (seconds).</p></li>
+<li><p><strong>f0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Knee angular frequency <span class="math notranslate nohighlight">\(\omega_0\)</span> (rad/s).</p></li>
+<li><p><strong>fc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cutoff angular frequency <span class="math notranslate nohighlight">\(\omega_c\)</span> (rad/s).</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Spectral index (<span class="math notranslate nohighlight">\(\alpha &gt; 1\)</span>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Correlation values for each lag in <em>taus</em>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NDArray[np.float64]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The angular frequency convention (<span class="math notranslate nohighlight">\(\omega = 2\pi f\)</span>) is used.
+All elements of <em>taus</em> must be non-zero; use <a class="reference internal" href="#hydra_tod.flicker_model.flicker_cov_vec" title="hydra_tod.flicker_model.flicker_cov_vec"><code class="xref py py-func docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a> to
+include the zero-lag term.</p>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.flicker_cov_vec">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">flicker_cov_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_n_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.5e-06</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#flicker_cov_vec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.flicker_cov_vec" title="Link to this definition"></a></dt>
+<dd><p>Compute the first row of the flicker covariance matrix (vectorised).</p>
+<p>Evaluates the correlation function at all lags in <em>tau_list</em>, handling
+the zero-lag term separately (analytic expression plus white-noise
+variance).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tau_list</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – Array of time lags starting with <code class="docutils literal notranslate"><span class="pre">0</span></code>. Typically produced by
+<a class="reference internal" href="utilities.html#hydra_tod.utils.lag_list" title="hydra_tod.utils.lag_list"><code class="xref py py-func docutils literal notranslate"><span class="pre">hydra_tod.utils.lag_list()</span></code></a>.</p></li>
+<li><p><strong>f0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Knee angular frequency <span class="math notranslate nohighlight">\(\omega_0\)</span> (rad/s).</p></li>
+<li><p><strong>fc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cutoff angular frequency <span class="math notranslate nohighlight">\(\omega_c\)</span> (rad/s).</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Spectral index (<span class="math notranslate nohighlight">\(\alpha &gt; 1\)</span>).</p></li>
+<li><p><strong>white_n_variance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – White-noise variance <span class="math notranslate nohighlight">\(\sigma_w^2\)</span> added at zero lag.
+Default is <code class="docutils literal notranslate"><span class="pre">2.5e-6</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Correlation vector (first row of the Toeplitz covariance matrix).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NDArray[np.float64]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AssertionError" title="(in Python v3.14)"><strong>AssertionError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">tau_list[0]</span> <span class="pre">!=</span> <span class="pre">0</span></code>.</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.flicker_cov">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">flicker_cov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_n_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_row_0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#flicker_cov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.flicker_cov" title="Link to this definition"></a></dt>
+<dd><p>Construct the Toeplitz covariance matrix of flicker noise.</p>
+<p>Computes the correlation at each unique lag from <em>time_list</em> and
+assembles the full symmetric Toeplitz matrix, or optionally returns
+only the first row.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_list</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – Observation time stamps (seconds). The lag list is derived via
+<a class="reference internal" href="utilities.html#hydra_tod.utils.lag_list" title="hydra_tod.utils.lag_list"><code class="xref py py-func docutils literal notranslate"><span class="pre">hydra_tod.utils.lag_list()</span></code></a>.</p></li>
+<li><p><strong>f0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Knee angular frequency <span class="math notranslate nohighlight">\(\omega_0\)</span> (rad/s).</p></li>
+<li><p><strong>fc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cutoff angular frequency <span class="math notranslate nohighlight">\(\omega_c\)</span> (rad/s).</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Spectral index (<span class="math notranslate nohighlight">\(\alpha &gt; 1\)</span>).</p></li>
+<li><p><strong>white_n_variance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – White-noise variance <span class="math notranslate nohighlight">\(\sigma_w^2\)</span>. Default is <code class="docutils literal notranslate"><span class="pre">5e-6</span></code>.</p></li>
+<li><p><strong>only_row_0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, return only the first row of the Toeplitz matrix.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If <em>only_row_0</em> is <code class="docutils literal notranslate"><span class="pre">False</span></code>, the full <span class="math notranslate nohighlight">\(N \times N\)</span> Toeplitz
+covariance matrix. Otherwise, a 1-D array of length <span class="math notranslate nohighlight">\(N\)</span>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NDArray[np.float64]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The matrix is constructed via <code class="docutils literal notranslate"><span class="pre">scipy.linalg.toeplitz</span></code> from the
+correlation vector. For large <span class="math notranslate nohighlight">\(N\)</span>, consider using
+<a class="reference internal" href="#hydra_tod.flicker_model.FlickerCorrEmulator" title="hydra_tod.flicker_model.FlickerCorrEmulator"><code class="xref py py-class docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a> for faster evaluation.</p>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.flicker_corr_full">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">flicker_corr_full</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">f0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#flicker_corr_full"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.flicker_corr_full" title="Link to this definition"></a></dt>
+<dd><p>Compute the flicker-noise correlation including the DC mode contribution.</p>
+<p>Extends <a class="reference internal" href="#hydra_tod.flicker_model.flicker_corr" title="hydra_tod.flicker_model.flicker_corr"><code class="xref py py-func docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a> with an additional sinusoidal term that
+accounts for non-vanishing power at the DC mode and its adjacent
+frequencies:</p>
+<div class="math notranslate nohighlight">
+\[C_{\mathrm{full}}(\tau) = \frac{1}{\pi\tau}\Bigl[
+    (\omega_0\tau)^\alpha\,\operatorname{Re}[e^{-i\pi\mu/2}\Gamma(\mu,i\omega_c\tau)]
+    + \bigl(\omega_0/\omega_c\bigr)^\alpha\sin(\omega_c\tau)
+\Bigr]\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Time lag in seconds.</p></li>
+<li><p><strong>f0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Knee angular frequency <span class="math notranslate nohighlight">\(\omega_0\)</span> (rad/s).</p></li>
+<li><p><strong>fc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cutoff angular frequency <span class="math notranslate nohighlight">\(\omega_c\)</span> (rad/s).</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Spectral index (<span class="math notranslate nohighlight">\(\alpha &gt; 1\)</span>).</p></li>
+<li><p><strong>var_w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – White-noise variance added at zero lag. Default is <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Correlation value including the DC contribution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.sim_noise">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">sim_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_n_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5e-06</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#sim_noise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.sim_noise" title="Link to this definition"></a></dt>
+<dd><p>Generate realisations of correlated flicker noise.</p>
+<p>Constructs the full Toeplitz covariance matrix from the analytic
+correlation function and draws samples from the corresponding
+multivariate normal distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Knee angular frequency <span class="math notranslate nohighlight">\(\omega_0\)</span> (rad/s).</p></li>
+<li><p><strong>fc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cutoff angular frequency <span class="math notranslate nohighlight">\(\omega_c\)</span> (rad/s).</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Spectral index (<span class="math notranslate nohighlight">\(\alpha &gt; 1\)</span>).</p></li>
+<li><p><strong>time_list</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – Observation time stamps (seconds).</p></li>
+<li><p><strong>n_samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of independent noise realisations. Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p><strong>white_n_variance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – White-noise variance <span class="math notranslate nohighlight">\(\sigma_w^2\)</span>. Default is <code class="docutils literal notranslate"><span class="pre">5e-6</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If <code class="docutils literal notranslate"><span class="pre">n_samples</span> <span class="pre">==</span> <span class="pre">1</span></code>, a 1-D array of length <code class="docutils literal notranslate"><span class="pre">len(time_list)</span></code>.
+Otherwise, a 2-D array of shape <code class="docutils literal notranslate"><span class="pre">(n_samples,</span> <span class="pre">len(time_list))</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NDArray[np.float64]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function builds the dense covariance matrix and is therefore
+<span class="math notranslate nohighlight">\(O(N^2)\)</span> in memory and <span class="math notranslate nohighlight">\(O(N^3)\)</span> in compute due to the
+Cholesky decomposition inside <code class="docutils literal notranslate"><span class="pre">np.random.multivariate_normal</span></code>.</p>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.flicker_cov_general">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">flicker_cov_general</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_n_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5e-06</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#flicker_cov_general"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.flicker_cov_general" title="Link to this definition"></a></dt>
+<dd><p>Construct the full covariance matrix for arbitrary (non-consecutive) time stamps.</p>
+<p>Unlike <a class="reference internal" href="#hydra_tod.flicker_model.flicker_cov" title="hydra_tod.flicker_model.flicker_cov"><code class="xref py py-func docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a>, which assumes evenly-spaced times and builds
+a Toeplitz matrix from the first-row correlation vector, this function
+computes all pairwise time differences and evaluates the correlation
+function at each unique lag.  The result is a general symmetric positive-
+definite matrix suitable for flagged / non-contiguous time samples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_list</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – Observation time stamps (seconds), not necessarily evenly spaced.</p></li>
+<li><p><strong>f0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Knee angular frequency <span class="math notranslate nohighlight">\(\omega_0\)</span> (rad/s).</p></li>
+<li><p><strong>fc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cutoff angular frequency <span class="math notranslate nohighlight">\(\omega_c\)</span> (rad/s).</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Spectral index (<span class="math notranslate nohighlight">\(\alpha &gt; 1\)</span>).</p></li>
+<li><p><strong>white_n_variance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – White-noise variance <span class="math notranslate nohighlight">\(\sigma_w^2\)</span> added to the diagonal.
+Default is <code class="docutils literal notranslate"><span class="pre">5e-6</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Full <span class="math notranslate nohighlight">\(N \times N\)</span> covariance matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NDArray[np.float64]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>For consecutive (evenly-spaced) time stamps, prefer <a class="reference internal" href="#hydra_tod.flicker_model.flicker_cov" title="hydra_tod.flicker_model.flicker_cov"><code class="xref py py-func docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a>
+which exploits the Toeplitz structure for faster evaluation.</p>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.FNoise_traditional">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">FNoise_traditional</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dnu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">200000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fknee</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#FNoise_traditional"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.FNoise_traditional" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Traditional <span class="math notranslate nohighlight">\(1/f^\alpha\)</span> noise generator using FFT filtering.</p>
+<p>Generates time-domain noise realisations by shaping white noise in the
+Fourier domain with a <span class="math notranslate nohighlight">\(1/f^\alpha\)</span> power spectral density (PSD).
+The white-noise variance is set by the radiometer equation:</p>
+<div class="math notranslate nohighlight">
+\[\sigma^2 = \frac{1}{\Delta t \, \Delta\nu}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta t\)</span> is the integration time and <span class="math notranslate nohighlight">\(\Delta\nu\)</span>
+is the frequency channel width.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Spectral index of the <span class="math notranslate nohighlight">\(1/f^\alpha\)</span> noise.</p></li>
+<li><p><strong>dtime</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling / integration time per data point (seconds). Default is <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+<li><p><strong>dnu</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Frequency channel width (Hz). Default is <code class="docutils literal notranslate"><span class="pre">2e5</span></code>.</p></li>
+<li><p><strong>fknee</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Knee angular frequency <span class="math notranslate nohighlight">\(\omega_{\mathrm{knee}} = 2\pi f_{\mathrm{knee}}\)</span>
+(rad/s). Default is <code class="docutils literal notranslate"><span class="pre">0.001</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.FNoise_traditional.sigma_2">
+<span class="sig-name descname"><span class="pre">sigma_2</span></span><a class="headerlink" href="#hydra_tod.flicker_model.FNoise_traditional.sigma_2" title="Link to this definition"></a></dt>
+<dd><p>White-noise variance <span class="math notranslate nohighlight">\(1/(\Delta t \, \Delta\nu)\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.FNoise_traditional.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ntime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#FNoise_traditional.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.FNoise_traditional.generate" title="Link to this definition"></a></dt>
+<dd><p>Generate a single realisation of <span class="math notranslate nohighlight">\(1/f^\alpha\)</span> noise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ntime</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of time samples.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Time-domain noise array of length <em>ntime</em>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NDArray[np.float64]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The procedure is:</p>
+<ol class="arabic simple">
+<li><p>Compute the FFT frequency axis and convert to angular frequency.</p></li>
+<li><p>Build the PSD filter <span class="math notranslate nohighlight">\(\sqrt{(\omega_{\mathrm{knee}}/|\omega|)^\alpha}\)</span>.</p></li>
+<li><p>Generate white noise, FFT, multiply by the filter, and IFFT.</p></li>
+</ol>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.FlickerCorrEmulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">FlickerCorrEmulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logfc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wnoise_var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.5e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corr_training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corr_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#FlickerCorrEmulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.FlickerCorrEmulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Polynomial emulator for the flicker-noise correlation function.</p>
+<p>Trains a <code class="xref py py-class docutils literal notranslate"><span class="pre">MomentEmu.PolyEmu</span></code> polynomial emulator to approximate
+<a class="reference internal" href="#hydra_tod.flicker_model.flicker_cov_vec" title="hydra_tod.flicker_model.flicker_cov_vec"><code class="xref py py-func docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a> as a function of the spectral index
+<span class="math notranslate nohighlight">\(\alpha\)</span>, enabling fast evaluation without repeated numerical
+integration.</p>
+<p>The emulator is split into two parts:</p>
+<ul class="simple">
+<li><p><strong>Auto-correlation</strong> (small lags, indices <code class="docutils literal notranslate"><span class="pre">0:5</span></code>): emulates
+<span class="math notranslate nohighlight">\(\ln C(\tau)\)</span> to preserve positivity.</p></li>
+<li><p><strong>Cross-correlation</strong> (remaining lags): emulates <span class="math notranslate nohighlight">\(C(\tau)\)</span>
+directly.</p></li>
+</ul>
+<p>Scaling with <span class="math notranslate nohighlight">\(\omega_0\)</span> is handled analytically:</p>
+<div class="math notranslate nohighlight">
+\[C(\tau;\,\omega_0,\alpha)
+= 10^{(\log_{10}\omega_0 - \log_{10}\omega_0^{\mathrm{ref}})\,\alpha}
+  \; C(\tau;\,\omega_0^{\mathrm{ref}},\alpha)\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logfc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Log10 of the cutoff angular frequency <span class="math notranslate nohighlight">\(\log_{10}\omega_c\)</span>.</p></li>
+<li><p><strong>tau_list</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – Array of time lags (seconds), starting with zero.</p></li>
+<li><p><strong>wnoise_var</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – White-noise variance added at zero lag. Default is <code class="docutils literal notranslate"><span class="pre">2.5e-6</span></code>.</p></li>
+<li><p><strong>alpha_training</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – Training values of <span class="math notranslate nohighlight">\(\alpha\)</span>. Default generates 3000 points
+linearly spaced in <code class="docutils literal notranslate"><span class="pre">[1.1,</span> <span class="pre">4]</span></code>.</p></li>
+<li><p><strong>corr_training</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – Pre-computed training correlation vectors. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, computed
+from <em>alpha_training</em> via <a class="reference internal" href="#hydra_tod.flicker_model.flicker_cov_vec" title="hydra_tod.flicker_model.flicker_cov_vec"><code class="xref py py-func docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a>.</p></li>
+<li><p><strong>alpha_test</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – Test values of <span class="math notranslate nohighlight">\(\alpha\)</span>. Default generates 500 uniform
+random points in <code class="docutils literal notranslate"><span class="pre">[1.1,</span> <span class="pre">4]</span></code>.</p></li>
+<li><p><strong>corr_test</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – Pre-computed test correlation vectors.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.FlickerCorrEmulator.ref_logf0">
+<span class="sig-name descname"><span class="pre">ref_logf0</span></span><a class="headerlink" href="#hydra_tod.flicker_model.FlickerCorrEmulator.ref_logf0" title="Link to this definition"></a></dt>
+<dd><p>Reference <span class="math notranslate nohighlight">\(\log_{10}\omega_0\)</span> used for training (<code class="docutils literal notranslate"><span class="pre">-4.0</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.FlickerCorrEmulator.lag_emulator">
+<span class="sig-name descname"><span class="pre">lag_emulator</span></span><a class="headerlink" href="#hydra_tod.flicker_model.FlickerCorrEmulator.lag_emulator" title="Link to this definition"></a></dt>
+<dd><p>Emulator for lags with index &gt;= 5.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PolyEmu</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.FlickerCorrEmulator.auto_emulator">
+<span class="sig-name descname"><span class="pre">auto_emulator</span></span><a class="headerlink" href="#hydra_tod.flicker_model.FlickerCorrEmulator.auto_emulator" title="Link to this definition"></a></dt>
+<dd><p>Emulator for lags with index &lt; 5 (log-space).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PolyEmu</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.FlickerCorrEmulator.create_jax">
+<span class="sig-name descname"><span class="pre">create_jax</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#FlickerCorrEmulator.create_jax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.FlickerCorrEmulator.create_jax" title="Link to this definition"></a></dt>
+<dd><p>Create a JAX-autodifferentiable version of the emulator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A JAX-compatible function with signature
+<code class="docutils literal notranslate"><span class="pre">(logf0,</span> <span class="pre">alpha,</span> <span class="pre">indices=None)</span> <span class="pre">-&gt;</span> <span class="pre">jnp.ndarray</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Callable</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Requires JAX and <code class="docutils literal notranslate"><span class="pre">MomentEmu.jax_momentemu</span></code>. The returned function
+is suitable for use with <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code> and <code class="docutils literal notranslate"><span class="pre">jax.grad</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.LogDetEmulator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hydra_tod.flicker_model.</span></span><span class="sig-name descname"><span class="pre">LogDetEmulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_det_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#LogDetEmulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.LogDetEmulator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Polynomial emulator for the log-determinant of the flicker covariance.</p>
+<p>Trains a <code class="xref py py-class docutils literal notranslate"><span class="pre">MomentEmu.PolyEmu</span></code> emulator to approximate
+<span class="math notranslate nohighlight">\(\ln\det\mathbf{C}(\log_{10}\omega_0, \alpha)\)</span>, enabling fast
+evaluation of the Gaussian log-likelihood normalisation term during
+MCMC sampling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params_list</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – Training parameter array of shape <code class="docutils literal notranslate"><span class="pre">(n_train,</span> <span class="pre">2)</span></code> with columns
+<code class="docutils literal notranslate"><span class="pre">[logf0,</span> <span class="pre">alpha]</span></code>.</p></li>
+<li><p><strong>log_det_list</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – Corresponding log-determinant values, shape <code class="docutils literal notranslate"><span class="pre">(n_train,</span> <span class="pre">1)</span></code>.</p></li>
+<li><p><strong>X_test</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – Test parameter array, shape <code class="docutils literal notranslate"><span class="pre">(n_test,</span> <span class="pre">2)</span></code>.</p></li>
+<li><p><strong>Y_test</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – Test log-determinant values, shape <code class="docutils literal notranslate"><span class="pre">(n_test,</span> <span class="pre">1)</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hydra_tod.flicker_model.LogDetEmulator.create_jax">
+<span class="sig-name descname"><span class="pre">create_jax</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a></span></span><a class="reference internal" href="../_modules/hydra_tod/flicker_model.html#LogDetEmulator.create_jax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.flicker_model.LogDetEmulator.create_jax" title="Link to this definition"></a></dt>
+<dd><p>Create a JAX-autodifferentiable version of the log-det emulator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A JAX-compatible function with signature
+<code class="docutils literal notranslate"><span class="pre">(logf0,</span> <span class="pre">alpha)</span> <span class="pre">-&gt;</span> <span class="pre">jnp.ndarray</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gibbs_sampler.html" class="btn btn-neutral float-left" title="Gibbs Sampler" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="samplers.html" class="btn btn-neutral float-right" title="Parameter Samplers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025-2026, Zheng Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

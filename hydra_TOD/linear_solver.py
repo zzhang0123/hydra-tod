@@ -1,84 +1,63 @@
+from __future__ import annotations
+
 # This is exactly the linear_solver in Hydra.
 try:
-    from mpi4py.MPI import SUM as MPI_SUM 
+    from mpi4py.MPI import SUM as MPI_SUM
     from mpi4py.MPI import LAND as MPI_LAND
 except:
     pass
 
+from typing import TYPE_CHECKING, Callable
+
 import numpy as np
+from numpy.typing import NDArray
+
+if TYPE_CHECKING:
+    from mpi4py import MPI
 
 
-def matvec_mpi(comm_row, mat_block, vec_block):
+def matvec_mpi(
+    comm_row: MPI.Intracomm,
+    mat_block: NDArray[np.floating],
+    vec_block: NDArray[np.floating],
+) -> NDArray[np.floating]:
     """
-    Do matrix-vector product for a row of a block matrix.
+    Perform a distributed matrix-vector product for one row of a block matrix.
 
     Each block in the matrix row is multiplied by the corresponding row block
     of the vector. The result on each worker is then summed together to give
     the result for the corresponding row of the result vector.
 
-    All workers in the row will posses the result for the same row of the
+    All workers in the row will possess the result for the same row of the
     result vector.
 
-    For example, for the first row of this (block) linear system:
-    ( A B C )     ( x )     ( r0 )
-    ( D E F )  .  ( y )  =  ( r1 )
-    ( G H I )     ( z )     ( r2 )
+    For example, for the first row of this (block) linear system::
+
+        ( A B C )     ( x )     ( r0 )
+        ( D E F )  .  ( y )  =  ( r1 )
+        ( G H I )     ( z )     ( r2 )
 
     workers 0, 1, and 2 will compute Ax, By, and Cz respectively. They will
-    then collectively sum over their results to obtain `r0 = Ax + By + Cz`. The
-    three workers will all possess copies of `r0`.
+    then collectively sum over their results to obtain ``r0 = Ax + By + Cz``.
+    The three workers will all possess copies of ``r0``.
 
-    Parameters:
-        comm_row (MPI.Intracomm):
-            MPI group communicator for a row of the block matrix.
-        mat_block (array_like):
-            Block of the matrix belonging to this worker.
-        vec_block (array_like):
-            Block of the vector belonging to this worker.
+    Parameters
+    ----------
+    comm_row : MPI.Intracomm
+        MPI group communicator for a row of the block matrix.
+    mat_block : NDArray[np.floating]
+        Block of the matrix belonging to this worker, shape ``(m, n)``.
+    vec_block : NDArray[np.floating]
+        Block of the vector belonging to this worker, shape ``(n,)``.
 
-    Returns:
-        res_block (array_like):
-            Block of the result vector corresponding to this row.
-    """
-    # Do matrix-vector product for the available blocks
-    y = mat_block @ vec_block
+    Returns
+    -------
+    res_block : NDArray[np.floating]
+        Block of the result vector corresponding to this row, shape ``(m,)``.
 
-    # Do reduce to all members of this column group
-    ytot = np.zeros_like(y)
-    comm_row.Allreduce(y, ytot, op=MPI_SUM)
-    return ytot
-
-def matvec_mpi_v2(comm_row, mat_block, vec_block):
-    """
-    Do matrix-vector product for a row of a block matrix.
-
-    Each block in the matrix row is multiplied by the corresponding row block
-    of the vector. The result on each worker is then summed together to give
-    the result for the corresponding row of the result vector.
-
-    All workers in the row will posses the result for the same row of the
-    result vector.
-
-    For example, for the first row of this (block) linear system:
-    ( A B C )     ( x )     ( r0 )
-    ( D E F )  .  ( y )  =  ( r1 )
-    ( G H I )     ( z )     ( r2 )
-
-    workers 0, 1, and 2 will compute Ax, By, and Cz respectively. They will
-    then collectively sum over their results to obtain `r0 = Ax + By + Cz`. The
-    three workers will all possess copies of `r0`.
-
-    Parameters:
-        comm_row (MPI.Intracomm):
-            MPI group communicator for a row of the block matrix.
-        mat_block (array_like):
-            Block of the matrix belonging to this worker.
-        vec_block (array_like):
-            Block of the vector belonging to this worker.
-
-    Returns:
-        res_block (array_like):
-            Block of the result vector corresponding to this row.
+    References
+    ----------
+    Zhang et al. (2026), RASTI, rzag024.
     """
     # Do matrix-vector product for the available blocks
     y = mat_block @ vec_block
@@ -89,46 +68,61 @@ def matvec_mpi_v2(comm_row, mat_block, vec_block):
     return ytot
 
 
-def setup_mpi_blocks(comm, matrix_shape, split=1):
+# Backward-compatible alias
+matvec_mpi_v2 = matvec_mpi
+
+
+def setup_mpi_blocks(
+    comm: MPI.Comm,
+    matrix_shape: tuple[int, int],
+    split: int = 1,
+) -> tuple[
+    tuple[MPI.Intracomm, ...] | None,
+    dict[int, tuple[int, int]],
+    tuple[int, int] | dict,
+]:
     """
-    Set up a scheme for dividing the linear system into blocks. This function
-    determines the number and size of the blocks, creates a map between MPI
-    workers and blocks, and sets up some MPI communicator groups that are
-    needed by the CG solver to communicate intermediate results.
+    Set up a scheme for dividing a linear system into MPI blocks.
+
+    This function determines the number and size of the blocks, creates a map
+    between MPI workers and blocks, and sets up MPI communicator groups needed
+    by the CG solver to communicate intermediate results.
 
     The linear system matrix operator is assumed to be square, and the blocks
     must also be square. The blocks will be zero-padded at the edges if the
     operator cannot be evenly divided into the blocks.
 
-    Parameters:
-        comm (MPI.Communicator):
-            MPI communicator object for all active workers.
-        matrix_shape (tuple of int):
-            The shape of the linear operator matrix that is to be divided into
-            blocks.
-        split (int):
-            How many rows and columns to split the matrix into. For instance,
-            `split = 2` will split the matrix into 2 rows and 2 columns, for a
-            total of 4 blocks.
+    Parameters
+    ----------
+    comm : MPI.Comm
+        MPI communicator object for all active workers.
+    matrix_shape : tuple of int
+        The shape ``(N, N)`` of the linear operator matrix that is to be
+        divided into blocks.
+    split : int, optional
+        How many rows and columns to split the matrix into. For instance,
+        ``split=2`` will split the matrix into 2 rows and 2 columns, for a
+        total of 4 blocks. Default is 1.
 
-    Returns:
-        comm_groups (tuple of MPI.Intracomm):
-            Group communicators for the blocks (active, row, col, diag).
+    Returns
+    -------
+    comm_groups : tuple of MPI.Intracomm or None
+        Group communicators ``(active, row, col, diag)``.  These correspond to
+        the MPI workers that are active, and the ones for each row, each
+        column, and along the diagonal of the block structure, respectively.
+        Each worker returns its own set of communicators; where it is not a
+        member of a relevant group, ``None`` is returned instead.  Returns
+        ``None`` entirely for inactive workers.
+    block_map : dict
+        Dictionary mapping worker ID to ``(row_id, col_id)`` of the block it
+        manages.
+    block_shape : tuple of int
+        Shape of the square blocks ``(block_rows, block_cols)`` that the full
+        matrix and RHS vector should be split into.
 
-            These correspond to the MPI workers that are active, and the ones
-            for each row, each column, and along the diagonal of the block
-            structure, respectively.
-
-            Each worker will return its own set of communicators (e.g. for the
-            row or column it belongs to). Where it is not a member of a
-            relevant group, `None` will be returned instead.
-        block_map (dict):
-            Dictionary of tuples, one for each worker in the `active`
-            communicator group, with the row and column ID of the block that it
-            is managing.
-        block_shape (tuple of int):
-            Shape of the square blocks that the full matrix operator (and RHS
-            vector) should be split up into. These will be square.
+    References
+    ----------
+    Zhang et al. (2026), RASTI, rzag024.
     """
     assert len(matrix_shape) == 2, "'matrix_shape' must be a tuple with 2 entries"
     assert (
@@ -147,7 +141,7 @@ def setup_mpi_blocks(comm, matrix_shape, split=1):
         return None, {}, {}
 
     # Construct map of block row/column IDs vs worker IDs
-    block_map = {}
+    block_map: dict[int, tuple[int, int]] = {}
     for w in workers.flatten():
         _row, _col = np.where(workers == w)
         block_map[w] = (_row[0], _col[0])
@@ -178,38 +172,53 @@ def setup_mpi_blocks(comm, matrix_shape, split=1):
 
 
 def collect_linear_sys_blocks(
-    comm, block_map, block_shape, Amat=None, bvec=None, verbose=False
-):
+    comm: MPI.Comm,
+    block_map: dict[int, tuple[int, int]],
+    block_shape: tuple[int, int],
+    Amat: NDArray[np.floating] | None = None,
+    bvec: NDArray[np.floating] | None = None,
+    verbose: bool = False,
+) -> tuple[NDArray[np.floating] | None, NDArray[np.floating] | None]:
     """
-    Send LHS operator matrix and RHS vector blocks to assigned workers.
+    Distribute LHS operator matrix and RHS vector blocks to assigned workers.
 
-    Parameters:
-        comm (MPI.Communicator):
-            MPI communicator object for all active workers.
-        block_map (dict):
-            Dictionary of tuples, one for each worker in the `active`
-            communicator group, with the row and column ID of the block that it
-            is managing.
-        block_shape (tuple of int):
-            Shape of the square blocks that the full matrix operator (and RHS
-            vector) should be split up into. These must be square.
-        Amat (array_like):
-            The full LHS matrix operator, which will be split into blocks.
-        bvec (array_like):
-            The full right-hand side vector, which will be split into blocks.
-        verbose (bool):
-            If `True`, print status messages when MPI communication is complete.
+    The root worker (rank 0) splits the full matrix and vector into blocks and
+    sends each block to its assigned worker via point-to-point MPI
+    communication.
 
-    Returns:
-        my_Amat (array_like):
-            The single block of the matrix operator belonging to this worker.
-            It will have shape `block_shape`. If the matrix operator cannot be
-            exactly divided into same-sized blocks, the blocks at the far edges
-            will be zero-padded. Returns `None` if worker is not active.
-        my_bvec (array_like):
-            The single block of the RHS vector belonging to this worker. Note
-            that workers in the same column have the same block. Returns `None`
-            if worker is not active.
+    Parameters
+    ----------
+    comm : MPI.Comm
+        MPI communicator object for all active workers.
+    block_map : dict
+        Dictionary mapping worker ID to ``(row_id, col_id)`` of the block it
+        manages, as returned by :func:`setup_mpi_blocks`.
+    block_shape : tuple of int
+        Shape ``(block_rows, block_cols)`` of the square blocks that the full
+        matrix operator and RHS vector should be split into.
+    Amat : NDArray[np.floating] or None, optional
+        The full LHS matrix operator, which will be split into blocks.  Only
+        required on the root worker.
+    bvec : NDArray[np.floating] or None, optional
+        The full right-hand side vector, which will be split into blocks.  Only
+        required on the root worker.
+    verbose : bool, optional
+        If ``True``, print status messages when MPI communication is complete.
+
+    Returns
+    -------
+    my_Amat : NDArray[np.floating] or None
+        The single block of the matrix operator belonging to this worker with
+        shape ``block_shape``.  Zero-padded at edges if the matrix cannot be
+        exactly divided.  Returns ``None`` if worker is not active.
+    my_bvec : NDArray[np.floating] or None
+        The single block of the RHS vector belonging to this worker.  Workers
+        in the same column receive the same block.  Returns ``None`` if worker
+        is not active.
+
+    References
+    ----------
+    Zhang et al. (2026), RASTI, rzag024.
     """
     myid = comm.Get_rank()
     dtype = bvec.dtype
@@ -276,52 +285,58 @@ def collect_linear_sys_blocks(
 
 
 def cg_mpi(
-    comm_groups,
-    Amat_block,
-    bvec_block,
-    vec_size,
-    block_map,
-    maxiters=1000,
-    abs_tol=1e-8,
-):
+    comm_groups: tuple[MPI.Intracomm, ...] | None,
+    Amat_block: NDArray[np.floating],
+    bvec_block: NDArray[np.floating],
+    vec_size: int,
+    block_map: dict[int, tuple[int, int]],
+    maxiters: int = 1000,
+    abs_tol: float = 1e-8,
+) -> NDArray[np.floating] | None:
     """
-    A distributed CG solver for linear systems with square matrix operators.
-    The linear operator matrix is split into square blocks, each of which is
-    handled by a single worker.
+    Distributed Conjugate Gradient solver for block-partitioned linear systems.
 
-    Parameters:
-        comm_groups (tuple of MPI.Intracomm):
-            Group communicators for the blocks (active, row, col, diag).
+    The linear operator matrix is split into square blocks, each handled by a
+    single MPI worker.  The algorithm follows the standard CG iteration but
+    with distributed matrix-vector products and scalar reductions across ranks.
 
-            These are set up by `setup_mpi_blocks`, and correspond to the MPI
-            workers that are active, the ones for each row, each column, and
-            along the diagonal of the block structure, respectively.
+    Parameters
+    ----------
+    comm_groups : tuple of MPI.Intracomm or None
+        Group communicators ``(active, row, col, diag)`` as set up by
+        :func:`setup_mpi_blocks`.  If ``None``, the worker is inactive and
+        the function returns immediately.
+    Amat_block : NDArray[np.floating]
+        The block of the matrix operator belonging to this worker.
+    bvec_block : NDArray[np.floating]
+        The block of the right-hand side vector corresponding to this
+        worker's matrix operator block.
+    vec_size : int
+        The size of the total result vector across all blocks.
+    block_map : dict
+        Dictionary mapping worker ID to ``(row_id, col_id)`` of the block it
+        manages.
+    maxiters : int, optional
+        Maximum number of solver iterations. Default is 1000.
+    abs_tol : float, optional
+        Absolute tolerance on each element of the residual. Once this
+        tolerance has been reached for all entries of the residual vector,
+        the solution is considered to have converged. Default is 1e-8.
 
-            If `None`, this is assumed to be an inactive worker and nothing is
-            done.
-        Amat_block (array_like):
-            The block of the matrix operator belonging to this worker.
-        bvec_block (array_like):
-            The block of the right-hand side vector corresponding to this
-            worker's matrix operator block.
-        vec_size (int):
-            The size of the total result vector, across all blocks.
-        block_map (dict):
-            Dictionary of tuples, one for each worker in the `active`
-            communicator group, with the row and column ID of the block that it
-            is managing.
-        maxiters (int):
-            Maximum number of iterations of the solver to perform before
-            returning.
-        abs_tol (float):
-            Absolute tolerance on each element of the residual. Once this
-            tolerance has been reached for all entries of the residual vector,
-            the solution is considered to have converged.
+    Returns
+    -------
+    x : NDArray[np.floating] or None
+        Solution vector for the full system.  Only workers on the diagonal
+        have the correct solution vector; other workers return ``None``.
 
-    Returns:
-        x (array_like):
-            Solution vector for the full system. Only workers on the diagonal
-            have the correct solution vector; other workers will return `None`.
+    Notes
+    -----
+    The initial guess is always the zero vector.  For non-zero initial
+    guesses, the residual computation would need to be adjusted.
+
+    References
+    ----------
+    Zhang et al. (2026), RASTI, rzag024.
     """
     if comm_groups is None:
         # FIXME: Need to fix this so non-active workers are ignored without hanging
@@ -416,50 +431,58 @@ def cg_mpi(
 
 
 def cg(
-    Amat,
-    bvec,
-    maxiters=1000,
-    abs_tol=1e-18,
-    use_norm_tol=False,
-    x0=None,
-    linear_op=None,
-    comm=None,
-):
+    Amat: NDArray[np.floating] | None,
+    bvec: NDArray[np.floating],
+    maxiters: int = 1000,
+    abs_tol: float = 1e-18,
+    use_norm_tol: bool = False,
+    x0: NDArray[np.floating] | None = None,
+    linear_op: Callable[[NDArray[np.floating]], NDArray[np.floating]] | None = None,
+    comm: MPI.Comm | None = None,
+) -> NDArray[np.floating]:
     """
-    Simple Conjugate Gradient solver that operates in serial. This uses the
-    same algorithm as `cg_mpi()` and so can be used for testing/comparison of
-    results.
+    Serial Conjugate Gradient solver with optional MPI broadcasting.
 
-    Note that this function will still permit threading used within numpy.
+    Implements the standard CG algorithm on a single process, with optional
+    broadcasting of the solution to all MPI workers.  Uses the same algorithm
+    as :func:`cg_mpi` and can be used for testing and comparison.
 
-    Parameters:
-        Amat (array_like):
-            Linear operator matrix.
-        bvec (array_like):
-            Right-hand side vector.
-        maxiters (int):
-            Maximum number of iterations of the solver to perform before
-            returning.
-        abs_tol (float):
-            Absolute tolerance on each element of the residual. Once this
-            tolerance has been reached for all entries of the residual vector,
-            the solution is considered to have converged.
-        use_norm_tol (bool):
-            Whether to use the tolerance on each element (as above), or an
-            overall tolerance on the norm of the residual.
-        x0 (array_like):
-            Initial guess for the solution vector. Will be set to zero
-            otherwise.
-        linear_op (func):
-            If specified, this function will be used to operate on vectors,
-            instead of the Amat matrix. Must have call signature `func(x)`.
-        comm (MPI communicator):
-            If specified, the CG solver will be run only on the root worker,
-            but the
+    Parameters
+    ----------
+    Amat : NDArray[np.floating] or None
+        Linear operator matrix.  Ignored if ``linear_op`` is provided.
+    bvec : NDArray[np.floating]
+        Right-hand side vector.
+    maxiters : int, optional
+        Maximum number of solver iterations. Default is 1000.
+    abs_tol : float, optional
+        Absolute tolerance on each element of the residual (or on the norm
+        if ``use_norm_tol=True``). Default is 1e-18.
+    use_norm_tol : bool, optional
+        If ``True``, check convergence on the norm of the residual rather
+        than per-element. Default is ``False``.
+    x0 : NDArray[np.floating] or None, optional
+        Initial guess for the solution vector.  Defaults to zeros.
+    linear_op : callable or None, optional
+        If specified, this function ``f(x) -> Ax`` is used instead of
+        explicit matrix multiplication.
+    comm : MPI.Comm or None, optional
+        If specified, the CG solver runs only on rank 0 and the solution is
+        broadcast to all workers.
 
-    Returns:
-        x (array_like):
-            Solution vector for the full system.
+    Returns
+    -------
+    x : NDArray[np.floating]
+        Solution vector for the full system.
+
+    Notes
+    -----
+    Threading within NumPy is still permitted even though the algorithm
+    itself is serial.
+
+    References
+    ----------
+    Zhang et al. (2026), RASTI, rzag024.
     """
     # MPI worker ID
     myid = 0
@@ -534,7 +557,7 @@ def cg(
             # Update pvec on all workers
             if comm is not None:
                 comm.Bcast(pvec, root=0)
-            
+
             # Increment iteration
             niter += 1
         except:
@@ -549,47 +572,61 @@ def cg(
     return x
 
 
-import torch
+try:
+    import torch
 
-# Specify device (MPS, CPU, or CUDA)
-if torch.cuda.is_available():
-    device = torch.device("cuda")
-elif torch.backends.mps.is_available():
-    device = torch.device("mps")
-else:
-    device = torch.device("cpu")
+    # Specify device (MPS, CPU, or CUDA)
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
+except ImportError:
+    torch = None
+    device = None
 
 
-# # This least square solver is not quite correct!!! Need to further debug
-# def pytorch_lstsq(A, b, device=device):
-#     """
-#     Solve the linear system using least squares with PyTorch.
-#     Handles MPS backend by falling back to CPU.
-#     """
-#     # Convert numpy arrays to PyTorch tensors
-#     if device.type == "mps":
-#         # Use CPU for lstsq operation
-#         with torch.device('cpu'):
-#             A_torch = torch.tensor(A, dtype=torch.float32)
-#             b_torch = torch.tensor(b, dtype=torch.float32)
-#             x_torch = torch.linalg.lstsq(A_torch, b_torch).solution
-#     else:
-#         # Use specified device
-#         A_torch = torch.tensor(A, dtype=torch.float64).to(device)
-#         b_torch = torch.tensor(b, dtype=torch.float64).to(device)
-#         x_torch = torch.linalg.lstsq(A_torch, b_torch).solution
-    
-#     return x_torch.cpu().numpy()
-
-def pytorch_lin_solver(A, b, device=device):
+def pytorch_lin_solver(
+    A: NDArray[np.floating],
+    b: NDArray[np.floating],
+    device: torch.device | None = device,
+) -> NDArray[np.floating]:
     """
-    Solve the linear system using least squares with PyTorch.
-    Handles MPS backend by falling back to CPU.
+    Solve a linear system ``Ax = b`` using PyTorch.
+
+    Uses ``torch.linalg.solve`` for a direct solution. Handles the MPS
+    backend by falling back to CPU (MPS does not support ``linalg.solve``
+    in double precision).
+
+    Parameters
+    ----------
+    A : NDArray[np.floating]
+        Coefficient matrix of shape ``(N, N)``.
+    b : NDArray[np.floating]
+        Right-hand side vector of shape ``(N,)`` or matrix ``(N, K)``.
+    device : torch.device or None, optional
+        Torch device to use (``cpu``, ``cuda``, or ``mps``).  Defaults to
+        the best available device detected at import time.
+
+    Returns
+    -------
+    x : NDArray[np.floating]
+        Solution vector (or matrix) as a NumPy array.
+
+    Raises
+    ------
+    ImportError
+        If PyTorch is not installed.
     """
+    if torch is None:
+        raise ImportError(
+            "PyTorch is required for pytorch_lin_solver. Install with: pip install torch"
+        )
     # Convert numpy arrays to PyTorch tensors
     if device.type == "mps":
         # Use CPU for lstsq operation
-        with torch.device('cpu'):
+        with torch.device("cpu"):
             A_torch = torch.tensor(A, dtype=torch.float32)
             b_torch = torch.tensor(b, dtype=torch.float32)
             x_torch = torch.linalg.solve(A_torch, b_torch)
@@ -598,42 +635,62 @@ def pytorch_lin_solver(A, b, device=device):
         A_torch = torch.tensor(A, dtype=torch.float64).to(device)
         b_torch = torch.tensor(b, dtype=torch.float64).to(device)
         x_torch = torch.linalg.solve(A_torch, b_torch)
-    
+
     return x_torch.cpu().numpy()
 
 
-def pytorch_nnls(A, b, device=device, max_iter=1000):
+def pytorch_nnls(
+    A: NDArray[np.floating],
+    b: NDArray[np.floating],
+    device: torch.device | None = device,
+    max_iter: int = 1000,
+) -> NDArray[np.floating]:
     """
-    Solve non-negative least squares using PyTorch with gradient descent.
-    
-    Parameters:
-        A (array_like): Coefficient matrix
-        b (array_like): Right-hand side vector
-        device: Torch device (cpu, cuda, mps)
-        max_iter (int): Maximum number of iterations
-        
-    Returns:
-        x (array_like): Non-negative solution vector
+    Solve non-negative least squares using PyTorch with L-BFGS optimisation.
+
+    Minimises ``||Ax - b||^2`` subject to ``x >= 0`` by first running
+    unconstrained L-BFGS and then clamping the solution to non-negative
+    values.
+
+    Parameters
+    ----------
+    A : NDArray[np.floating]
+        Coefficient matrix of shape ``(M, N)``.
+    b : NDArray[np.floating]
+        Right-hand side vector of shape ``(M,)``.
+    device : torch.device or None, optional
+        Torch device to use. Defaults to the best available device.
+    max_iter : int, optional
+        Maximum number of L-BFGS iterations. Default is 1000.
+
+    Returns
+    -------
+    x : NDArray[np.floating]
+        Non-negative solution vector of shape ``(N,)``.
+
+    Notes
+    -----
+    The non-negativity constraint is enforced by clamping after
+    optimisation, so the solution is only approximately NNLS-optimal.
     """
     A_torch = torch.tensor(A, dtype=torch.float32).to(device)
     b_torch = torch.tensor(b, dtype=torch.float32).to(device)
-    
+
     # Initialize with zeros
-    x = torch.zeros(A.shape[1], dtype=torch.float32, 
-                   device=device, requires_grad=True)
-    
+    x = torch.zeros(A.shape[1], dtype=torch.float32, device=device, requires_grad=True)
+
     optimizer = torch.optim.LBFGS([x], lr=0.1, max_iter=max_iter)
-    
+
     def closure():
         optimizer.zero_grad()
         loss = torch.sum((A_torch @ x - b_torch) ** 2)
         loss.backward()
         return loss
-    
+
     optimizer.step(closure)
-    
+
     # Apply non-negativity constraint
     with torch.no_grad():
         x = torch.clamp(x, min=0)
-    
+
     return x.cpu().numpy()

@@ -1,0 +1,909 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hydra_tod.noise_sampler_fixed_fc &mdash; hydra_tod 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            hydra_tod
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#conda-environment">Conda Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/data_model.html">Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#observation-model">Observation Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#system-temperature">System Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gain-model">Gain Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/flicker_noise.html">Flicker Noise Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#power-spectral-density">Power Spectral Density</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#correlation-function">Correlation Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#covariance-matrix">Covariance Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#emulator">Emulator</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/simulation.html">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/gibbs_sampler.html">Gibbs Sampler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/flicker_model.html">Flicker Noise Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_general"><code class="docutils literal notranslate"><span class="pre">flicker_cov_general()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/samplers.html">Parameter Samplers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/linear_algebra.html">Linear Algebra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/utilities.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.utils">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/diagnostics.html">MCMC Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/visualization.html">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citation.html">Citation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#plain-text">Plain text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#bibtex">BibTeX</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#id1">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hydra_tod</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hydra_tod.noise_sampler_fixed_fc</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for hydra_tod.noise_sampler_fixed_fc</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NDArray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">lag_list</span><span class="p">,</span> <span class="n">log_det_symmetric_toeplitz</span><span class="p">,</span> <span class="n">log_likeli</span><span class="p">,</span> <span class="n">log_likeli_general</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.mcmc_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">mcmc_sampler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jax.scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.nuts_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">NUTS_sampler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.bayes_util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">wrap_with_priors</span><span class="p">,</span>
+    <span class="n">make_transforms</span><span class="p">,</span>
+    <span class="n">constrained_to_unconstrained</span><span class="p">,</span>
+    <span class="n">unconstrained_to_constrained</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># if the emulator of the correlation function exists, load it</span>
+<span class="c1"># otherwise, use flicker_cov_vec</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span>
+
+    <span class="c1"># Get the directory where this module is located</span>
+    <span class="n">module_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">corr_emulator_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">module_dir</span><span class="p">,</span> <span class="s2">&quot;flicker_corr_emulator.pkl&quot;</span><span class="p">)</span>
+    <span class="n">logdet_emulator_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">module_dir</span><span class="p">,</span> <span class="s2">&quot;flicker_logdet_emulator.pkl&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Import the class definition before unpickling</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlickerCorrEmulator</span>
+
+    <span class="c1"># Load the emulator</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">corr_emulator_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">flicker_cov</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogDetEmulator</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logdet_emulator_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">flicker_logdet</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">use_emulator</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using the emulator for flicker noise correlation function.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># JIT the flicker covariance function</span>
+    <span class="n">flicker_cov_jax</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">flicker_cov</span><span class="o">.</span><span class="n">create_jax</span><span class="p">())</span>
+    <span class="n">flicker_logdet_jax</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">flicker_logdet</span><span class="o">.</span><span class="n">create_jax</span><span class="p">())</span>
+
+<span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Emulator for flicker noise correlation function not found or failed to load: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using flicker_cov_vec instead.&quot;</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">flicker_cov_vec</span>
+
+    <span class="n">use_emulator</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">flicker_cov_general</span><span class="p">,</span> <span class="n">flicker_corr</span>
+
+
+<div class="viewcode-block" id="log_likeli_emu">
+<a class="viewcode-back" href="../../api/samplers.html#hydra_tod.noise_sampler_fixed_fc.log_likeli_emu">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">log_likeli_emu</span><span class="p">(</span>
+    <span class="n">logf0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">DC_scaler</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">consecutive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluate the Gaussian log-likelihood using the pre-trained emulator.</span>
+
+<span class="sd">    Uses the emulated flicker covariance and log-determinant to compute</span>
+<span class="sd">    the log-likelihood via Levinson-style Toeplitz solve. Falls back to</span>
+<span class="sd">    ``-inf`` when the solve fails (e.g. non-positive-definite matrix).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logf0 : float</span>
+<span class="sd">        Log10 of the knee angular frequency.</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Spectral index of the 1/f noise power spectrum.</span>
+<span class="sd">    data : NDArray[np.floating]</span>
+<span class="sd">        Mean-centred residual data vector ``(d / g / Tsys - 1)``.</span>
+<span class="sd">    DC_scaler : float, optional</span>
+<span class="sd">        Multiplicative DC gain factor applied to the data before</span>
+<span class="sd">        evaluating the likelihood. Default is ``1.0``.</span>
+<span class="sd">    consecutive : bool, optional</span>
+<span class="sd">        If ``True`` (default), use the efficient Toeplitz solve.  If</span>
+<span class="sd">        ``False``, build the full covariance matrix from *time_list* and</span>
+<span class="sd">        use Cholesky decomposition.</span>
+<span class="sd">    time_list : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Observation time stamps (seconds).  Required when</span>
+<span class="sd">        ``consecutive=False``; ignored otherwise.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Scalar log-likelihood value, or ``-inf`` on failure.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function uses NumPy for the Toeplitz solve and is therefore</span>
+<span class="sd">    *not* JAX-differentiable. For a fully JAX-compatible version see</span>
+<span class="sd">    :func:`log_likeli_emu_jax`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">corr_list</span> <span class="o">=</span> <span class="n">flicker_cov_jax</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">DC_scaler</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">consecutive</span><span class="p">:</span>
+        <span class="c1"># Build full covariance from emulated correlation at actual time lags</span>
+        <span class="n">time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
+        <span class="n">tau_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">time_list</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">time_list</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+                <span class="n">tau_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">tau_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]))</span>
+                <span class="k">if</span> <span class="n">tau_idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">corr_list</span><span class="p">):</span>
+                    <span class="n">cov</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">corr_list</span><span class="p">[</span><span class="n">tau_idx</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Lag exceeds emulator range — use the analytic function</span>
+                    <span class="n">cov</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">flicker_corr</span><span class="p">(</span>
+                        <span class="n">tau_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="mf">10.0</span><span class="o">**</span><span class="n">logf0</span><span class="p">,</span> <span class="mf">10.0</span><span class="o">**</span><span class="n">flicker_cov</span><span class="o">.</span><span class="n">logfc</span><span class="p">,</span> <span class="n">alpha</span>
+                    <span class="p">)</span>
+                <span class="n">cov</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cov</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">log_likeli_general</span><span class="p">(</span><span class="n">cov</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">solve_toeplitz</span><span class="p">(</span><span class="n">corr_list</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
+            <span class="o">+</span> <span class="n">flicker_logdet_jax</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">result</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span></div>
+
+
+
+<span class="nd">@jit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_log_likeli_emu_jax_toeplitz</span><span class="p">(</span>
+    <span class="n">logf0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">DC_scaler</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;JAX log-likelihood assuming consecutive (Toeplitz) covariance.&quot;&quot;&quot;</span>
+    <span class="n">corr_list</span> <span class="o">=</span> <span class="n">flicker_cov_jax</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">logdet</span> <span class="o">=</span> <span class="n">flicker_logdet_jax</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">corr_list</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">corr_list</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span> <span class="o">/</span> <span class="n">DC_scaler</span><span class="p">)</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">toeplitz_matrix</span> <span class="o">=</span> <span class="n">corr_list</span><span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">indices</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">indices</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])]</span>
+
+    <span class="n">solved</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">toeplitz_matrix</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">assume_a</span><span class="o">=</span><span class="s2">&quot;pos&quot;</span><span class="p">)</span>
+    <span class="n">quad_form</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">solved</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">quad_form</span> <span class="o">+</span> <span class="n">logdet</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">result</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_log_likeli_emu_jax_general</span><span class="p">(</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a JIT-compiled JAX log-likelihood for non-consecutive times.</span>
+
+<span class="sd">    The time-difference index matrix is precomputed and baked into the</span>
+<span class="sd">    closure so that the returned function can be JIT-compiled.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">tau_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">time_list</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">time_list</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="c1"># Precompute integer lag indices (for indexing into emulator output)</span>
+    <span class="n">lag_indices</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">tau_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+    <span class="nd">@jit</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_log_likeli_general</span><span class="p">(</span>
+        <span class="n">logf0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">DC_scaler</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">corr_list</span> <span class="o">=</span> <span class="n">flicker_cov_jax</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">corr_list</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">corr_list</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span> <span class="o">/</span> <span class="n">DC_scaler</span><span class="p">)</span>
+
+        <span class="c1"># Build general covariance from correlation vector at actual lags</span>
+        <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">corr_list</span><span class="p">[</span><span class="n">lag_indices</span><span class="p">]</span>
+
+        <span class="n">solved</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">assume_a</span><span class="o">=</span><span class="s2">&quot;pos&quot;</span><span class="p">)</span>
+        <span class="n">quad_form</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">solved</span><span class="p">)</span>
+        <span class="c1"># Log-determinant via Cholesky</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+        <span class="n">logdet</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">L</span><span class="p">)))</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">quad_form</span> <span class="o">+</span> <span class="n">logdet</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">result</span>
+
+    <span class="k">return</span> <span class="n">_log_likeli_general</span>
+
+
+<div class="viewcode-block" id="log_likeli_emu_jax">
+<a class="viewcode-back" href="../../api/samplers.html#hydra_tod.noise_sampler_fixed_fc.log_likeli_emu_jax">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">log_likeli_emu_jax</span><span class="p">(</span>
+    <span class="n">logf0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">DC_scaler</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    JAX-differentiable Gaussian log-likelihood using the emulator.</span>
+
+<span class="sd">    Constructs the full Toeplitz covariance matrix in JAX and solves</span>
+<span class="sd">    the linear system with ``jax.scipy.linalg.solve``, enabling</span>
+<span class="sd">    automatic differentiation for gradient-based samplers (e.g. NUTS).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logf0 : float</span>
+<span class="sd">        Log10 of the knee angular frequency.</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Spectral index of the 1/f noise power spectrum.</span>
+<span class="sd">    data : jnp.ndarray</span>
+<span class="sd">        Mean-centred residual data vector.</span>
+<span class="sd">    DC_scaler : float, optional</span>
+<span class="sd">        Multiplicative DC gain factor. Default is ``1.0``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    jnp.ndarray</span>
+<span class="sd">        Scalar (0-D) log-likelihood value.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Unlike :func:`log_likeli_emu` this builds the full dense Toeplitz</span>
+<span class="sd">    matrix (O(N^2) memory) and is JIT-compiled. Suitable for moderate</span>
+<span class="sd">    time-stream lengths where auto-differentiation is required.</span>
+
+<span class="sd">    For non-consecutive time lists, use</span>
+<span class="sd">    :func:`_make_log_likeli_emu_jax_general` to build a specialised</span>
+<span class="sd">    JIT-compiled closure.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_log_likeli_emu_jax_toeplitz</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">DC_scaler</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># Define the likelihood function for the flicker noise model.</span>
+<div class="viewcode-block" id="flicker_likeli_func">
+<a class="viewcode-back" href="../../api/samplers.html#hydra_tod.noise_sampler_fixed_fc.flicker_likeli_func">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flicker_likeli_func</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">gain</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">Tsys</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">logfc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">wnoise_var</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.5e-6</span><span class="p">,</span>
+    <span class="n">consecutive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Construct a log-likelihood closure for the flicker noise model.</span>
+
+<span class="sd">    Preprocesses the data by removing the gain and system temperature</span>
+<span class="sd">    contributions, mean-centres the residual, and returns a callable</span>
+<span class="sd">    that evaluates the Gaussian log-likelihood for ``(logf0, alpha)``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : NDArray[np.floating]</span>
+<span class="sd">        1-D time-ordered data array.</span>
+<span class="sd">    gain : NDArray[np.floating]</span>
+<span class="sd">        1-D array of instrument gain values.</span>
+<span class="sd">    Tsys : NDArray[np.floating]</span>
+<span class="sd">        1-D array of system temperature values.</span>
+<span class="sd">    logfc : float</span>
+<span class="sd">        Log10 of the low-frequency cutoff angular frequency.</span>
+<span class="sd">    time_list : NDArray[np.floating] or None, optional</span>
+<span class="sd">        1-D array of observation timestamps (seconds). Required when the</span>
+<span class="sd">        emulator is not available, or when ``consecutive=False``.</span>
+<span class="sd">    wnoise_var : float, optional</span>
+<span class="sd">        White noise variance. Default is ``2.5e-6``.</span>
+<span class="sd">    consecutive : bool, optional</span>
+<span class="sd">        If ``True`` (default), assume evenly-spaced time stamps and use</span>
+<span class="sd">        efficient Toeplitz solvers.  If ``False``, build the full</span>
+<span class="sd">        covariance matrix for non-consecutive time stamps using</span>
+<span class="sd">        :func:`~hydra_tod.flicker_model.flicker_cov_general`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    log_like : callable</span>
+<span class="sd">        A function ``log_like(params) -&gt; float`` with</span>
+<span class="sd">        ``params = [logf0, alpha]``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Frequencies ``f0`` and ``fc`` are in angular frequency units</span>
+<span class="sd">    (rad/s), differing from FFT frequencies by a factor of ``2 * pi``.</span>
+
+<span class="sd">    When the pre-trained emulator is available it is used for faster</span>
+<span class="sd">    evaluation; otherwise the analytic ``flicker_cov_vec`` is called.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dvec</span> <span class="o">=</span> <span class="n">data</span> <span class="o">/</span> <span class="n">gain</span> <span class="o">/</span> <span class="n">Tsys</span> <span class="o">-</span> <span class="mf">1.0</span>
+    <span class="n">dvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dvec</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">dvec</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dvec</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">consecutive</span><span class="p">:</span>
+        <span class="c1"># Non-consecutive path: build full covariance at each evaluation</span>
+        <span class="n">_time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_emulator</span><span class="p">:</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">log_like</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+                <span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">params</span>
+                <span class="k">return</span> <span class="n">log_likeli_emu</span><span class="p">(</span>
+                    <span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">dvec</span><span class="p">,</span> <span class="n">consecutive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">time_list</span><span class="o">=</span><span class="n">_time_list</span>
+                <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">log_like</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+                <span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">params</span>
+                <span class="n">cov</span> <span class="o">=</span> <span class="n">flicker_cov_general</span><span class="p">(</span>
+                    <span class="n">_time_list</span><span class="p">,</span>
+                    <span class="mf">10.0</span><span class="o">**</span><span class="n">logf0</span><span class="p">,</span>
+                    <span class="mf">10.0</span><span class="o">**</span><span class="n">logfc</span><span class="p">,</span>
+                    <span class="n">alpha</span><span class="p">,</span>
+                    <span class="n">white_n_variance</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">log_likeli_general</span><span class="p">(</span><span class="n">cov</span><span class="p">,</span> <span class="n">dvec</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">log_like</span>
+
+    <span class="c1"># Consecutive (Toeplitz) path — original behaviour</span>
+    <span class="k">if</span> <span class="n">use_emulator</span><span class="p">:</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">log_like</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">params</span>
+            <span class="k">return</span> <span class="n">log_likeli_emu</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">dvec</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tau_list</span> <span class="o">=</span> <span class="n">lag_list</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">log_like</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">params</span>
+            <span class="n">corr_list</span> <span class="o">=</span> <span class="n">flicker_cov_vec</span><span class="p">(</span>
+                <span class="n">tau_list</span><span class="p">,</span> <span class="mf">10.0</span><span class="o">**</span><span class="n">logf0</span><span class="p">,</span> <span class="mf">10.0</span><span class="o">**</span><span class="n">logfc</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">white_n_variance</span><span class="o">=</span><span class="n">wnoise_var</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">log_likeli</span><span class="p">(</span><span class="n">corr_list</span><span class="p">,</span> <span class="n">dvec</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">log_like</span></div>
+
+
+
+<div class="viewcode-block" id="flicker_log_post_JAX">
+<a class="viewcode-back" href="../../api/samplers.html#hydra_tod.noise_sampler_fixed_fc.flicker_log_post_JAX">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flicker_log_post_JAX</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">gain</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">Tsys</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">include_DC_Gain</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">prior_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">jeffreys</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">transform</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">consecutive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build a JAX-compatible log-posterior closure for flicker noise parameters.</span>
+
+<span class="sd">    Constructs the preprocessed residual vector and returns a log-posterior</span>
+<span class="sd">    function that combines the Gaussian likelihood (via emulator) with</span>
+<span class="sd">    optional Jeffreys prior, user-supplied prior, and/or parameter-space</span>
+<span class="sd">    transforms.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : NDArray[np.floating]</span>
+<span class="sd">        1-D time-ordered data array.</span>
+<span class="sd">    gain : NDArray[np.floating]</span>
+<span class="sd">        1-D instrument gain array.</span>
+<span class="sd">    Tsys : NDArray[np.floating]</span>
+<span class="sd">        1-D system temperature array.</span>
+<span class="sd">    include_DC_Gain : bool, optional</span>
+<span class="sd">        If ``True`` the model includes a DC gain parameter, making the</span>
+<span class="sd">        parameter vector ``(DC_gain, logf0, alpha)`` (3-D). Default is</span>
+<span class="sd">        ``False`` (2-D: ``(logf0, alpha)``).</span>
+<span class="sd">    prior_func : callable or None, optional</span>
+<span class="sd">        Additional log-prior function ``prior_func(params) -&gt; float``.</span>
+<span class="sd">    jeffreys : bool, optional</span>
+<span class="sd">        If ``True``, add the Jeffreys prior computed from the Fisher</span>
+<span class="sd">        information matrix. When enabled the JAX-differentiable</span>
+<span class="sd">        likelihood (:func:`log_likeli_emu_jax`) is used. Default is</span>
+<span class="sd">        ``False``.</span>
+<span class="sd">    transform : bool, optional</span>
+<span class="sd">        If ``True``, the returned function expects parameters in</span>
+<span class="sd">        unconstrained space and internally maps them to constrained</span>
+<span class="sd">        space via sigmoid-type bijectors. Default is ``False``.</span>
+<span class="sd">    bounds : list of tuple or None, optional</span>
+<span class="sd">        Per-parameter ``(low, high)`` bounds. ``None`` entries indicate</span>
+<span class="sd">        no bound in that direction.</span>
+<span class="sd">    consecutive : bool, optional</span>
+<span class="sd">        If ``True`` (default), assume evenly-spaced time stamps.  If</span>
+<span class="sd">        ``False``, build the full covariance matrix for non-consecutive</span>
+<span class="sd">        time stamps.</span>
+<span class="sd">    time_list : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Observation time stamps.  Required when ``consecutive=False``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    log_like : callable</span>
+<span class="sd">        A function ``log_like(params) -&gt; float`` returning the</span>
+<span class="sd">        (possibly transformed) log-posterior value.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The closure is decorated by :func:`~hydra_tod.bayes_util.wrap_with_priors`</span>
+<span class="sd">    which handles bounds checking, Jeffreys prior injection, and the</span>
+<span class="sd">    constrained-to-unconstrained reparameterisation.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert inputs to JAX arrays</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">gain</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">gain</span><span class="p">)</span>
+    <span class="n">Tsys</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Tsys</span><span class="p">)</span>
+
+    <span class="c1"># Preprocess data using JAX operations</span>
+    <span class="n">dvec</span> <span class="o">=</span> <span class="n">data</span> <span class="o">/</span> <span class="n">gain</span> <span class="o">/</span> <span class="n">Tsys</span> <span class="o">-</span> <span class="mf">1.0</span>
+    <span class="n">dvec</span> <span class="o">=</span> <span class="n">dvec</span> <span class="o">-</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dvec</span><span class="p">)</span>  <span class="c1"># Mean-center using JAX</span>
+
+    <span class="k">assert</span> <span class="n">use_emulator</span>
+
+    <span class="k">if</span> <span class="n">jeffreys</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">consecutive</span><span class="p">:</span>
+            <span class="n">_time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_log_ll</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">DC_scaler</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">log_likeli_emu</span><span class="p">(</span>
+                    <span class="n">logf0</span><span class="p">,</span>
+                    <span class="n">alpha</span><span class="p">,</span>
+                    <span class="n">d</span><span class="p">,</span>
+                    <span class="n">DC_scaler</span><span class="o">=</span><span class="n">DC_scaler</span><span class="p">,</span>
+                    <span class="n">consecutive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">time_list</span><span class="o">=</span><span class="n">_time_list</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">log_ll</span> <span class="o">=</span> <span class="n">_log_ll</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log_ll</span> <span class="o">=</span> <span class="n">log_likeli_emu</span>
+        <span class="n">jaxjit</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">consecutive</span><span class="p">:</span>
+            <span class="n">log_ll</span> <span class="o">=</span> <span class="n">_make_log_likeli_emu_jax_general</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log_ll</span> <span class="o">=</span> <span class="n">log_likeli_emu_jax</span>
+        <span class="n">jaxjit</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">include_DC_Gain</span><span class="p">:</span>
+
+        <span class="nd">@wrap_with_priors</span><span class="p">(</span>
+            <span class="n">add_jeffreys</span><span class="o">=</span><span class="n">jeffreys</span><span class="p">,</span>
+            <span class="n">prior_func</span><span class="o">=</span><span class="n">prior_func</span><span class="p">,</span>
+            <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">jaxjit</span><span class="o">=</span><span class="n">jaxjit</span><span class="p">,</span>
+            <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">log_like</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="n">DC_gain</span><span class="p">,</span> <span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">params</span>
+            <span class="n">likelihood</span> <span class="o">=</span> <span class="n">log_ll</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">dvec</span><span class="p">,</span> <span class="n">DC_scaler</span><span class="o">=</span><span class="n">DC_gain</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">likelihood</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="nd">@wrap_with_priors</span><span class="p">(</span>
+            <span class="n">add_jeffreys</span><span class="o">=</span><span class="n">jeffreys</span><span class="p">,</span>
+            <span class="n">prior_func</span><span class="o">=</span><span class="n">prior_func</span><span class="p">,</span>
+            <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">jaxjit</span><span class="o">=</span><span class="n">jaxjit</span><span class="p">,</span>
+            <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">log_like</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">params</span>
+            <span class="n">likelihood</span> <span class="o">=</span> <span class="n">log_ll</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">dvec</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">likelihood</span>
+
+    <span class="k">return</span> <span class="n">log_like</span></div>
+
+
+
+<div class="viewcode-block" id="flicker_sampler">
+<a class="viewcode-back" href="../../api/samplers.html#hydra_tod.noise_sampler_fixed_fc.flicker_sampler">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flicker_sampler</span><span class="p">(</span>
+    <span class="n">TOD</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">gains</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">Tsys</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">init_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">include_DC_Gain</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">prior_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">jeffreys</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">transform</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">sampler</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;emcee&quot;</span><span class="p">,</span>
+    <span class="n">rng_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">consecutive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sample flicker noise parameters using either emcee or NUTS.</span>
+
+<span class="sd">    High-level interface that constructs the log-posterior via</span>
+<span class="sd">    :func:`flicker_log_post_JAX` and dispatches to the requested</span>
+<span class="sd">    sampler backend.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    TOD : NDArray[np.floating]</span>
+<span class="sd">        1-D time-ordered data array.</span>
+<span class="sd">    gains : NDArray[np.floating]</span>
+<span class="sd">        1-D instrument gain array.</span>
+<span class="sd">    Tsys : NDArray[np.floating]</span>
+<span class="sd">        1-D system temperature array.</span>
+<span class="sd">    init_params : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Initial parameter guess. Shape ``(2,)`` when ``include_DC_Gain``</span>
+<span class="sd">        is ``False``, ``(3,)`` otherwise. If ``None``, defaults are</span>
+<span class="sd">        chosen internally.</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        Number of posterior samples to draw. Default is ``1``.</span>
+<span class="sd">    include_DC_Gain : bool, optional</span>
+<span class="sd">        Whether to include a DC gain parameter. Default is ``False``.</span>
+<span class="sd">    prior_func : callable or None, optional</span>
+<span class="sd">        Additional log-prior function.</span>
+<span class="sd">    jeffreys : bool, optional</span>
+<span class="sd">        Whether to include the Jeffreys prior. Default is ``True``.</span>
+<span class="sd">    bounds : list of tuple or None, optional</span>
+<span class="sd">        Per-parameter ``(low, high)`` bounds.</span>
+<span class="sd">    transform : bool, optional</span>
+<span class="sd">        If ``True``, sample in unconstrained space using sigmoid</span>
+<span class="sd">        bijectors. Only used with the ``&quot;emcee&quot;`` backend. Default is</span>
+<span class="sd">        ``False``.</span>
+<span class="sd">    sampler : str, optional</span>
+<span class="sd">        Backend sampler: ``&quot;emcee&quot;`` (ensemble MCMC) or ``&quot;nuts&quot;``</span>
+<span class="sd">        (No-U-Turn Sampler via NumPyro). Default is ``&quot;emcee&quot;``.</span>
+<span class="sd">    rng_key : jax.Array or None, optional</span>
+<span class="sd">        JAX PRNG key. Required for deterministic results with NUTS;</span>
+<span class="sd">        a default key is used if ``None``.</span>
+<span class="sd">    consecutive : bool, optional</span>
+<span class="sd">        If ``True`` (default), assume evenly-spaced time stamps.  If</span>
+<span class="sd">        ``False``, build the full covariance matrix for non-consecutive</span>
+<span class="sd">        time stamps.</span>
+<span class="sd">    time_list : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Observation time stamps.  Required when ``consecutive=False``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sample : NDArray[np.floating]</span>
+<span class="sd">        Posterior sample(s). Shape ``(ndim,)`` when ``n_samples == 1``,</span>
+<span class="sd">        ``(n_samples, ndim)`` otherwise.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If *sampler* is not ``&quot;emcee&quot;`` or ``&quot;nuts&quot;``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    * When ``sampler=&quot;emcee&quot;`` with ``transform=True`` the chain runs</span>
+<span class="sd">      in unconstrained space and samples are mapped back before return.</span>
+<span class="sd">    * When ``sampler=&quot;nuts&quot;`` the ``transform`` and ``bounds`` options</span>
+<span class="sd">      are handled inside :func:`~hydra_tod.nuts_sampler.NUTS_sampler`</span>
+<span class="sd">      via NumPyro&#39;s built-in reparameterisation.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># log_likeli_func = flicker_likeli_func(t_list, TOD, gains, Tsys, logfc, wnoise_var=wnoise_var, bounds=bounds)</span>
+
+    <span class="n">dim</span> <span class="o">=</span> <span class="mi">3</span> <span class="k">if</span> <span class="n">include_DC_Gain</span> <span class="k">else</span> <span class="mi">2</span>
+
+    <span class="k">if</span> <span class="n">sampler</span> <span class="o">==</span> <span class="s2">&quot;emcee&quot;</span><span class="p">:</span>
+        <span class="n">log_post</span> <span class="o">=</span> <span class="n">flicker_log_post_JAX</span><span class="p">(</span>
+            <span class="n">TOD</span><span class="p">,</span>
+            <span class="n">gains</span><span class="p">,</span>
+            <span class="n">Tsys</span><span class="p">,</span>
+            <span class="n">include_DC_Gain</span><span class="o">=</span><span class="n">include_DC_Gain</span><span class="p">,</span>
+            <span class="n">prior_func</span><span class="o">=</span><span class="n">prior_func</span><span class="p">,</span>
+            <span class="n">jeffreys</span><span class="o">=</span><span class="n">jeffreys</span><span class="p">,</span>
+            <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+            <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">,</span>
+            <span class="n">consecutive</span><span class="o">=</span><span class="n">consecutive</span><span class="p">,</span>
+            <span class="n">time_list</span><span class="o">=</span><span class="n">time_list</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">transform</span><span class="p">:</span>
+            <span class="n">tfms</span> <span class="o">=</span> <span class="n">make_transforms</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">init_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">theta0</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">init_params</span><span class="p">))</span>
+                <span class="c1"># Invert to z0</span>
+                <span class="n">z0</span> <span class="o">=</span> <span class="n">constrained_to_unconstrained</span><span class="p">(</span><span class="n">theta0</span><span class="p">,</span> <span class="n">tfms</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initial params in unconstrained space: </span><span class="si">{</span><span class="n">z0</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">z0</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z0</span> <span class="o">=</span> <span class="n">init_params</span>
+        <span class="n">zsample</span> <span class="o">=</span> <span class="n">mcmc_sampler</span><span class="p">(</span>
+            <span class="n">log_post</span><span class="p">,</span>
+            <span class="n">z0</span><span class="p">,</span>
+            <span class="n">p_std</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># Large step size in unconstrained space</span>
+            <span class="n">nsteps</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>  <span class="c1"># steps for each chain</span>
+            <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+            <span class="n">return_sampler</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">transform</span><span class="p">:</span>
+            <span class="n">sample</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">unconstrained_to_constrained</span><span class="p">(</span><span class="n">zsample</span><span class="p">,</span> <span class="n">tfms</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sample</span> <span class="o">=</span> <span class="n">zsample</span>
+
+    <span class="k">elif</span> <span class="n">sampler</span> <span class="o">==</span> <span class="s2">&quot;nuts&quot;</span><span class="p">:</span>
+        <span class="n">log_ll</span> <span class="o">=</span> <span class="n">flicker_log_post_JAX</span><span class="p">(</span>
+            <span class="n">TOD</span><span class="p">,</span>
+            <span class="n">gains</span><span class="p">,</span>
+            <span class="n">Tsys</span><span class="p">,</span>
+            <span class="n">include_DC_Gain</span><span class="o">=</span><span class="n">include_DC_Gain</span><span class="p">,</span>
+            <span class="n">prior_func</span><span class="o">=</span><span class="n">prior_func</span><span class="p">,</span>
+            <span class="n">jeffreys</span><span class="o">=</span><span class="n">jeffreys</span><span class="p">,</span>
+            <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">transform</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">consecutive</span><span class="o">=</span><span class="n">consecutive</span><span class="p">,</span>
+            <span class="n">time_list</span><span class="o">=</span><span class="n">time_list</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">NUTS_sampler</span><span class="p">(</span>
+            <span class="n">log_ll</span><span class="p">,</span>
+            <span class="n">init_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">event_shape</span><span class="o">=</span><span class="p">(</span><span class="n">dim</span><span class="p">,),</span>
+            <span class="n">initial_warmup</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+            <span class="n">max_warmup</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+            <span class="n">N_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+            <span class="n">target_r_hat</span><span class="o">=</span><span class="mf">1.01</span><span class="p">,</span>
+            <span class="n">single_return</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">N_chains</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">rng_key</span><span class="o">=</span><span class="n">rng_key</span><span class="p">,</span>
+            <span class="n">prior_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown sampler: </span><span class="si">{</span><span class="n">sampler</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sample</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025-2026, Zheng Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

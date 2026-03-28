@@ -1,0 +1,712 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hydra_tod.gain_sampler &mdash; hydra_tod 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            hydra_tod
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#conda-environment">Conda Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/data_model.html">Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#observation-model">Observation Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#system-temperature">System Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gain-model">Gain Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/flicker_noise.html">Flicker Noise Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#power-spectral-density">Power Spectral Density</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#correlation-function">Correlation Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#covariance-matrix">Covariance Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#emulator">Emulator</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#visualization">Visualization</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/simulation.html">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/gibbs_sampler.html">Gibbs Sampler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/flicker_model.html">Flicker Noise Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/samplers.html">Parameter Samplers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/linear_algebra.html">Linear Algebra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/utilities.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.utils">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/diagnostics.html">MCMC Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/visualization.html">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citation.html">Citation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#plain-text">Plain text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#bibtex">BibTeX</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#id1">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hydra_tod</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hydra_tod.gain_sampler</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for hydra_tod.gain_sampler</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NDArray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.linear_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">cg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">cho_compute_mat_inv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">flicker_cov</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.linear_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">sample_p_old</span><span class="p">,</span> <span class="n">iterative_gls</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">toeplitz</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span>
+
+    <span class="c1"># Get the directory where this module is located</span>
+    <span class="n">module_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">corr_emulator_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">module_dir</span><span class="p">,</span> <span class="s2">&quot;flicker_corr_emulator.pkl&quot;</span><span class="p">)</span>
+    <span class="n">logdet_emulator_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">module_dir</span><span class="p">,</span> <span class="s2">&quot;flicker_logdet_emulator.pkl&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Import the class definition before unpickling</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlickerCorrEmulator</span>
+
+    <span class="c1"># Load the emulator</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">corr_emulator_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">flicker_cov</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogDetEmulator</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logdet_emulator_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">flicker_logdet</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">use_emulator</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using the emulator for flicker noise correlation function.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># JIT the flicker covariance function</span>
+    <span class="n">flicker_cov_jax</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">flicker_cov</span><span class="o">.</span><span class="n">create_jax</span><span class="p">())</span>
+    <span class="n">flicker_logdet_jax</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">flicker_logdet</span><span class="o">.</span><span class="n">create_jax</span><span class="p">())</span>
+
+<span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Emulator for flicker noise correlation function not found or failed to load: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using flicker_cov_vec instead.&quot;</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">flicker_cov_vec</span> <span class="k">as</span> <span class="n">flicker_cov</span>
+
+    <span class="n">use_emulator</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="linear_gain_sampler">
+<a class="viewcode-back" href="../../api/samplers.html#hydra_tod.gain_sampler.linear_gain_sampler">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">linear_gain_sampler</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">t_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">gain_proj</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">Tsys</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">noise_params</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">logfc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">wnoise_var</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.5e-6</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-13</span><span class="p">,</span>
+    <span class="n">prior_cov_inv</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prior_mean</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">cg</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sample gain coefficients under the linear gain model.</span>
+
+<span class="sd">    In the linear model the gain is a linear function of basis coefficients:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        g(t) = \mathbf{G}\,\mathbf{p}</span>
+
+<span class="sd">    where :math:`\mathbf{G}` is the gain projection matrix and</span>
+<span class="sd">    :math:`\mathbf{p}` is the parameter vector. The data vector is</span>
+<span class="sd">    formed as :math:`\mathbf{d} = \mathrm{TOD} / T_{\mathrm{sys}}`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : NDArray[np.floating]</span>
+<span class="sd">        Time-ordered data vector of length :math:`N_t`.</span>
+<span class="sd">    t_list : NDArray[np.floating]</span>
+<span class="sd">        Observation time stamps (seconds).</span>
+<span class="sd">    gain_proj : NDArray[np.floating]</span>
+<span class="sd">        Gain projection (design) matrix :math:`\mathbf{G}` of shape</span>
+<span class="sd">        ``(N_t, N_p)``.</span>
+<span class="sd">    Tsys : NDArray[np.floating]</span>
+<span class="sd">        System temperature vector of length :math:`N_t`.</span>
+<span class="sd">    noise_params : tuple[float, float]</span>
+<span class="sd">        Noise parameters ``(logf0, alpha)`` where ``logf0`` is</span>
+<span class="sd">        :math:`\log_{10}\omega_0` and ``alpha`` is the spectral index.</span>
+<span class="sd">    logfc : float</span>
+<span class="sd">        Log10 of the cutoff angular frequency :math:`\log_{10}\omega_c`.</span>
+<span class="sd">    wnoise_var : float, optional</span>
+<span class="sd">        White-noise variance :math:`\sigma_w^2`. Default is ``2.5e-6``.</span>
+<span class="sd">    mu : float, optional</span>
+<span class="sd">        Prior mean offset for the gain model. Default is ``0.0``.</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        Number of posterior samples to draw. Default is ``1``.</span>
+<span class="sd">    tol : float, optional</span>
+<span class="sd">        Tolerance for the iterative GLS solver. Default is ``1e-13``.</span>
+<span class="sd">    prior_cov_inv : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Inverse prior covariance matrix (or 1-D diagonal). If ``None``,</span>
+<span class="sd">        an uninformative prior is used.</span>
+<span class="sd">    prior_mean : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Prior mean vector. If ``None``, zero mean is assumed.</span>
+<span class="sd">    solver : Callable, optional</span>
+<span class="sd">        Linear solver function (e.g., ``cg``, ``minres``). Default is</span>
+<span class="sd">        :func:`hydra_tod.linear_solver.cg`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NDArray[np.float64]</span>
+<span class="sd">        Posterior sample(s) of gain coefficients :math:`\mathbf{p}`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">d_vec</span> <span class="o">=</span> <span class="n">data</span> <span class="o">/</span> <span class="n">Tsys</span>
+    <span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">noise_params</span>
+    <span class="k">if</span> <span class="n">use_emulator</span><span class="p">:</span>
+        <span class="n">Ncov_inv</span> <span class="o">=</span> <span class="n">cho_compute_mat_inv</span><span class="p">(</span><span class="n">toeplitz</span><span class="p">(</span><span class="n">flicker_cov_jax</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Ncov_inv</span> <span class="o">=</span> <span class="n">cho_compute_mat_inv</span><span class="p">(</span>
+            <span class="n">flicker_cov</span><span class="p">(</span>
+                <span class="n">t_list</span><span class="p">,</span>
+                <span class="mf">10.0</span><span class="o">**</span><span class="n">logf0</span><span class="p">,</span>
+                <span class="mf">10.0</span><span class="o">**</span><span class="n">logfc</span><span class="p">,</span>
+                <span class="n">alpha</span><span class="p">,</span>
+                <span class="n">white_n_variance</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+                <span class="n">only_row_0</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="n">p_GLS</span><span class="p">,</span> <span class="n">sigma_inv</span> <span class="o">=</span> <span class="n">iterative_gls</span><span class="p">(</span><span class="n">d_vec</span><span class="p">,</span> <span class="n">gain_proj</span><span class="p">,</span> <span class="n">Ncov_inv</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sample_p_old</span><span class="p">(</span>
+        <span class="n">d_vec</span><span class="p">,</span>
+        <span class="n">gain_proj</span><span class="p">,</span>
+        <span class="n">sigma_inv</span><span class="p">,</span>
+        <span class="n">num_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+        <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span>
+        <span class="n">prior_cov_inv</span><span class="o">=</span><span class="n">prior_cov_inv</span><span class="p">,</span>
+        <span class="n">prior_mean</span><span class="o">=</span><span class="n">prior_mean</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="log_gain_sampler">
+<a class="viewcode-back" href="../../api/samplers.html#hydra_tod.gain_sampler.log_gain_sampler">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">log_gain_sampler</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">t_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">gain_proj</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">Tsys</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">noise_params</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">logfc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">wnoise_var</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.5e-6</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">prior_cov_inv</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prior_mean</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">cg</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sample gain coefficients under the log-linear gain model.</span>
+
+<span class="sd">    In the log model the logarithm of the gain is a linear function of</span>
+<span class="sd">    basis coefficients:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        g(t) = \exp(\mathbf{G}\,\mathbf{p})</span>
+
+<span class="sd">    The data vector is formed as</span>
+<span class="sd">    :math:`\mathbf{d} = \ln(\mathrm{TOD}/T_{\mathrm{sys}})`, linearising</span>
+<span class="sd">    the model so that standard conjugate Gaussian sampling applies.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : NDArray[np.floating]</span>
+<span class="sd">        Time-ordered data vector of length :math:`N_t`.</span>
+<span class="sd">    t_list : NDArray[np.floating]</span>
+<span class="sd">        Observation time stamps (seconds).</span>
+<span class="sd">    gain_proj : NDArray[np.floating]</span>
+<span class="sd">        Gain projection matrix :math:`\mathbf{G}`, shape ``(N_t, N_p)``.</span>
+<span class="sd">    Tsys : NDArray[np.floating]</span>
+<span class="sd">        System temperature vector of length :math:`N_t`.</span>
+<span class="sd">    noise_params : tuple[float, float]</span>
+<span class="sd">        Noise parameters ``(logf0, alpha)``.</span>
+<span class="sd">    logfc : float</span>
+<span class="sd">        Log10 of the cutoff angular frequency.</span>
+<span class="sd">    wnoise_var : float, optional</span>
+<span class="sd">        White-noise variance. Default is ``2.5e-6``.</span>
+<span class="sd">    mu : float, optional</span>
+<span class="sd">        Prior mean offset. Default is ``0.0``.</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        Number of posterior samples. Default is ``1``.</span>
+<span class="sd">    prior_cov_inv : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Inverse prior covariance (or 1-D diagonal).</span>
+<span class="sd">    prior_mean : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Prior mean vector.</span>
+<span class="sd">    solver : Callable, optional</span>
+<span class="sd">        Linear solver function. Default is :func:`hydra_tod.linear_solver.cg`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NDArray[np.float64]</span>
+<span class="sd">        Posterior sample(s) of log-gain coefficients :math:`\mathbf{p}`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">d_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">data</span> <span class="o">/</span> <span class="n">Tsys</span><span class="p">)</span>
+    <span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">noise_params</span>
+    <span class="k">if</span> <span class="n">use_emulator</span><span class="p">:</span>
+        <span class="n">Ncov_inv</span> <span class="o">=</span> <span class="n">cho_compute_mat_inv</span><span class="p">(</span><span class="n">toeplitz</span><span class="p">(</span><span class="n">flicker_cov_jax</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Ncov_inv</span> <span class="o">=</span> <span class="n">cho_compute_mat_inv</span><span class="p">(</span>
+            <span class="n">flicker_cov</span><span class="p">(</span>
+                <span class="n">t_list</span><span class="p">,</span>
+                <span class="mf">10.0</span><span class="o">**</span><span class="n">logf0</span><span class="p">,</span>
+                <span class="mf">10.0</span><span class="o">**</span><span class="n">logfc</span><span class="p">,</span>
+                <span class="n">alpha</span><span class="p">,</span>
+                <span class="n">white_n_variance</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+                <span class="n">only_row_0</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">sample_p_old</span><span class="p">(</span>
+        <span class="n">d_vec</span><span class="p">,</span>
+        <span class="n">gain_proj</span><span class="p">,</span>
+        <span class="n">Ncov_inv</span><span class="p">,</span>
+        <span class="n">num_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+        <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span>
+        <span class="n">prior_cov_inv</span><span class="o">=</span><span class="n">prior_cov_inv</span><span class="p">,</span>
+        <span class="n">prior_mean</span><span class="o">=</span><span class="n">prior_mean</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="factorized_gain_sampler">
+<a class="viewcode-back" href="../../api/samplers.html#hydra_tod.gain_sampler.factorized_gain_sampler">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">factorized_gain_sampler</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">t_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">gain_proj</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">Tsys</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">noise_params</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">logfc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">wnoise_var</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.5e-6</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-13</span><span class="p">,</span>
+    <span class="n">prior_cov_inv</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prior_mean</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">cg</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sample gain coefficients under the factorized gain model.</span>
+
+<span class="sd">    In the factorized model the gain is decomposed into a DC component</span>
+<span class="sd">    and a time-varying perturbation:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        g(t) = g_0 \bigl(\mathbf{G}\,\mathbf{p} + 1\bigr)</span>
+
+<span class="sd">    where :math:`g_0` is the DC gain (sampled jointly with the noise</span>
+<span class="sd">    parameters). The data vector is</span>
+<span class="sd">    :math:`\mathbf{d} = \mathrm{TOD}/(T_{\mathrm{sys}}\,g_0)`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : NDArray[np.floating]</span>
+<span class="sd">        Time-ordered data vector of length :math:`N_t`.</span>
+<span class="sd">    t_list : NDArray[np.floating]</span>
+<span class="sd">        Observation time stamps (seconds).</span>
+<span class="sd">    gain_proj : NDArray[np.floating]</span>
+<span class="sd">        Gain projection matrix :math:`\mathbf{G}`, shape ``(N_t, N_p)``.</span>
+<span class="sd">    Tsys : NDArray[np.floating]</span>
+<span class="sd">        System temperature vector of length :math:`N_t`.</span>
+<span class="sd">    noise_params : tuple[float, float, float]</span>
+<span class="sd">        Noise parameters ``(DC_gain, logf0, alpha)`` where ``DC_gain`` is</span>
+<span class="sd">        the overall gain factor :math:`g_0`.</span>
+<span class="sd">    logfc : float</span>
+<span class="sd">        Log10 of the cutoff angular frequency.</span>
+<span class="sd">    wnoise_var : float, optional</span>
+<span class="sd">        White-noise variance. Default is ``2.5e-6``.</span>
+<span class="sd">    mu : float, optional</span>
+<span class="sd">        Prior mean offset. Default is ``1.0`` (since perturbations are</span>
+<span class="sd">        centred around unity).</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        Number of posterior samples. Default is ``1``.</span>
+<span class="sd">    tol : float, optional</span>
+<span class="sd">        Tolerance for the iterative GLS solver. Default is ``1e-13``.</span>
+<span class="sd">    prior_cov_inv : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Inverse prior covariance (or 1-D diagonal).</span>
+<span class="sd">    prior_mean : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Prior mean vector.</span>
+<span class="sd">    solver : Callable, optional</span>
+<span class="sd">        Linear solver function. Default is :func:`hydra_tod.linear_solver.cg`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NDArray[np.float64]</span>
+<span class="sd">        Posterior sample(s) of gain perturbation coefficients</span>
+<span class="sd">        :math:`\mathbf{p}`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DC_gain</span><span class="p">,</span> <span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">noise_params</span>
+    <span class="n">d_vec</span> <span class="o">=</span> <span class="n">data</span> <span class="o">/</span> <span class="n">Tsys</span> <span class="o">/</span> <span class="n">DC_gain</span>
+    <span class="k">if</span> <span class="n">use_emulator</span><span class="p">:</span>
+        <span class="n">Ncov_inv</span> <span class="o">=</span> <span class="n">cho_compute_mat_inv</span><span class="p">(</span><span class="n">toeplitz</span><span class="p">(</span><span class="n">flicker_cov_jax</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Ncov_inv</span> <span class="o">=</span> <span class="n">cho_compute_mat_inv</span><span class="p">(</span>
+            <span class="n">flicker_cov</span><span class="p">(</span>
+                <span class="n">t_list</span><span class="p">,</span>
+                <span class="mf">10.0</span><span class="o">**</span><span class="n">logf0</span><span class="p">,</span>
+                <span class="mf">10.0</span><span class="o">**</span><span class="n">logfc</span><span class="p">,</span>
+                <span class="n">alpha</span><span class="p">,</span>
+                <span class="n">white_n_variance</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+                <span class="n">only_row_0</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="n">p_GLS</span><span class="p">,</span> <span class="n">sigma_inv</span> <span class="o">=</span> <span class="n">iterative_gls</span><span class="p">(</span><span class="n">d_vec</span><span class="p">,</span> <span class="n">gain_proj</span><span class="p">,</span> <span class="n">Ncov_inv</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sample_p_old</span><span class="p">(</span>
+        <span class="n">d_vec</span><span class="p">,</span>
+        <span class="n">gain_proj</span><span class="p">,</span>
+        <span class="n">sigma_inv</span><span class="p">,</span>
+        <span class="n">num_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+        <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span>
+        <span class="n">prior_cov_inv</span><span class="o">=</span><span class="n">prior_cov_inv</span><span class="p">,</span>
+        <span class="n">prior_mean</span><span class="o">=</span><span class="n">prior_mean</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="gain_sampler">
+<a class="viewcode-back" href="../../api/samplers.html#hydra_tod.gain_sampler.gain_sampler">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gain_sampler</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">t_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">gain_proj</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">Tsys</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">noise_params</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="n">logfc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span>
+    <span class="n">wnoise_var</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.5e-6</span><span class="p">,</span>
+    <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-13</span><span class="p">,</span>
+    <span class="n">prior_cov_inv</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prior_mean</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">cg</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sample gain coefficients and reconstruct the gain time series.</span>
+
+<span class="sd">    Dispatcher that selects the appropriate gain sampling function based</span>
+<span class="sd">    on the chosen model and returns both the basis coefficients and the</span>
+<span class="sd">    reconstructed gain vector.</span>
+
+<span class="sd">    The three supported models are:</span>
+
+<span class="sd">    * **&quot;linear&quot;**: :math:`g(t) = \mathbf{G}\,\mathbf{p}`</span>
+<span class="sd">    * **&quot;log&quot;**: :math:`g(t) = \exp(\mathbf{G}\,\mathbf{p})`</span>
+<span class="sd">    * **&quot;factorized&quot;**: :math:`g(t) = g_0\,(\mathbf{G}\,\mathbf{p} + 1)`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : NDArray[np.floating]</span>
+<span class="sd">        Time-ordered data vector of length :math:`N_t`.</span>
+<span class="sd">    t_list : NDArray[np.floating]</span>
+<span class="sd">        Observation time stamps (seconds).</span>
+<span class="sd">    gain_proj : NDArray[np.floating]</span>
+<span class="sd">        Gain projection matrix :math:`\mathbf{G}`, shape ``(N_t, N_p)``.</span>
+<span class="sd">    Tsys : NDArray[np.floating]</span>
+<span class="sd">        System temperature vector of length :math:`N_t`.</span>
+<span class="sd">    noise_params : tuple[float, ...]</span>
+<span class="sd">        Noise parameters. For ``&quot;linear&quot;`` and ``&quot;log&quot;`` models:</span>
+<span class="sd">        ``(logf0, alpha)``. For ``&quot;factorized&quot;`` model:</span>
+<span class="sd">        ``(DC_gain, logf0, alpha)``.</span>
+<span class="sd">    logfc : float</span>
+<span class="sd">        Log10 of the cutoff angular frequency.</span>
+<span class="sd">    model : str, optional</span>
+<span class="sd">        Gain model name: ``&quot;linear&quot;``, ``&quot;log&quot;``, or ``&quot;factorized&quot;``.</span>
+<span class="sd">        Default is ``&quot;linear&quot;``.</span>
+<span class="sd">    wnoise_var : float, optional</span>
+<span class="sd">        White-noise variance. Default is ``2.5e-6``.</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        Number of posterior samples. Default is ``1``.</span>
+<span class="sd">    tol : float, optional</span>
+<span class="sd">        Tolerance for the iterative GLS solver. Default is ``1e-13``.</span>
+<span class="sd">    prior_cov_inv : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Inverse prior covariance (or 1-D diagonal).</span>
+<span class="sd">    prior_mean : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Prior mean vector.</span>
+<span class="sd">    solver : Callable, optional</span>
+<span class="sd">        Linear solver function. Default is :func:`hydra_tod.linear_solver.cg`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sample : NDArray[np.float64]</span>
+<span class="sd">        Posterior sample(s) of the gain basis coefficients.</span>
+<span class="sd">    gains : NDArray[np.float64]</span>
+<span class="sd">        Reconstructed gain time series :math:`g(t)`.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If *model* is not one of ``&quot;linear&quot;``, ``&quot;log&quot;``, ``&quot;factorized&quot;``.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">model</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">linear_gain_sampler</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span>
+            <span class="n">t_list</span><span class="p">,</span>
+            <span class="n">gain_proj</span><span class="p">,</span>
+            <span class="n">Tsys</span><span class="p">,</span>
+            <span class="n">noise_params</span><span class="p">,</span>
+            <span class="n">logfc</span><span class="p">,</span>
+            <span class="n">wnoise_var</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+            <span class="n">mu</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+            <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+            <span class="n">prior_cov_inv</span><span class="o">=</span><span class="n">prior_cov_inv</span><span class="p">,</span>
+            <span class="n">prior_mean</span><span class="o">=</span><span class="n">prior_mean</span><span class="p">,</span>
+            <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">gains</span> <span class="o">=</span> <span class="n">gain_proj</span> <span class="o">@</span> <span class="n">sample</span>
+    <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s2">&quot;log&quot;</span><span class="p">:</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">log_gain_sampler</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span>
+            <span class="n">t_list</span><span class="p">,</span>
+            <span class="n">gain_proj</span><span class="p">,</span>
+            <span class="n">Tsys</span><span class="p">,</span>
+            <span class="n">noise_params</span><span class="p">,</span>
+            <span class="n">logfc</span><span class="p">,</span>
+            <span class="n">wnoise_var</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+            <span class="n">mu</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+            <span class="n">prior_cov_inv</span><span class="o">=</span><span class="n">prior_cov_inv</span><span class="p">,</span>
+            <span class="n">prior_mean</span><span class="o">=</span><span class="n">prior_mean</span><span class="p">,</span>
+            <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">gains</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">gain_proj</span> <span class="o">@</span> <span class="n">sample</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s2">&quot;factorized&quot;</span><span class="p">:</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">factorized_gain_sampler</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span>
+            <span class="n">t_list</span><span class="p">,</span>
+            <span class="n">gain_proj</span><span class="p">,</span>
+            <span class="n">Tsys</span><span class="p">,</span>
+            <span class="n">noise_params</span><span class="p">,</span>
+            <span class="n">logfc</span><span class="p">,</span>
+            <span class="n">wnoise_var</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+            <span class="n">mu</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+            <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+            <span class="n">prior_cov_inv</span><span class="o">=</span><span class="n">prior_cov_inv</span><span class="p">,</span>
+            <span class="n">prior_mean</span><span class="o">=</span><span class="n">prior_mean</span><span class="p">,</span>
+            <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">gains</span> <span class="o">=</span> <span class="n">gain_proj</span> <span class="o">@</span> <span class="n">sample</span> <span class="o">+</span> <span class="mf">1.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown smooth_gain_model: </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sample</span><span class="p">,</span> <span class="n">gains</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025-2026, Zheng Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

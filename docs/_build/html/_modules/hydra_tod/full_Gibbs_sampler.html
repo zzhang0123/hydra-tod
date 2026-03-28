@@ -1,0 +1,1252 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hydra_tod.full_Gibbs_sampler &mdash; hydra_tod 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            hydra_tod
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#conda-environment">Conda Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/data_model.html">Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#observation-model">Observation Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#system-temperature">System Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gain-model">Gain Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/flicker_noise.html">Flicker Noise Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#power-spectral-density">Power Spectral Density</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#correlation-function">Correlation Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#covariance-matrix">Covariance Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#emulator">Emulator</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#visualization">Visualization</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/simulation.html">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/gibbs_sampler.html">Gibbs Sampler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/flicker_model.html">Flicker Noise Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/samplers.html">Parameter Samplers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/linear_algebra.html">Linear Algebra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/utilities.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.utils">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/diagnostics.html">MCMC Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/visualization.html">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citation.html">Citation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#plain-text">Plain text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#bibtex">BibTeX</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#id1">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hydra_tod</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hydra_tod.full_Gibbs_sampler</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for hydra_tod.full_Gibbs_sampler</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="c1"># This file contains the full Gibbs sampler for all the parameters in data model,</span>
+<span class="c1"># including the system temperature parameters, noise parameters, gain parameters.</span>
+
+<span class="c1"># Full Gibbs sampler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.random</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpiutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.gain_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">gain_sampler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.noise_sampler_fixed_fc</span><span class="w"> </span><span class="kn">import</span> <span class="n">flicker_sampler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.noise_sampler_old</span><span class="w"> </span><span class="kn">import</span> <span class="n">flicker_noise_sampler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.tsys_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tsys_coeff_sampler</span><span class="p">,</span> <span class="n">Tsys_sampler_multi_TODs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.linear_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">cg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">block_diag</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="n">comm</span> <span class="o">=</span> <span class="n">mpiutil</span><span class="o">.</span><span class="n">world</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">mpiutil</span><span class="o">.</span><span class="n">rank</span>
+<span class="n">rank0</span> <span class="o">=</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span>
+
+<span class="c1"># Default bounds format: [[lower1, upper1], [lower2, upper2], ...]</span>
+<span class="n">flicker_bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mf">6.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)]</span>
+<span class="n">Gflicker_bounds</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">6.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]</span>
+
+
+<div class="viewcode-block" id="get_Tsys_operator">
+<a class="viewcode-back" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_Tsys_operator</span><span class="p">(</span>
+    <span class="n">local_Tsky_operator_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">local_Tloc_operator_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct combined Tsys operator matrix from Tsky and Tloc operators.</span>
+
+<span class="sd">    Assembles a block-structured system temperature operator that maps the</span>
+<span class="sd">    joint parameter vector ``[Tsky_params, Tloc1_params, Tloc2_params, ...]``</span>
+<span class="sd">    to time-ordered data for each TOD on this MPI rank. The Tsky columns are</span>
+<span class="sd">    shared across all TODs (and ranks), while the Tloc columns are block-diagonal</span>
+<span class="sd">    (each TOD has its own local temperature component).</span>
+
+<span class="sd">    For example, with two ranks where rank 0 owns TODs 1--2 and rank 1 owns</span>
+<span class="sd">    TOD 3, the global operator has the structure::</span>
+
+<span class="sd">              ( U1  R1   0   0  )</span>
+<span class="sd">        U  =  ( U2   0  R2   0  )</span>
+<span class="sd">              ( U3   0   0  R3  )</span>
+
+<span class="sd">    where ``U_i`` is the sky operator and ``R_i`` is the local operator for</span>
+<span class="sd">    TOD *i*. Each rank stores only its own rows.</span>
+
+<span class="sd">    The resulting linear system is:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \\mathbf{U} \\begin{pmatrix} T_{\\rm sky} \\\\ T_{\\rm loc,1} \\\\</span>
+<span class="sd">        T_{\\rm loc,2} \\\\ T_{\\rm loc,3} \\end{pmatrix}</span>
+<span class="sd">        + \\mathbf{n} = \\mathbf{d}</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    local_Tsky_operator_list : list[np.ndarray]</span>
+<span class="sd">        List of sky temperature projection operators for each TOD on this rank.</span>
+<span class="sd">        Each element has shape ``(n_time_i, n_sky_modes)``.</span>
+<span class="sd">    local_Tloc_operator_list : list[np.ndarray]</span>
+<span class="sd">        List of local temperature projection operators for each TOD on this</span>
+<span class="sd">        rank. Each element has shape ``(n_time_i, n_loc_modes_i)``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[np.ndarray]</span>
+<span class="sd">        List of combined Tsys operators for each TOD on this rank. Each element</span>
+<span class="sd">        has shape ``(n_time_i, n_sky_modes + total_loc_modes)`` where</span>
+<span class="sd">        ``total_loc_modes`` is the sum of all local mode dimensions across all</span>
+<span class="sd">        ranks.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function uses MPI collective operations (``allgather``) to determine</span>
+<span class="sd">    the global block structure. All ranks must call this function together.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; Tsys_ops = get_Tsys_operator(Tsky_op_list, Tloc_op_list)</span>
+<span class="sd">    &gt;&gt;&gt; Tsys = Tsys_ops[0] @ np.concatenate([Tsky_params, Tloc_params_all])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate Tsys operator from Tsky and Tloc operators</span>
+    <span class="c1"># For example, we illustrate this in a block matrix form:</span>
+    <span class="c1"># say we have two ranks,</span>
+    <span class="c1"># rank0 has local Tsky operators U1, U2, and local Tloc operators R1, R2,</span>
+    <span class="c1"># rank1 has local Tsky operators U3, and local Tloc operators R3,</span>
+    <span class="c1"># then the overall Tsys operator U is:</span>
+    <span class="c1">#        ( U1 R1  0  0 )</span>
+    <span class="c1"># U =    ( U2  0 R2  0 )</span>
+    <span class="c1">#        ( U3  0  0  R3)</span>
+    <span class="c1"># It will be again saved as local lists: rank0 has [( U1 R1  0  0 ), (U2  0 R2  0 )],</span>
+    <span class="c1"># and rank1 has [( U3  0  0  R3)].</span>
+
+    <span class="c1"># The linear system reads</span>
+    <span class="c1"># ( U1 R1  0  0 )       (Tsky)       (n1)       (d1)</span>
+    <span class="c1"># ( U2  0 R2  0 )   @   (Tloc1)   +  (n2)   =   (d2)</span>
+    <span class="c1"># ( U3  0  0  R3)       (Tloc2)      (n3)       (d3)</span>
+    <span class="c1">#                       (Tloc3)</span>
+    <span class="n">num_TODs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_Tsky_operator_list</span><span class="p">)</span>
+
+    <span class="n">local_loc_dim</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">local_Tloc_operator_list</span><span class="p">]</span>
+    <span class="n">local_total_loc_dim</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">local_loc_dim</span><span class="p">)</span>
+    <span class="n">glist_total_loc_dims</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">local_total_loc_dim</span><span class="p">)</span>
+    <span class="n">global_total_loc_dim</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">glist_total_loc_dims</span><span class="p">)</span>
+    <span class="c1"># cumulative sum of glist_total_loc_dims</span>
+    <span class="n">rank_offset_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">glist_total_loc_dims</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">local_rank_offset</span> <span class="o">=</span> <span class="n">rank_offset_list</span><span class="p">[</span><span class="n">rank</span><span class="p">]</span>
+    <span class="n">local_loc_dim</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">local_loc_dim</span>
+
+    <span class="n">local_Tsys_operator_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_TODs</span><span class="p">):</span>
+        <span class="n">dim_data</span> <span class="o">=</span> <span class="n">local_Tloc_operator_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dim_params</span> <span class="o">=</span> <span class="n">local_Tloc_operator_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">Tloc_operator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim_data</span><span class="p">,</span> <span class="n">global_total_loc_dim</span><span class="p">))</span>
+        <span class="n">start_ind</span> <span class="o">=</span> <span class="n">local_rank_offset</span> <span class="o">+</span> <span class="n">local_loc_dim</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+        <span class="n">end_ind</span> <span class="o">=</span> <span class="n">start_ind</span> <span class="o">+</span> <span class="n">dim_params</span>
+        <span class="n">Tloc_operator</span><span class="p">[:,</span> <span class="n">start_ind</span><span class="p">:</span><span class="n">end_ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">local_Tloc_operator_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+        <span class="n">Tsys_operator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">local_Tsky_operator_list</span><span class="p">[</span><span class="n">di</span><span class="p">],</span> <span class="n">Tloc_operator</span><span class="p">))</span>
+        <span class="n">local_Tsys_operator_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Tsys_operator</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">local_Tsys_operator_list</span></div>
+
+
+
+<div class="viewcode-block" id="TOD_Gibbs_sampler">
+<a class="viewcode-back" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">TOD_Gibbs_sampler</span><span class="p">(</span>
+    <span class="n">local_TOD_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">local_t_lists</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">local_gain_operator_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">local_Tsky_operator_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">local_Tloc_operator_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">init_Tsky_params</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">init_Tloc_params_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">init_noise_params_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">local_logfc_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">local_Tsys_injection_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">wnoise_var</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.5e-6</span><span class="p">,</span>
+    <span class="n">Tsky_prior_cov_inv</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">Tsky_prior_mean</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">local_Tloc_prior_cov_inv_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">local_Tloc_prior_mean_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">local_gain_prior_cov_inv_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">local_gain_prior_mean_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">local_noise_prior_func_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">joint_Tsys_sampling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">smooth_gain_model</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="s2">&quot;factorized&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span>
+    <span class="n">noise_sampler_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;emcee&quot;</span><span class="p">,</span> <span class="s2">&quot;nuts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;emcee&quot;</span><span class="p">,</span>
+    <span class="n">noise_Jeffreys_prior</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">noise_params_bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">flicker_bounds</span><span class="p">,</span>
+    <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">,</span>
+    <span class="n">linear_solver</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">cg</span><span class="p">,</span>
+    <span class="n">root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">Est_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span>
+    <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span>
+    <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the full Gibbs sampler for multi-TOD Bayesian inference.</span>
+
+<span class="sd">    This is the main inference engine of the ``hydra_tod`` package. It</span>
+<span class="sd">    implements a Gibbs sampler that alternates between conditionally sampling</span>
+<span class="sd">    the gain parameters, system temperature parameters, and noise parameters</span>
+<span class="sd">    from a hierarchical Bayesian model for radio telescope time-ordered data.</span>
+
+<span class="sd">    The data model is:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        d(t) = T_{\\rm sys}(t) \\, [1 + n(t)] \\, g(t)</span>
+
+<span class="sd">    where :math:`T_{\\rm sys} = T_{\\rm sky} + T_{\\rm loc}`, :math:`g(t)` is</span>
+<span class="sd">    the time-varying instrument gain, and :math:`n(t)` is flicker noise with a</span>
+<span class="sd">    :math:`1/f^\\alpha` power spectrum.</span>
+
+<span class="sd">    The Gibbs sampling scheme iterates through the following conditional</span>
+<span class="sd">    updates at each step *s*:</span>
+
+<span class="sd">    1. **Gain sampling**: :math:`g^{(s)} \\sim p(g \\mid T_{\\rm sys}^{(s-1)},</span>
+<span class="sd">       n^{(s-1)}, d)`</span>
+<span class="sd">    2. **Local temperature sampling** (if not joint):</span>
+<span class="sd">       :math:`T_{\\rm loc}^{(s)} \\sim p(T_{\\rm loc} \\mid T_{\\rm sky}^{(s-1)},</span>
+<span class="sd">       g^{(s)}, n^{(s-1)}, d)`</span>
+<span class="sd">    3. **Noise parameter sampling**: :math:`(\\log f_0, \\alpha)^{(s)} \\sim</span>
+<span class="sd">       p(\\theta_n \\mid T_{\\rm sys}^{(s-1)}, g^{(s)}, d)`</span>
+<span class="sd">    4. **Sky temperature sampling**: :math:`T_{\\rm sky}^{(s)} \\sim</span>
+<span class="sd">       p(T_{\\rm sky} \\mid T_{\\rm loc}^{(s)}, g^{(s)}, n^{(s)}, d)`</span>
+
+<span class="sd">    Computation is parallelized across MPI ranks, where each rank processes a</span>
+<span class="sd">    subset of TODs. Gain and noise parameters are local to each TOD, while</span>
+<span class="sd">    sky temperature parameters are shared and synchronized across all ranks.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    local_TOD_list : list[np.ndarray]</span>
+<span class="sd">        List of time-ordered data vectors for this MPI rank. Each element</span>
+<span class="sd">        has shape ``(n_time_i,)``.</span>
+<span class="sd">    local_t_lists : list[np.ndarray]</span>
+<span class="sd">        List of time-lag arrays for each TOD on this rank. Each element has</span>
+<span class="sd">        shape ``(n_time_i,)`` and is used for constructing the flicker noise</span>
+<span class="sd">        covariance matrix.</span>
+<span class="sd">    local_gain_operator_list : list[np.ndarray]</span>
+<span class="sd">        List of gain projection operators (design matrices) for each TOD.</span>
+<span class="sd">        Each element has shape ``(n_time_i, n_gain_modes)``, mapping gain</span>
+<span class="sd">        polynomial coefficients to time-domain gains.</span>
+<span class="sd">    local_Tsky_operator_list : list[np.ndarray]</span>
+<span class="sd">        List of sky temperature projection operators for each TOD. Each</span>
+<span class="sd">        element has shape ``(n_time_i, n_sky_modes)``, typically a beam-</span>
+<span class="sd">        weighted HEALPix pointing matrix.</span>
+<span class="sd">    local_Tloc_operator_list : list[np.ndarray]</span>
+<span class="sd">        List of local temperature projection operators for each TOD. Each</span>
+<span class="sd">        element has shape ``(n_time_i, n_loc_modes)``.</span>
+<span class="sd">    init_Tsky_params : np.ndarray</span>
+<span class="sd">        Initial sky temperature parameter vector, shape ``(n_sky_modes,)``.</span>
+<span class="sd">        Shared across all ranks.</span>
+<span class="sd">    init_Tloc_params_list : list[np.ndarray]</span>
+<span class="sd">        Initial local temperature parameter vectors for each TOD on this</span>
+<span class="sd">        rank. Each element has shape ``(n_loc_modes,)``.</span>
+<span class="sd">    init_noise_params_list : list[np.ndarray]</span>
+<span class="sd">        Initial noise parameter vectors for each TOD on this rank. Each</span>
+<span class="sd">        element contains ``[logf0, alpha]`` (2 elements) or</span>
+<span class="sd">        ``[DC_gain, logf0, alpha]`` (3 elements) if using the factorized</span>
+<span class="sd">        gain model.</span>
+<span class="sd">    local_logfc_list : list[float]</span>
+<span class="sd">        List of log10 cutoff frequencies for the flicker noise model for</span>
+<span class="sd">        each TOD. Typically ``log10(1 / (N * dt) * 2 * pi)``.</span>
+<span class="sd">    local_Tsys_injection_list : list[float | np.ndarray], optional</span>
+<span class="sd">        List of additional system temperature injections (e.g., noise diode</span>
+<span class="sd">        contribution) for each TOD. Defaults to zeros.</span>
+<span class="sd">    wnoise_var : float, optional</span>
+<span class="sd">        White noise variance, by default ``2.5e-6``. This corresponds to</span>
+<span class="sd">        :math:`\\sigma_w^2 = 1 / (B \\tau)` where *B* is bandwidth and</span>
+<span class="sd">        :math:`\\tau` is integration time.</span>
+<span class="sd">    Tsky_prior_cov_inv : np.ndarray, optional</span>
+<span class="sd">        Inverse prior covariance matrix for sky temperature parameters.</span>
+<span class="sd">        Shape ``(n_sky_modes,)`` for diagonal or</span>
+<span class="sd">        ``(n_sky_modes, n_sky_modes)`` for full matrix. If ``None``, an</span>
+<span class="sd">        uninformative prior is used.</span>
+<span class="sd">    Tsky_prior_mean : np.ndarray, optional</span>
+<span class="sd">        Prior mean vector for sky temperature parameters, shape</span>
+<span class="sd">        ``(n_sky_modes,)``. If ``None``, zero mean is assumed.</span>
+<span class="sd">    local_Tloc_prior_cov_inv_list : list[np.ndarray], optional</span>
+<span class="sd">        List of inverse prior covariance matrices for local temperature</span>
+<span class="sd">        parameters for each TOD. If ``None``, uninformative priors are used.</span>
+<span class="sd">    local_Tloc_prior_mean_list : list[np.ndarray], optional</span>
+<span class="sd">        List of prior mean vectors for local temperature parameters for</span>
+<span class="sd">        each TOD. If ``None``, zero means are assumed.</span>
+<span class="sd">    local_gain_prior_cov_inv_list : list[np.ndarray], optional</span>
+<span class="sd">        List of inverse prior covariance matrices for gain parameters for</span>
+<span class="sd">        each TOD. If ``None``, uninformative priors are used.</span>
+<span class="sd">    local_gain_prior_mean_list : list[np.ndarray], optional</span>
+<span class="sd">        List of prior mean vectors for gain parameters for each TOD.</span>
+<span class="sd">        If ``None``, zero means are assumed.</span>
+<span class="sd">    local_noise_prior_func_list : list[Callable | None], optional</span>
+<span class="sd">        List of custom log-prior functions for noise parameters for each</span>
+<span class="sd">        TOD. Each callable takes a noise parameter vector and returns the</span>
+<span class="sd">        log-prior probability. If ``None``, default priors are used.</span>
+<span class="sd">    joint_Tsys_sampling : bool, optional</span>
+<span class="sd">        If ``True``, sample the full system temperature parameter vector</span>
+<span class="sd">        :math:`[T_{\\rm sky}, T_{\\rm loc,1}, T_{\\rm loc,2}, \\ldots]`</span>
+<span class="sd">        jointly using a single linear system. If ``False`` (default),</span>
+<span class="sd">        sample :math:`T_{\\rm sky}` and :math:`T_{\\rm loc}` separately.</span>
+<span class="sd">    smooth_gain_model : ``{&#39;linear&#39;, &#39;log&#39;, &#39;factorized&#39;}``, optional</span>
+<span class="sd">        Gain parameterization model:</span>
+
+<span class="sd">        - ``&#39;linear&#39;``: :math:`g(t) = \\exp(\\mathbf{G} \\mathbf{p})`</span>
+<span class="sd">        - ``&#39;log&#39;``: :math:`\\log g(t) = \\mathbf{G} \\mathbf{p}`</span>
+<span class="sd">        - ``&#39;factorized&#39;``: :math:`g(t) = g_0 \\exp(\\mathbf{G} \\mathbf{p})`</span>
+<span class="sd">          where :math:`g_0` is a DC gain sampled with the noise parameters.</span>
+
+<span class="sd">        Default is ``&#39;linear&#39;``.</span>
+<span class="sd">    noise_sampler_type : ``{&#39;emcee&#39;, &#39;nuts&#39;}``, optional</span>
+<span class="sd">        MCMC sampler used for noise parameter inference. Default is</span>
+<span class="sd">        ``&#39;emcee&#39;``.</span>
+<span class="sd">    noise_Jeffreys_prior : bool, optional</span>
+<span class="sd">        If ``True``, use a Jeffreys prior for noise scale parameters,</span>
+<span class="sd">        providing scale invariance. Default is ``False``.</span>
+<span class="sd">    noise_params_bounds : list[tuple[float, float]], optional</span>
+<span class="sd">        Parameter bounds for noise MCMC sampling. Each tuple specifies</span>
+<span class="sd">        ``(lower, upper)`` for one parameter. Default bounds are</span>
+<span class="sd">        ``[(-6.0, -3.0), (1.1, 4.0)]`` for ``[logf0, alpha]``.</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        Number of Gibbs samples to draw. Default is ``100``.</span>
+<span class="sd">    tol : float, optional</span>
+<span class="sd">        Tolerance for iterative linear solvers (CG, MINRES). Default is</span>
+<span class="sd">        ``1e-12``.</span>
+<span class="sd">    linear_solver : Callable, optional</span>
+<span class="sd">        Linear solver function used for the conjugate sampling steps.</span>
+<span class="sd">        Default is :func:`hydra_tod.linear_solver.cg`.</span>
+<span class="sd">    root : int, optional</span>
+<span class="sd">        MPI rank to gather results onto. If ``None`` (default), results</span>
+<span class="sd">        are gathered onto all ranks via ``allgather``.</span>
+<span class="sd">    Est_mode : bool, optional</span>
+<span class="sd">        If ``True``, return MAP estimates instead of posterior samples</span>
+<span class="sd">        (no stochastic sampling step). Default is ``False``.</span>
+<span class="sd">    debug : bool, optional</span>
+<span class="sd">        If ``True``, print diagnostic information during sampling.</span>
+<span class="sd">        Default is ``False``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tsky_samples : np.ndarray</span>
+<span class="sd">        Sky (or joint Tsys) temperature samples, shape</span>
+<span class="sd">        ``(n_samples, n_sky_modes)`` or ``(n_samples, n_sys_modes)`` if</span>
+<span class="sd">        ``joint_Tsys_sampling=True``.</span>
+<span class="sd">    all_gain_samples : list[np.ndarray]</span>
+<span class="sd">        Gain parameter samples gathered from all ranks. Each element has</span>
+<span class="sd">        shape ``(n_local_TODs, n_samples, n_gain_modes)``.</span>
+<span class="sd">    all_noise_samples : list[np.ndarray]</span>
+<span class="sd">        Noise parameter samples gathered from all ranks. Each element has</span>
+<span class="sd">        shape ``(n_local_TODs, n_samples, n_noise_modes)``.</span>
+<span class="sd">    all_Tloc_samples : list[np.ndarray], optional</span>
+<span class="sd">        Local temperature parameter samples, only returned when</span>
+<span class="sd">        ``joint_Tsys_sampling=False``. Each element has shape</span>
+<span class="sd">        ``(n_local_TODs, n_samples, n_loc_modes)``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - All ranks must call this function together due to MPI collective</span>
+<span class="sd">      operations (barriers, allgather/gather).</span>
+<span class="sd">    - The function uses index ``si - 1`` (i.e., the previous sample) for</span>
+<span class="sd">      conditional parameters, which wraps to the last index at ``si = 0``,</span>
+<span class="sd">      using the initialization values stored there.</span>
+<span class="sd">    - The ``factorized`` gain model includes a DC gain :math:`g_0` that is</span>
+<span class="sd">      sampled jointly with the noise parameters, yielding 3 noise parameter</span>
+<span class="sd">      components instead of 2.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    TOD_Gibbs_sampler_joint_loc : Variant with joint local parameter sampling.</span>
+<span class="sd">    gain_sampler : Conditional gain sampling step.</span>
+<span class="sd">    Tsys_sampler_multi_TODs : Conditional Tsys sampling across multiple TODs.</span>
+<span class="sd">    flicker_noise_sampler : Noise parameter MCMC sampling step.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Synchronize the processes</span>
+    <span class="n">mpiutil</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+    <span class="c1"># Check the length of the input lists</span>
+    <span class="n">num_TODs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_TOD_list</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">num_TODs</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_t_lists</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="n">num_TODs</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_Tsky_operator_list</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="n">num_TODs</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_Tloc_operator_list</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="n">num_TODs</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_gain_operator_list</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The length of the input lists must be the same.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">smooth_gain_model</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="s2">&quot;factorized&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Unknown smooth_gain_model: </span><span class="si">{}</span><span class="s2">. Supported models are &#39;linear&#39;, &#39;log&#39;, and &#39;factorized&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">smooth_gain_model</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">smooth_gain_model</span> <span class="o">==</span> <span class="s2">&quot;factorized&quot;</span><span class="p">:</span>
+        <span class="n">include_DC_Gain</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">include_DC_Gain</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">noise_params_bounds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">include_DC_Gain</span><span class="p">:</span>
+            <span class="n">noise_params_bounds</span> <span class="o">=</span> <span class="n">Gflicker_bounds</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">noise_params_bounds</span> <span class="o">=</span> <span class="n">flicker_bounds</span>
+
+    <span class="k">if</span> <span class="n">joint_Tsys_sampling</span><span class="p">:</span>
+        <span class="n">Tloc_prior_cov_inv_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">item</span>
+            <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">local_Tloc_prior_cov_inv_list</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span>
+        <span class="p">]</span>
+        <span class="n">Tloc_prior_mean_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">item</span>
+            <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">local_Tloc_prior_mean_list</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span>
+        <span class="p">]</span>
+        <span class="n">init_Tloc_params_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">item</span>
+            <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">init_Tloc_params_list</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">Tsky_prior_cov_inv</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># assert all</span>
+            <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+                <span class="n">Tloc_prior_cov_inv</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span>
+                <span class="k">for</span> <span class="n">Tloc_prior_cov_inv</span> <span class="ow">in</span> <span class="n">Tloc_prior_cov_inv_list</span>
+            <span class="p">),</span> <span class="s2">&quot;All prior_cov_inv must have the same number of dimensions [1D (i.e., diagonals) or 2D].&quot;</span>
+            <span class="c1"># The prior covariance matrices are diagonal, the inputs are the diagonal elements</span>
+            <span class="n">Tsys_prior_cov_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">Tsky_prior_cov_inv</span><span class="p">]</span> <span class="o">+</span> <span class="n">Tloc_prior_cov_inv_list</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">Tsky_prior_cov_inv</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+                <span class="n">Tloc_prior_cov_inv</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span>
+                <span class="k">for</span> <span class="n">Tloc_prior_cov_inv</span> <span class="ow">in</span> <span class="n">Tloc_prior_cov_inv_list</span>
+            <span class="p">),</span> <span class="s2">&quot;All prior_cov_inv must have the same number of dimensions [1D (i.e., diagonals) or 2D].&quot;</span>
+            <span class="n">Tsys_prior_cov_inv</span> <span class="o">=</span> <span class="n">block_diag</span><span class="p">(</span>
+                <span class="n">Tsky_prior_cov_inv</span><span class="p">,</span> <span class="o">*</span><span class="n">Tloc_prior_cov_inv_list</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid number of dimensions for Tsky_prior_cov_inv.&quot;</span><span class="p">)</span>
+        <span class="n">Tsys_prior_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">Tsky_prior_mean</span><span class="p">]</span> <span class="o">+</span> <span class="n">Tloc_prior_mean_list</span><span class="p">)</span>
+        <span class="n">init_Tsys_params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">init_Tsky_params</span><span class="p">]</span> <span class="o">+</span> <span class="n">init_Tloc_params_list</span><span class="p">)</span>
+
+        <span class="n">local_Tsys_operator_list</span> <span class="o">=</span> <span class="n">get_Tsys_operator</span><span class="p">(</span>
+            <span class="n">local_Tsky_operator_list</span><span class="p">,</span> <span class="n">local_Tloc_operator_list</span>
+        <span class="p">)</span>
+        <span class="n">n_sys_modes</span> <span class="o">=</span> <span class="n">local_Tsys_operator_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">Tsys_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_sys_modes</span><span class="p">))</span>
+        <span class="n">Tsys_samples</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">init_Tsys_params</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_loc_modes</span> <span class="o">=</span> <span class="n">local_Tloc_operator_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">local_Tloc_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_TODs</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_loc_modes</span><span class="p">))</span>
+
+        <span class="n">n_sky_modes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">init_Tsky_params</span><span class="p">)</span>
+        <span class="n">Tsky_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_sky_modes</span><span class="p">))</span>
+        <span class="n">Tsky_params</span> <span class="o">=</span> <span class="n">init_Tsky_params</span>
+
+        <span class="n">local_Tsky_mu_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">local_TOD_list</span><span class="p">[</span><span class="n">di</span><span class="p">])</span> <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_TODs</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_TODs</span><span class="p">):</span>
+            <span class="n">local_Tloc_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">init_Tloc_params_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+
+    <span class="n">n_g_modes</span> <span class="o">=</span> <span class="n">local_gain_operator_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">local_gain_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_TODs</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_g_modes</span><span class="p">))</span>
+
+    <span class="n">n_N_modes</span> <span class="o">=</span> <span class="mi">3</span> <span class="k">if</span> <span class="n">include_DC_Gain</span> <span class="k">else</span> <span class="mi">2</span>
+    <span class="n">local_noise_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_TODs</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_N_modes</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_TODs</span><span class="p">):</span>
+        <span class="n">t_list</span> <span class="o">=</span> <span class="n">local_t_lists</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+        <span class="n">local_noise_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">init_noise_params_list</span><span class="p">[</span><span class="n">di</span><span class="p">])</span>
+
+    <span class="n">local_gain_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">local_TOD_list</span><span class="p">[</span><span class="n">di</span><span class="p">])</span> <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_TODs</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">Est_mode</span><span class="p">:</span>
+        <span class="n">num_sample</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">num_sample</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">local_Tsys_injection_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">local_Tsys_injection_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_TODs</span>
+    <span class="k">if</span> <span class="n">local_noise_prior_func_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">local_noise_prior_func_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_TODs</span>
+    <span class="k">if</span> <span class="n">local_gain_prior_mean_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">local_gain_prior_mean_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_TODs</span>
+    <span class="k">if</span> <span class="n">local_gain_prior_cov_inv_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">local_gain_prior_cov_inv_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_TODs</span>
+    <span class="k">if</span> <span class="n">local_Tloc_prior_mean_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">local_Tloc_prior_mean_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_TODs</span>
+    <span class="k">if</span> <span class="n">local_Tloc_prior_cov_inv_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">local_Tloc_prior_cov_inv_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_TODs</span>
+
+    <span class="n">master_rng_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">noise_key</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+
+    <span class="c1"># Sample the parameters</span>
+    <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Gibbs Sampling&quot;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="p">(</span><span class="ow">not</span> <span class="n">rank0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">si</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_TODs</span><span class="p">):</span>
+            <span class="n">TOD</span> <span class="o">=</span> <span class="n">local_TOD_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+            <span class="n">t_list</span> <span class="o">=</span> <span class="n">local_t_lists</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+            <span class="n">gain_operator</span> <span class="o">=</span> <span class="n">local_gain_operator_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">joint_Tsys_sampling</span><span class="p">:</span>
+                <span class="n">Tsys_operator</span> <span class="o">=</span> <span class="n">local_Tsys_operator_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+                <span class="n">Tsys</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">Tsys_operator</span> <span class="o">@</span> <span class="n">Tsys_samples</span><span class="p">[</span><span class="n">si</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+                    <span class="o">+</span> <span class="n">local_Tsys_injection_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">Tsky_operator</span> <span class="o">=</span> <span class="n">local_Tsky_operator_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+                <span class="n">Tloc_operator</span> <span class="o">=</span> <span class="n">local_Tloc_operator_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+                <span class="n">Tloc_params</span> <span class="o">=</span> <span class="n">local_Tloc_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="n">si</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">TOD_sky</span> <span class="o">=</span> <span class="n">Tsky_operator</span> <span class="o">@</span> <span class="n">Tsky_params</span>
+                <span class="n">TOD_loc</span> <span class="o">=</span> <span class="n">Tloc_operator</span> <span class="o">@</span> <span class="n">Tloc_params</span>
+                <span class="n">Tsys</span> <span class="o">=</span> <span class="n">TOD_sky</span> <span class="o">+</span> <span class="n">TOD_loc</span> <span class="o">+</span> <span class="n">local_Tsys_injection_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+                <span class="n">mu_loc</span> <span class="o">=</span> <span class="n">TOD_sky</span> <span class="o">+</span> <span class="n">local_Tsys_injection_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+
+            <span class="n">noise_params</span> <span class="o">=</span> <span class="n">local_noise_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="n">si</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+            <span class="n">logfc</span> <span class="o">=</span> <span class="n">local_logfc_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+
+            <span class="c1"># Sample gain parameters</span>
+            <span class="n">gain_sample</span><span class="p">,</span> <span class="n">gains</span> <span class="o">=</span> <span class="n">gain_sampler</span><span class="p">(</span>
+                <span class="n">TOD</span><span class="p">,</span>
+                <span class="n">t_list</span><span class="p">,</span>
+                <span class="n">gain_operator</span><span class="p">,</span>
+                <span class="n">Tsys</span><span class="p">,</span>
+                <span class="n">noise_params</span><span class="p">,</span>
+                <span class="n">logfc</span><span class="p">,</span>
+                <span class="n">model</span><span class="o">=</span><span class="n">smooth_gain_model</span><span class="p">,</span>
+                <span class="n">wnoise_var</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+                <span class="n">n_samples</span><span class="o">=</span><span class="n">num_sample</span><span class="p">,</span>
+                <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+                <span class="n">prior_cov_inv</span><span class="o">=</span><span class="n">local_gain_prior_cov_inv_list</span><span class="p">[</span><span class="n">di</span><span class="p">],</span>
+                <span class="n">prior_mean</span><span class="o">=</span><span class="n">local_gain_prior_mean_list</span><span class="p">[</span><span class="n">di</span><span class="p">],</span>
+                <span class="n">solver</span><span class="o">=</span><span class="n">linear_solver</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Rank: </span><span class="si">{}</span><span class="s2">, local id: </span><span class="si">{}</span><span class="s2">, gain_sample </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">rank</span><span class="p">,</span> <span class="n">di</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="n">gain_sample</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="n">local_gain_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">gain_sample</span>
+
+            <span class="k">if</span> <span class="n">include_DC_Gain</span><span class="p">:</span>
+                <span class="n">DC_gain</span> <span class="o">=</span> <span class="n">noise_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">aux_gains</span> <span class="o">=</span> <span class="n">gains</span> <span class="o">*</span> <span class="n">DC_gain</span>
+                <span class="n">noise_params</span> <span class="o">=</span> <span class="n">noise_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">aux_gains</span> <span class="o">=</span> <span class="n">gains</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">joint_Tsys_sampling</span><span class="p">:</span>
+                <span class="c1"># Sample local Tsys temperature parameters</span>
+                <span class="n">Tloc_params</span> <span class="o">=</span> <span class="n">Tsys_coeff_sampler</span><span class="p">(</span>
+                    <span class="n">TOD</span><span class="p">,</span>
+                    <span class="n">t_list</span><span class="p">,</span>
+                    <span class="n">aux_gains</span><span class="p">,</span>
+                    <span class="n">Tloc_operator</span><span class="p">,</span>
+                    <span class="n">noise_params</span><span class="p">,</span>
+                    <span class="n">logfc</span><span class="o">=</span><span class="n">local_logfc_list</span><span class="p">[</span><span class="n">di</span><span class="p">],</span>
+                    <span class="n">wnoise_var</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+                    <span class="n">n_samples</span><span class="o">=</span><span class="n">num_sample</span><span class="p">,</span>
+                    <span class="n">mu</span><span class="o">=</span><span class="n">mu_loc</span><span class="p">,</span>
+                    <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+                    <span class="n">prior_cov_inv</span><span class="o">=</span><span class="n">local_Tloc_prior_cov_inv_list</span><span class="p">[</span><span class="n">di</span><span class="p">],</span>
+                    <span class="n">prior_mean</span><span class="o">=</span><span class="n">local_Tloc_prior_mean_list</span><span class="p">[</span><span class="n">di</span><span class="p">],</span>
+                    <span class="n">solver</span><span class="o">=</span><span class="n">linear_solver</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">local_Tloc_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Tloc_params</span>
+                <span class="n">TOD_loc</span> <span class="o">=</span> <span class="n">Tloc_operator</span> <span class="o">@</span> <span class="n">Tloc_params</span>
+
+                <span class="n">Tsys</span> <span class="o">=</span> <span class="n">TOD_sky</span> <span class="o">+</span> <span class="n">TOD_loc</span> <span class="o">+</span> <span class="n">local_Tsys_injection_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+                <span class="c1"># Collect mu vectors for Tsky sampler</span>
+                <span class="n">local_Tsky_mu_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span> <span class="o">=</span> <span class="n">TOD_loc</span> <span class="o">+</span> <span class="n">local_Tsys_injection_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+
+            <span class="c1"># Sample noise parameters</span>
+            <span class="n">noise_sample</span> <span class="o">=</span> <span class="n">flicker_noise_sampler</span><span class="p">(</span>
+                <span class="n">TOD</span><span class="p">,</span>
+                <span class="n">t_list</span><span class="p">,</span>
+                <span class="n">gains</span><span class="p">,</span>
+                <span class="n">Tsys</span><span class="p">,</span>
+                <span class="n">init_noise_params_list</span><span class="p">[</span>
+                    <span class="n">di</span>
+                <span class="p">],</span>  <span class="c1"># using the input init_noise_params as fixed initial point for MCMC sampling</span>
+                <span class="n">logfc</span><span class="p">,</span>
+                <span class="n">n_samples</span><span class="o">=</span><span class="n">num_sample</span><span class="p">,</span>
+                <span class="n">wnoise_var</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+                <span class="n">prior_func</span><span class="o">=</span><span class="n">local_noise_prior_func_list</span><span class="p">[</span><span class="n">di</span><span class="p">],</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">include_DC_Gain</span><span class="p">:</span>
+                <span class="n">local_gain_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span> <span class="o">=</span> <span class="n">gains</span> <span class="o">*</span> <span class="n">noise_sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">local_gain_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span> <span class="o">=</span> <span class="n">gains</span>
+
+            <span class="n">local_noise_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">noise_sample</span>
+
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                <span class="c1"># print(&quot;Rank: {}, local id: {}, gain_sample {}: {}&quot;.format(rank, di, si, gain_sample))</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Rank: </span><span class="si">{}</span><span class="s2">, local id: </span><span class="si">{}</span><span class="s2">, noise_sample </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">rank</span><span class="p">,</span> <span class="n">di</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="n">noise_sample</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">joint_Tsys_sampling</span><span class="p">:</span>
+            <span class="c1"># Given gain and noise, sample Tsys parameters</span>
+            <span class="n">linear_op_aux</span> <span class="o">=</span> <span class="n">local_Tsys_operator_list</span>
+            <span class="n">mu_aux</span> <span class="o">=</span> <span class="n">local_Tsys_injection_list</span>
+            <span class="n">prior_icov_aux</span> <span class="o">=</span> <span class="n">Tsys_prior_cov_inv</span>
+            <span class="n">prior_mean_aux</span> <span class="o">=</span> <span class="n">Tsys_prior_mean</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">linear_op_aux</span> <span class="o">=</span> <span class="n">local_Tsky_operator_list</span>
+            <span class="n">mu_aux</span> <span class="o">=</span> <span class="n">local_Tsky_mu_list</span>
+            <span class="n">prior_icov_aux</span> <span class="o">=</span> <span class="n">Tsky_prior_cov_inv</span>
+            <span class="n">prior_mean_aux</span> <span class="o">=</span> <span class="n">Tsky_prior_mean</span>
+
+        <span class="k">if</span> <span class="n">include_DC_Gain</span><span class="p">:</span>
+            <span class="n">flicker_parameters</span> <span class="o">=</span> <span class="n">local_noise_samples</span><span class="p">[:,</span> <span class="n">si</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flicker_parameters</span> <span class="o">=</span> <span class="n">local_noise_samples</span><span class="p">[:,</span> <span class="n">si</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">Tsys_sampler_multi_TODs</span><span class="p">(</span>
+            <span class="n">local_TOD_list</span><span class="p">,</span>
+            <span class="n">local_t_lists</span><span class="p">,</span>
+            <span class="n">local_gain_list</span><span class="p">,</span>
+            <span class="n">linear_op_aux</span><span class="p">,</span>
+            <span class="n">flicker_parameters</span><span class="p">,</span>
+            <span class="n">local_logfc_list</span><span class="p">,</span>
+            <span class="n">local_mu_list</span><span class="o">=</span><span class="n">mu_aux</span><span class="p">,</span>
+            <span class="n">wnoise_var</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+            <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+            <span class="n">prior_cov_inv</span><span class="o">=</span><span class="n">prior_icov_aux</span><span class="p">,</span>
+            <span class="n">prior_mean</span><span class="o">=</span><span class="n">prior_mean_aux</span><span class="p">,</span>
+            <span class="n">solver</span><span class="o">=</span><span class="n">linear_solver</span><span class="p">,</span>
+            <span class="n">Est_mode</span><span class="o">=</span><span class="n">Est_mode</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">joint_Tsys_sampling</span><span class="p">:</span>
+            <span class="n">Tsys_samples</span><span class="p">[</span><span class="n">si</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sample</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Tsky_params</span> <span class="o">=</span> <span class="n">sample</span>
+            <span class="n">Tsky_samples</span><span class="p">[</span><span class="n">si</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Tsky_params</span>
+
+        <span class="c1"># Update after completing all TODs for this sample</span>
+        <span class="k">if</span> <span class="n">rank0</span><span class="p">:</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">({</span><span class="s2">&quot;Sample&quot;</span><span class="p">:</span> <span class="n">si</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="s2">&quot;Complete&quot;</span><span class="p">})</span>
+
+    <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Gather local gain and noise samples</span>
+    <span class="n">mpiutil</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+    <span class="n">all_gain_samples</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">all_noise_samples</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">all_Tloc_samples</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Gather all results onto all ranks</span>
+        <span class="n">all_gain_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">local_gain_samples</span><span class="p">)</span>
+        <span class="n">all_noise_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">local_noise_samples</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">joint_Tsys_sampling</span><span class="p">:</span>
+            <span class="n">all_Tloc_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">local_Tloc_samples</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Gather all results onto the specified rank</span>
+        <span class="n">all_gain_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">local_gain_samples</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">all_noise_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">local_noise_samples</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">joint_Tsys_sampling</span><span class="p">:</span>
+            <span class="n">all_Tloc_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">local_Tloc_samples</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">joint_Tsys_sampling</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Tsky_samples</span><span class="p">,</span> <span class="n">all_gain_samples</span><span class="p">,</span> <span class="n">all_noise_samples</span><span class="p">,</span> <span class="n">all_Tloc_samples</span>
+    <span class="k">return</span> <span class="n">Tsys_samples</span><span class="p">,</span> <span class="n">all_gain_samples</span><span class="p">,</span> <span class="n">all_noise_samples</span></div>
+
+
+
+<div class="viewcode-block" id="TOD_Gibbs_sampler_joint_loc">
+<a class="viewcode-back" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">TOD_Gibbs_sampler_joint_loc</span><span class="p">(</span>
+    <span class="n">local_TOD_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">local_t_lists</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="c1">#   local_TOD_diode_list,</span>
+    <span class="n">local_gain_operator_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">local_Tsky_operator_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">local_Tloc_operator_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">init_Tsky_params</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">init_Tloc_params_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">init_noise_params_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">local_logfc_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">wnoise_var</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.5e-6</span><span class="p">,</span>
+    <span class="n">Tsky_prior_cov_inv</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">Tsky_prior_mean</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">local_Tloc_prior_cov_inv_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">local_Tloc_prior_mean_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">local_gain_prior_cov_inv_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">local_gain_prior_mean_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">local_noise_prior_func_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">noise_sampler_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;emcee&quot;</span><span class="p">,</span> <span class="s2">&quot;nuts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;emcee&quot;</span><span class="p">,</span>
+    <span class="n">ploc_Jeffreys_prior</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">noise_Jeffreys_prior</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">noise_params_bounds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">flicker_bounds</span><span class="p">,</span>
+    <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">,</span>
+    <span class="n">linear_solver</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">cg</span><span class="p">,</span>
+    <span class="n">Est_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the Gibbs sampler with joint gain and local temperature sampling.</span>
+
+<span class="sd">    This is a variant of :func:`TOD_Gibbs_sampler` that samples the gain</span>
+<span class="sd">    parameters and local temperature parameters jointly using a combined</span>
+<span class="sd">    local parameter sampler, rather than sampling them in separate conditional</span>
+<span class="sd">    steps.</span>
+
+<span class="sd">    The data model is identical:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        d(t) = T_{\\rm sys}(t) \\, [1 + n(t)] \\, g(t)</span>
+
+<span class="sd">    where :math:`T_{\\rm sys} = T_{\\rm sky} + T_{\\rm loc}`. However, the</span>
+<span class="sd">    Gibbs update scheme differs:</span>
+
+<span class="sd">    1. **Joint local parameter sampling**: Sample gain and local temperature</span>
+<span class="sd">       parameters jointly:</span>
+<span class="sd">       :math:`(g, T_{\\rm loc})^{(s)} \\sim p(g, T_{\\rm loc} \\mid</span>
+<span class="sd">       T_{\\rm sky}^{(s-1)}, n^{(s-1)}, d)`</span>
+<span class="sd">    2. **Noise parameter sampling**: :math:`(\\log f_0, \\alpha)^{(s)} \\sim</span>
+<span class="sd">       p(\\theta_n \\mid T_{\\rm sys}^{(s)}, g^{(s)}, d)`</span>
+<span class="sd">    3. **Sky temperature sampling**: :math:`T_{\\rm sky}^{(s)} \\sim</span>
+<span class="sd">       p(T_{\\rm sky} \\mid T_{\\rm loc}^{(s)}, g^{(s)}, n^{(s)}, d)`</span>
+
+<span class="sd">    The joint sampling of gain and local temperature can improve mixing when</span>
+<span class="sd">    these parameters are correlated.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    local_TOD_list : list[np.ndarray]</span>
+<span class="sd">        List of time-ordered data vectors for this MPI rank. Each element</span>
+<span class="sd">        has shape ``(n_time_i,)``.</span>
+<span class="sd">    local_t_lists : list[np.ndarray]</span>
+<span class="sd">        List of time-lag arrays for each TOD on this rank. Each element has</span>
+<span class="sd">        shape ``(n_time_i,)``.</span>
+<span class="sd">    local_gain_operator_list : list[np.ndarray]</span>
+<span class="sd">        List of gain projection operators for each TOD. Each element has</span>
+<span class="sd">        shape ``(n_time_i, n_gain_modes)``.</span>
+<span class="sd">    local_Tsky_operator_list : list[np.ndarray]</span>
+<span class="sd">        List of sky temperature projection operators for each TOD. Each</span>
+<span class="sd">        element has shape ``(n_time_i, n_sky_modes)``.</span>
+<span class="sd">    local_Tloc_operator_list : list[np.ndarray]</span>
+<span class="sd">        List of local temperature projection operators for each TOD. Each</span>
+<span class="sd">        element has shape ``(n_time_i, n_loc_modes)``. The first column is</span>
+<span class="sd">        expected to be the noise diode template, and the remaining columns</span>
+<span class="sd">        are the receiver temperature basis functions.</span>
+<span class="sd">    init_Tsky_params : np.ndarray</span>
+<span class="sd">        Initial sky temperature parameter vector, shape ``(n_sky_modes,)``.</span>
+<span class="sd">    init_Tloc_params_list : list[np.ndarray]</span>
+<span class="sd">        Initial local temperature parameter vectors for each TOD on this</span>
+<span class="sd">        rank. Each element has shape ``(n_loc_modes,)``.</span>
+<span class="sd">    init_noise_params_list : list[np.ndarray]</span>
+<span class="sd">        Initial noise parameter vectors for each TOD. Each element contains</span>
+<span class="sd">        ``[logf0, alpha]``.</span>
+<span class="sd">    local_logfc_list : list[float]</span>
+<span class="sd">        List of log10 cutoff frequencies for the flicker noise model for</span>
+<span class="sd">        each TOD.</span>
+<span class="sd">    wnoise_var : float, optional</span>
+<span class="sd">        White noise variance. Default is ``2.5e-6``.</span>
+<span class="sd">    Tsky_prior_cov_inv : np.ndarray, optional</span>
+<span class="sd">        Inverse prior covariance for sky temperature parameters. Shape</span>
+<span class="sd">        ``(n_sky_modes,)`` for diagonal or ``(n_sky_modes, n_sky_modes)``</span>
+<span class="sd">        for full matrix.</span>
+<span class="sd">    Tsky_prior_mean : np.ndarray, optional</span>
+<span class="sd">        Prior mean for sky temperature parameters, shape ``(n_sky_modes,)``.</span>
+<span class="sd">    local_Tloc_prior_cov_inv_list : list[np.ndarray], optional</span>
+<span class="sd">        List of inverse prior covariance (diagonal) for local temperature</span>
+<span class="sd">        parameters. Required for the joint sampler.</span>
+<span class="sd">    local_Tloc_prior_mean_list : list[np.ndarray], optional</span>
+<span class="sd">        List of prior mean vectors for local temperature parameters.</span>
+<span class="sd">        Required for the joint sampler.</span>
+<span class="sd">    local_gain_prior_cov_inv_list : list[np.ndarray], optional</span>
+<span class="sd">        List of inverse prior covariance (diagonal) for gain parameters.</span>
+<span class="sd">        Required for the joint sampler.</span>
+<span class="sd">    local_gain_prior_mean_list : list[np.ndarray], optional</span>
+<span class="sd">        List of prior mean vectors for gain parameters. Required for the</span>
+<span class="sd">        joint sampler.</span>
+<span class="sd">    local_noise_prior_func_list : list[Callable | None], optional</span>
+<span class="sd">        List of custom log-prior functions for noise parameters for each</span>
+<span class="sd">        TOD. If ``None``, default priors are used.</span>
+<span class="sd">    noise_sampler_type : ``{&#39;emcee&#39;, &#39;nuts&#39;}``, optional</span>
+<span class="sd">        MCMC sampler for noise parameter inference. Default is ``&#39;emcee&#39;``.</span>
+<span class="sd">    ploc_Jeffreys_prior : bool, optional</span>
+<span class="sd">        If ``True``, use a Jeffreys prior in the joint local parameter</span>
+<span class="sd">        sampler. Default is ``True``.</span>
+<span class="sd">    noise_Jeffreys_prior : bool, optional</span>
+<span class="sd">        If ``True``, use a Jeffreys prior for noise scale parameters.</span>
+<span class="sd">        Default is ``True``.</span>
+<span class="sd">    noise_params_bounds : list[tuple[float, float]], optional</span>
+<span class="sd">        Parameter bounds for noise MCMC sampling. Default is</span>
+<span class="sd">        ``[(-6.0, -3.0), (1.1, 4.0)]``.</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        Number of Gibbs samples to draw. Default is ``100``.</span>
+<span class="sd">    tol : float, optional</span>
+<span class="sd">        Tolerance for iterative linear solvers. Default is ``1e-12``.</span>
+<span class="sd">    linear_solver : Callable, optional</span>
+<span class="sd">        Linear solver function. Default is</span>
+<span class="sd">        :func:`hydra_tod.linear_solver.cg`.</span>
+<span class="sd">    Est_mode : bool, optional</span>
+<span class="sd">        If ``True``, return MAP estimates instead of posterior samples.</span>
+<span class="sd">        Default is ``False``.</span>
+<span class="sd">    root : int, optional</span>
+<span class="sd">        MPI rank to gather results onto. If ``None`` (default), results</span>
+<span class="sd">        are gathered onto all ranks via ``allgather``.</span>
+<span class="sd">    debug : bool, optional</span>
+<span class="sd">        If ``True``, print diagnostic information. Default is ``False``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tsky_samples : np.ndarray</span>
+<span class="sd">        Sky temperature parameter samples, shape</span>
+<span class="sd">        ``(n_samples, n_sky_modes)``.</span>
+<span class="sd">    all_gain_samples : list[np.ndarray]</span>
+<span class="sd">        Gain parameter samples gathered from all ranks. Each element has</span>
+<span class="sd">        shape ``(n_local_TODs, n_samples, n_gain_modes)``.</span>
+<span class="sd">    all_noise_samples : list[np.ndarray]</span>
+<span class="sd">        Noise parameter samples gathered from all ranks. Each element has</span>
+<span class="sd">        shape ``(n_local_TODs, n_samples, n_noise_modes)``.</span>
+<span class="sd">    all_Tloc_samples : list[np.ndarray]</span>
+<span class="sd">        Local temperature parameter samples gathered from all ranks. Each</span>
+<span class="sd">        element has shape ``(n_local_TODs, n_samples, n_loc_modes)``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - This variant uses :func:`local_params_sampler` from the</span>
+<span class="sd">      ``local_sampler`` module for joint gain and local temperature</span>
+<span class="sd">      inference.</span>
+<span class="sd">    - The local temperature operator is decomposed as</span>
+<span class="sd">      :math:`T_{\\rm loc}(t) = T_{\\rm nd}(t) \\, e^{p_0}</span>
+<span class="sd">      + e^{\\mathbf{R}_{\\rm res} \\mathbf{p}_{1:}}` where :math:`p_0`</span>
+<span class="sd">      controls the noise diode amplitude and :math:`\\mathbf{p}_{1:}` are</span>
+<span class="sd">      the receiver temperature coefficients.</span>
+<span class="sd">    - The gain model uses a log parameterization:</span>
+<span class="sd">      :math:`g(t) = \\exp(\\mathbf{G} \\mathbf{p}_g)`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    TOD_Gibbs_sampler : Standard Gibbs sampler with separate conditional steps.</span>
+<span class="sd">    local_params_sampler : Joint local parameter sampler.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Synchronize the processes</span>
+    <span class="n">mpiutil</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+    <span class="c1"># Check the length of the input lists</span>
+    <span class="n">num_TODs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_TOD_list</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">num_TODs</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_t_lists</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="n">num_TODs</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_Tsky_operator_list</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="n">num_TODs</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_Tloc_operator_list</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="n">num_TODs</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_gain_operator_list</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The length of the input lists must be the same.&quot;</span><span class="p">)</span>
+
+    <span class="n">n_g_modes</span> <span class="o">=</span> <span class="n">local_gain_operator_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">local_gain_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_TODs</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_g_modes</span><span class="p">))</span>
+
+    <span class="n">n_loc_modes</span> <span class="o">=</span> <span class="n">local_Tloc_operator_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">local_Tloc_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_TODs</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_loc_modes</span><span class="p">))</span>
+
+    <span class="n">n_sky_modes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">init_Tsky_params</span><span class="p">)</span>
+    <span class="n">Tsky_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_sky_modes</span><span class="p">))</span>
+
+    <span class="n">n_N_modes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">init_noise_params_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">local_noise_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_TODs</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_N_modes</span><span class="p">))</span>
+
+    <span class="n">Tsky_params</span> <span class="o">=</span> <span class="n">init_Tsky_params</span>
+
+    <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_TODs</span><span class="p">):</span>
+        <span class="n">t_list</span> <span class="o">=</span> <span class="n">local_t_lists</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+        <span class="n">local_noise_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">init_noise_params_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+        <span class="n">local_Tloc_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">init_Tloc_params_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+        <span class="c1"># Ncov = flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha, white_n_variance=wnoise_var, only_row_0=False)</span>
+        <span class="c1"># local_Ncov_list.append(Ncov)</span>
+
+    <span class="k">if</span> <span class="n">local_noise_prior_func_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">local_noise_prior_func_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_TODs</span>
+
+    <span class="n">local_gain_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">local_TOD_list</span><span class="p">[</span><span class="n">di</span><span class="p">])</span> <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_TODs</span><span class="p">)]</span>
+    <span class="n">local_Tsky_mu_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">local_TOD_list</span><span class="p">[</span><span class="n">di</span><span class="p">])</span> <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_TODs</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">Est_mode</span><span class="p">:</span>
+        <span class="n">num_sample</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">num_sample</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.local_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">local_params_sampler</span>
+
+    <span class="n">master_rng_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+    <span class="c1"># Sample the parameters</span>
+    <span class="k">for</span> <span class="n">si</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_TODs</span><span class="p">):</span>
+            <span class="n">TOD</span> <span class="o">=</span> <span class="n">local_TOD_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+            <span class="n">gain_operator</span> <span class="o">=</span> <span class="n">local_gain_operator_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+            <span class="n">Tsky_operator</span> <span class="o">=</span> <span class="n">local_Tsky_operator_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+            <span class="n">Tloc_operator</span> <span class="o">=</span> <span class="n">local_Tloc_operator_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+            <span class="c1"># TOD_diode = local_TOD_diode_list[di]</span>
+
+            <span class="n">noise_params</span> <span class="o">=</span> <span class="n">local_noise_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="n">si</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+            <span class="n">TOD_sky</span> <span class="o">=</span> <span class="n">Tsky_operator</span> <span class="o">@</span> <span class="n">Tsky_params</span>
+            <span class="n">Tnd_vec</span> <span class="o">=</span> <span class="n">Tloc_operator</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">Tres_proj</span> <span class="o">=</span> <span class="n">Tloc_operator</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+
+            <span class="c1"># local_gain_prior_cov_inv_list[di]</span>
+            <span class="n">local_params_prior_cov_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">local_gain_prior_cov_inv_list</span><span class="p">[</span><span class="n">di</span><span class="p">],</span> <span class="n">local_Tloc_prior_cov_inv_list</span><span class="p">[</span><span class="n">di</span><span class="p">]]</span>
+            <span class="p">)</span>
+            <span class="n">local_params_prior_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">local_gain_prior_mean_list</span><span class="p">[</span><span class="n">di</span><span class="p">],</span> <span class="n">local_Tloc_prior_mean_list</span><span class="p">[</span><span class="n">di</span><span class="p">]]</span>
+            <span class="p">)</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">p_loc_prior</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                    <span class="o">-</span><span class="mf">0.5</span>
+                    <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">local_params_prior_mean</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+                    <span class="o">*</span> <span class="n">local_params_prior_cov_inv</span>
+                <span class="p">)</span>
+
+            <span class="n">master_rng_key</span><span class="p">,</span> <span class="n">noise_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">master_rng_key</span><span class="p">)</span>
+
+            <span class="n">local_params</span> <span class="o">=</span> <span class="n">local_params_sampler</span><span class="p">(</span>
+                <span class="n">TOD</span><span class="p">,</span>
+                <span class="n">TOD_sky</span><span class="p">,</span>
+                <span class="n">gain_operator</span><span class="p">,</span>
+                <span class="n">Tnd_vec</span><span class="p">,</span>
+                <span class="n">Tres_proj</span><span class="p">,</span>
+                <span class="n">noise_params</span><span class="p">,</span>
+                <span class="n">rng_key</span><span class="o">=</span><span class="n">noise_key</span><span class="p">,</span>
+                <span class="n">add_jeffreys</span><span class="o">=</span><span class="n">ploc_Jeffreys_prior</span><span class="p">,</span>
+                <span class="n">prior_func</span><span class="o">=</span><span class="n">p_loc_prior</span><span class="p">,</span>
+                <span class="n">jaxjit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;local_params </span><span class="si">{}</span><span class="s2">: </span><span class="se">\n</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">si</span><span class="p">,</span> <span class="n">local_params</span><span class="p">[:</span><span class="mi">4</span><span class="p">],</span> <span class="n">local_params</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">gain_sample</span> <span class="o">=</span> <span class="n">local_params</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
+            <span class="n">local_gain_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">gain_sample</span>
+            <span class="n">gains</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">gain_operator</span> <span class="o">@</span> <span class="n">gain_sample</span><span class="p">)</span>
+            <span class="n">local_gain_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span> <span class="o">=</span> <span class="n">gains</span>
+
+            <span class="n">Tloc_params</span> <span class="o">=</span> <span class="n">local_params</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+            <span class="n">local_Tloc_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Tloc_params</span>
+            <span class="n">Tloc_TOD</span> <span class="o">=</span> <span class="n">Tnd_vec</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Tloc_params</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+                <span class="n">Tres_proj</span> <span class="o">@</span> <span class="n">Tloc_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="p">)</span>
+            <span class="n">Tsys</span> <span class="o">=</span> <span class="n">TOD_sky</span> <span class="o">+</span> <span class="n">Tloc_TOD</span>
+            <span class="n">local_Tsky_mu_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tloc_TOD</span>
+
+            <span class="c1"># Sample noise parameters</span>
+            <span class="n">noise_sample</span> <span class="o">=</span> <span class="n">flicker_sampler</span><span class="p">(</span>
+                <span class="n">TOD</span><span class="p">,</span>
+                <span class="n">gains</span><span class="p">,</span>
+                <span class="n">Tsys</span><span class="p">,</span>
+                <span class="n">init_params</span><span class="o">=</span><span class="n">init_noise_params_list</span><span class="p">[</span>
+                    <span class="n">di</span>
+                <span class="p">],</span>  <span class="c1"># using the input init_noise_params as fixed initial point for MCMC sampling</span>
+                <span class="n">n_samples</span><span class="o">=</span><span class="n">num_sample</span><span class="p">,</span>
+                <span class="n">include_DC_Gain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">prior_func</span><span class="o">=</span><span class="n">local_noise_prior_func_list</span><span class="p">[</span><span class="n">di</span><span class="p">],</span>
+                <span class="n">jeffreys</span><span class="o">=</span><span class="n">noise_Jeffreys_prior</span><span class="p">,</span>
+                <span class="n">bounds</span><span class="o">=</span><span class="n">noise_params_bounds</span><span class="p">,</span>
+                <span class="n">sampler</span><span class="o">=</span><span class="n">noise_sampler_type</span><span class="p">,</span>
+                <span class="n">rng_key</span><span class="o">=</span><span class="n">noise_key</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">local_noise_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">noise_sample</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Rank: </span><span class="si">{}</span><span class="s2">, local id: </span><span class="si">{}</span><span class="s2">, noise_sample </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">rank</span><span class="p">,</span> <span class="n">di</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="n">noise_sample</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Given gain, noise and other Tsys components, sample Tsky parameters</span>
+        <span class="n">Tsky_params</span> <span class="o">=</span> <span class="n">Tsys_sampler_multi_TODs</span><span class="p">(</span>
+            <span class="n">local_TOD_list</span><span class="p">,</span>
+            <span class="n">local_t_lists</span><span class="p">,</span>
+            <span class="n">local_gain_list</span><span class="p">,</span>
+            <span class="n">local_Tsky_operator_list</span><span class="p">,</span>
+            <span class="n">local_noise_samples</span><span class="p">[:,</span> <span class="n">si</span><span class="p">,</span> <span class="p">:],</span>
+            <span class="n">local_logfc_list</span><span class="p">,</span>
+            <span class="n">local_mu_list</span><span class="o">=</span><span class="n">local_Tsky_mu_list</span><span class="p">,</span>
+            <span class="n">wnoise_var</span><span class="o">=</span><span class="n">wnoise_var</span><span class="p">,</span>
+            <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+            <span class="n">prior_cov_inv</span><span class="o">=</span><span class="n">Tsky_prior_cov_inv</span><span class="p">,</span>
+            <span class="n">prior_mean</span><span class="o">=</span><span class="n">Tsky_prior_mean</span><span class="p">,</span>
+            <span class="n">solver</span><span class="o">=</span><span class="n">linear_solver</span><span class="p">,</span>
+            <span class="n">Est_mode</span><span class="o">=</span><span class="n">Est_mode</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">Tsky_samples</span><span class="p">[</span><span class="n">si</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Tsky_params</span>
+
+    <span class="c1"># Gather local gain and noise samples</span>
+    <span class="n">mpiutil</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+    <span class="n">all_gain_samples</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">all_noise_samples</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">all_Tloc_samples</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Gather all results onto all ranks</span>
+        <span class="n">all_gain_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">local_gain_samples</span><span class="p">)</span>
+        <span class="n">all_noise_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">local_noise_samples</span><span class="p">)</span>
+        <span class="n">all_Tloc_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">local_Tloc_samples</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Gather all results onto the specified rank</span>
+        <span class="n">all_gain_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">local_gain_samples</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">all_noise_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">local_noise_samples</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">all_Tloc_samples</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">local_Tloc_samples</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Tsky_samples</span><span class="p">,</span> <span class="n">all_gain_samples</span><span class="p">,</span> <span class="n">all_noise_samples</span><span class="p">,</span> <span class="n">all_Tloc_samples</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025-2026, Zheng Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

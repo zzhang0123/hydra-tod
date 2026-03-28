@@ -1,0 +1,304 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Model &mdash; hydra_tod 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Flicker Noise Model" href="flicker_noise.html" />
+    <link rel="prev" title="Quick Start" href="../quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            hydra_tod
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#conda-environment">Conda Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#observation-model">Observation Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#system-temperature">System Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gain-model">Gain Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="flicker_noise.html">Flicker Noise Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="flicker_noise.html#power-spectral-density">Power Spectral Density</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flicker_noise.html#correlation-function">Correlation Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flicker_noise.html#covariance-matrix">Covariance Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flicker_noise.html#emulator">Emulator</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#visualization">Visualization</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/simulation.html">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/gibbs_sampler.html">Gibbs Sampler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/flicker_model.html">Flicker Noise Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/samplers.html">Parameter Samplers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/linear_algebra.html">Linear Algebra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utilities.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/utilities.html#module-hydra_tod.utils">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/diagnostics.html">MCMC Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/visualization.html">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../citation.html">Citation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../citation.html#plain-text">Plain text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../citation.html#bibtex">BibTeX</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">hydra_tod</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Data Model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/data_model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-model">
+<h1>Data Model<a class="headerlink" href="#data-model" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">hydra_tod</span></code> implements a hierarchical Bayesian model for radio telescope
+observations. This page describes the mathematical framework.</p>
+<section id="observation-model">
+<h2>Observation Model<a class="headerlink" href="#observation-model" title="Link to this heading"></a></h2>
+<p>The time-ordered data (TOD) from a radio telescope is modeled as:</p>
+<div class="math notranslate nohighlight">
+\[d(t) = T_{\mathrm{sys}}(t) \cdot \bigl[1 + n(t)\bigr] \cdot g(t)\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(d(t)\)</span> is the observed data at time <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(T_{\mathrm{sys}}(t)\)</span> is the system temperature</p></li>
+<li><p><span class="math notranslate nohighlight">\(n(t)\)</span> is multiplicative correlated noise</p></li>
+<li><p><span class="math notranslate nohighlight">\(g(t)\)</span> is the time-varying instrument gain</p></li>
+</ul>
+</section>
+<section id="system-temperature">
+<h2>System Temperature<a class="headerlink" href="#system-temperature" title="Link to this heading"></a></h2>
+<p>The system temperature decomposes into sky and local components:</p>
+<div class="math notranslate nohighlight">
+\[T_{\mathrm{sys}}(t) = T_{\mathrm{sky}}(t) + T_{\mathrm{loc}}(t)\]</div>
+<p>The sky temperature is obtained by projecting a pixelized sky map through
+the telescope beam:</p>
+<div class="math notranslate nohighlight">
+\[T_{\mathrm{sky}}(t) = \sum_p B(t, p) \, T_p\]</div>
+<p>where <span class="math notranslate nohighlight">\(B(t,p)\)</span> is the beam response at pixel <span class="math notranslate nohighlight">\(p\)</span> and time
+<span class="math notranslate nohighlight">\(t\)</span>, and <span class="math notranslate nohighlight">\(T_p\)</span> is the sky temperature at pixel <span class="math notranslate nohighlight">\(p\)</span>.</p>
+<p>In matrix form: <span class="math notranslate nohighlight">\(\mathbf{T}_{\mathrm{sky}} = \mathbf{U}_{\mathrm{sky}} \, \boldsymbol{\theta}_{\mathrm{sky}}\)</span>.</p>
+<p>The local temperature includes receiver noise and noise diode contributions:</p>
+<div class="math notranslate nohighlight">
+\[T_{\mathrm{loc}}(t) = T_{\mathrm{rec}}(t) + T_{\mathrm{nd}}(t)\]</div>
+<p>parameterized as <span class="math notranslate nohighlight">\(\mathbf{T}_{\mathrm{loc}} = \mathbf{U}_{\mathrm{loc}} \, \boldsymbol{\theta}_{\mathrm{loc}}\)</span>.</p>
+</section>
+<section id="gain-model">
+<h2>Gain Model<a class="headerlink" href="#gain-model" title="Link to this heading"></a></h2>
+<p>The instrument gain is parameterized using Legendre polynomial basis functions:</p>
+<ul class="simple">
+<li><p><strong>Linear model</strong>: <span class="math notranslate nohighlight">\(g(t) = \mathbf{G} \, \mathbf{p}_g\)</span></p></li>
+<li><p><strong>Log-linear model</strong>: <span class="math notranslate nohighlight">\(g(t) = \exp(\mathbf{G} \, \mathbf{p}_g)\)</span></p></li>
+<li><p><strong>Factorized model</strong>: <span class="math notranslate nohighlight">\(g(t) = g_0 \cdot (\mathbf{G} \, \mathbf{p}_g + 1)\)</span></p></li>
+</ul>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{G}\)</span> is the polynomial projection matrix and <span class="math notranslate nohighlight">\(\mathbf{p}_g\)</span>
+are the gain coefficients.</p>
+</section>
+<section id="gibbs-sampling">
+<h2>Gibbs Sampling<a class="headerlink" href="#gibbs-sampling" title="Link to this heading"></a></h2>
+<p>The joint posterior is sampled using a Gibbs sampler that alternates between
+conditionally conjugate updates:</p>
+<ol class="arabic simple">
+<li><p><strong>Sample gains</strong> <span class="math notranslate nohighlight">\(\mathbf{p}_g \mid T_{\mathrm{sys}}, n, d\)</span></p></li>
+<li><p><strong>Sample local temperatures</strong> <span class="math notranslate nohighlight">\(\boldsymbol{\theta}_{\mathrm{loc}} \mid T_{\mathrm{sky}}, g, n, d\)</span></p></li>
+<li><p><strong>Sample sky temperatures</strong> <span class="math notranslate nohighlight">\(\boldsymbol{\theta}_{\mathrm{sky}} \mid T_{\mathrm{loc}}, g, n, d\)</span></p></li>
+<li><p><strong>Sample noise parameters</strong> <span class="math notranslate nohighlight">\((\log f_0, \alpha) \mid T_{\mathrm{sys}}, g, d\)</span></p></li>
+</ol>
+<p>Steps 1–3 are conjugate Gaussian updates solved via iterative linear solvers.
+Step 4 uses MCMC (emcee) or NUTS (NumPyro) to sample from the non-Gaussian
+noise parameter posterior.</p>
+<p>For full details, see Zhang et al. (2026), RASTI, rzag024.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../quickstart.html" class="btn btn-neutral float-left" title="Quick Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="flicker_noise.html" class="btn btn-neutral float-right" title="Flicker Noise Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025-2026, Zheng Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -31,14 +31,18 @@ pid.file
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Scientific computing
+# Scientific computing / data
 *.npy
 *.npz
 *.fits
 *.hdf5
+*.pkl
+*.pdf
+*.csv
+*.png
 
-test/outputs/
-test/figures/
+# Working directories
+test/
 draft/
 archived/
 

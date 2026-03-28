@@ -1,0 +1,1001 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hydra_tod.linear_sampler &mdash; hydra_tod 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            hydra_tod
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#conda-environment">Conda Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/data_model.html">Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#observation-model">Observation Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#system-temperature">System Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gain-model">Gain Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/flicker_noise.html">Flicker Noise Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#power-spectral-density">Power Spectral Density</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#correlation-function">Correlation Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#covariance-matrix">Covariance Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#emulator">Emulator</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#visualization">Visualization</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/simulation.html">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/gibbs_sampler.html">Gibbs Sampler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/flicker_model.html">Flicker Noise Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/samplers.html">Parameter Samplers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/linear_algebra.html">Linear Algebra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/utilities.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.utils">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/diagnostics.html">MCMC Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/visualization.html">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citation.html">Citation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#plain-text">Plain text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#bibtex">BibTeX</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#id1">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hydra_tod</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hydra_tod.linear_sampler</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for hydra_tod.linear_sampler</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NDArray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpiutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">cholesky</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.linear_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">cg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="n">comm</span> <span class="o">=</span> <span class="n">mpiutil</span><span class="o">.</span><span class="n">world</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">mpiutil</span><span class="o">.</span><span class="n">rank</span>
+<span class="n">rank0</span> <span class="o">=</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span>
+
+
+<div class="viewcode-block" id="params_space_oper_and_data">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_sampler.params_space_oper_and_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">params_space_oper_and_data</span><span class="p">(</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">U</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">p</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">N_inv</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">Ninv_sqrt</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span>
+    <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span>
+    <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Project the data model into parameter space for a heteroskedastic GLS.</span>
+
+<span class="sd">    Given the data model ``d = (U p + mu)(1 + n)`` where ``n`` has covariance</span>
+<span class="sd">    ``N``, this function constructs the parameter-space normal equations:</span>
+
+<span class="sd">    * ``A = U^T Sigma_inv U``</span>
+<span class="sd">    * ``b = U^T Sigma_inv (d - mu)``</span>
+
+<span class="sd">    where ``Sigma_inv = diag(1/(Up+mu)) N_inv diag(1/(Up+mu))``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    d : NDArray[np.floating]</span>
+<span class="sd">        Observed data vector of shape ``(M,)``.</span>
+<span class="sd">    U : NDArray[np.floating]</span>
+<span class="sd">        Projection (design) matrix of shape ``(M, N)``.</span>
+<span class="sd">    p : NDArray[np.floating]</span>
+<span class="sd">        Current parameter estimate of shape ``(N,)``.</span>
+<span class="sd">    N_inv : NDArray[np.floating]</span>
+<span class="sd">        Inverse noise covariance, shape ``(M, M)``.</span>
+<span class="sd">    mu : float or NDArray[np.floating], optional</span>
+<span class="sd">        Offset / mean term. Default is 0.0.</span>
+<span class="sd">    Ninv_sqrt : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Square root of the inverse noise covariance (lower Cholesky factor),</span>
+<span class="sd">        shape ``(M, M)``.  If provided, the function also returns</span>
+<span class="sd">        ``U^T Sigma_inv_sqrt`` for sampling.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    UTSigmaU : NDArray[np.floating]</span>
+<span class="sd">        Parameter-space operator ``U^T Sigma_inv U``, shape ``(N, N)``.</span>
+<span class="sd">    UTSigmaD : NDArray[np.floating]</span>
+<span class="sd">        Parameter-space data vector ``U^T Sigma_inv (d - mu)``, shape ``(N,)``.</span>
+<span class="sd">    UTSigma_sqrt : NDArray[np.floating], optional</span>
+<span class="sd">        Returned only when ``Ninv_sqrt`` is not None.  Product</span>
+<span class="sd">        ``U^T Sigma_inv_sqrt``, shape ``(N, M)``.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">D_p_inv</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">U</span> <span class="o">@</span> <span class="n">p</span> <span class="o">+</span> <span class="n">mu</span><span class="p">)</span>
+    <span class="n">sigma_inv</span> <span class="o">=</span> <span class="n">N_inv</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">D_p_inv</span><span class="p">,</span> <span class="n">D_p_inv</span><span class="p">)</span>
+    <span class="n">aux</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">sigma_inv</span>
+    <span class="k">if</span> <span class="n">Ninv_sqrt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">aux</span> <span class="o">@</span> <span class="n">U</span><span class="p">,</span> <span class="n">aux</span> <span class="o">@</span> <span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sigma_inv_sqrt</span> <span class="o">=</span> <span class="n">D_p_inv</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">Ninv_sqrt</span>
+        <span class="k">return</span> <span class="n">aux</span> <span class="o">@</span> <span class="n">U</span><span class="p">,</span> <span class="n">aux</span> <span class="o">@</span> <span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="n">mu</span><span class="p">),</span> <span class="n">U</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">sigma_inv_sqrt</span></div>
+
+
+
+<div class="viewcode-block" id="iterative_gls">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_sampler.iterative_gls">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">iterative_gls</span><span class="p">(</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">U</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">N_inv</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">,</span>
+    <span class="n">min_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">cg</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Iteratively solve for parameters using GLS with heteroskedastic noise.</span>
+
+<span class="sd">    Implements the iteratively-reweighted least squares (IRLS) algorithm for</span>
+<span class="sd">    the multiplicative noise model ``d = (U p + mu)(1 + n)``, where ``n``</span>
+<span class="sd">    has covariance ``N``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    d : NDArray[np.floating]</span>
+<span class="sd">        Observed data vector of shape ``(M,)``.</span>
+<span class="sd">    U : NDArray[np.floating]</span>
+<span class="sd">        Projection matrix of shape ``(M, N)``.</span>
+<span class="sd">    N_inv : NDArray[np.floating]</span>
+<span class="sd">        Inverse noise covariance of shape ``(M, M)``.</span>
+<span class="sd">    mu : float or NDArray[np.floating], optional</span>
+<span class="sd">        Offset term in the data model. Default is 0.0.</span>
+<span class="sd">    tol : float, optional</span>
+<span class="sd">        Relative convergence tolerance on the parameter norm. Default is 1e-10.</span>
+<span class="sd">    min_iter : int, optional</span>
+<span class="sd">        Minimum number of iterations before convergence is checked.</span>
+<span class="sd">        Default is 5.</span>
+<span class="sd">    max_iter : int, optional</span>
+<span class="sd">        Maximum number of iterations. Default is 100.</span>
+<span class="sd">    solver : callable or None, optional</span>
+<span class="sd">        Linear solver function with signature ``solver(A, b) -&gt; x``.</span>
+<span class="sd">        If ``None``, uses ``scipy.linalg.solve``. Default is :func:`cg`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    p_gls : NDArray[np.floating]</span>
+<span class="sd">        Estimated parameter vector of shape ``(N,)``.</span>
+<span class="sd">    Sigma_inv : NDArray[np.floating]</span>
+<span class="sd">        Final inverse covariance matrix of shape ``(M, M)``, evaluated at</span>
+<span class="sd">        the converged parameter estimate.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Initialize p using ordinary least squares (OLS) as a starting point</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">d</span> <span class="o">-</span> <span class="n">mu</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Compute noise covariance Sigma_epsilon = diag(U p) N diag(U p)</span>
+        <span class="c1"># Sigma_inv = np.linalg.inv(Sigma_epsilon)</span>
+
+        <span class="c1"># Solve GLS: (U^T Sigma_inv U) p = U^T Sigma_inv d</span>
+        <span class="n">UTSigma_invU</span><span class="p">,</span> <span class="n">UTSigma_invD</span> <span class="o">=</span> <span class="n">params_space_oper_and_data</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">N_inv</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">solver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p_new</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">UTSigma_invU</span><span class="p">,</span> <span class="n">UTSigma_invD</span><span class="p">,</span> <span class="n">assume_a</span><span class="o">=</span><span class="s2">&quot;sym&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">p_new</span> <span class="o">=</span> <span class="n">solver</span><span class="p">(</span><span class="n">UTSigma_invU</span><span class="p">,</span> <span class="n">UTSigma_invD</span><span class="p">)</span>
+
+        <span class="c1"># Check for convergence</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p_new</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">iteration</span> <span class="o">&gt;=</span> <span class="n">min_iter</span>
+        <span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Converged in </span><span class="si">{</span><span class="n">iteration</span><span class="si">}</span><span class="s2"> iterations.&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p_new</span>
+
+    <span class="c1"># Compute final covariance for posterior sampling</span>
+    <span class="c1"># covariance_p = np.linalg.inv(U.T @ Sigma_inv @ U)</span>
+    <span class="n">D_p_inv</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">U</span> <span class="o">@</span> <span class="n">p</span> <span class="o">+</span> <span class="n">mu</span><span class="p">)</span>
+    <span class="n">Sigma_inv</span> <span class="o">=</span> <span class="n">N_inv</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">D_p_inv</span><span class="p">,</span> <span class="n">D_p_inv</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p_new</span><span class="p">,</span> <span class="n">Sigma_inv</span></div>
+
+
+
+<div class="viewcode-block" id="params_space_oper_and_data_list">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_sampler.params_space_oper_and_data_list">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">params_space_oper_and_data_list</span><span class="p">(</span>
+    <span class="n">d_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span>
+    <span class="n">U_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span>
+    <span class="n">p</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">Ninv_sqrt_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span>
+    <span class="n">mu_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">draw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">root</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span>
+    <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span>
+        <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build parameter-space operator and data vector from multiple TODs via MPI.</span>
+
+<span class="sd">    Accumulates the contributions from each local TOD into the parameter-space</span>
+<span class="sd">    normal equations and reduces across MPI ranks.  Optionally generates a</span>
+<span class="sd">    white-noise draw for Gibbs sampling.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    d_list : list of NDArray[np.floating]</span>
+<span class="sd">        Local data vectors, one per TOD on this rank.</span>
+<span class="sd">    U_list : list of NDArray[np.floating]</span>
+<span class="sd">        Local projection matrices, one per TOD.</span>
+<span class="sd">    p : NDArray[np.floating]</span>
+<span class="sd">        Current shared parameter estimate of shape ``(N,)``.</span>
+<span class="sd">    Ninv_sqrt_list : list of NDArray[np.floating]</span>
+<span class="sd">        Square root of inverse noise covariance for each local TOD.</span>
+<span class="sd">    mu_list : list of float or NDArray or None, optional</span>
+<span class="sd">        Offset terms for each local TOD. Default is ``None`` (zero offset).</span>
+<span class="sd">    draw : bool, optional</span>
+<span class="sd">        If ``True``, also compute a white-noise contribution for Gibbs</span>
+<span class="sd">        sampling. Default is ``True``.</span>
+<span class="sd">    root : int or None, optional</span>
+<span class="sd">        If specified, only that rank receives the reduced result (via</span>
+<span class="sd">        ``Reduce``).  If ``None``, all ranks receive the result (via</span>
+<span class="sd">        ``Allreduce``).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    UT_sigma_U : NDArray[np.floating] or None</span>
+<span class="sd">        Reduced parameter-space operator, shape ``(N, N)``.</span>
+<span class="sd">    UT_sigma_d : NDArray[np.floating] or None</span>
+<span class="sd">        Reduced parameter-space data vector, shape ``(N,)``.</span>
+<span class="sd">    UT_sigma_sqrt_wn : NDArray[np.floating] or None</span>
+<span class="sd">        White-noise draw projected into parameter space, shape ``(N,)``.</span>
+<span class="sd">        Only returned when ``draw=True``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Non-root ranks return ``None`` values when ``root`` is specified.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">d_list</span><span class="p">)</span>
+    <span class="n">n_params</span> <span class="o">=</span> <span class="n">U_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Preallocate combined array - a stack of UT_sigma_U, UT_sigma_d, and UT_sigma_sqrt_wn</span>
+    <span class="c1"># The first n_params rows are UT_sigma_U, the next row is UT_sigma_d, and the last row is UT_sigma_sqrt_wn</span>
+    <span class="k">if</span> <span class="n">draw</span><span class="p">:</span>
+        <span class="n">combined_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_params</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_params</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">combined_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_params</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_params</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+        <span class="n">U_i</span> <span class="o">=</span> <span class="n">U_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">d_i</span> <span class="o">=</span> <span class="n">d_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">mu_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mu_i</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mu_i</span> <span class="o">=</span> <span class="n">mu_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="n">D_p_inv</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">U_i</span> <span class="o">@</span> <span class="n">p</span> <span class="o">+</span> <span class="n">mu_i</span><span class="p">)</span>
+        <span class="n">Sigma_inv_sqrt_i</span> <span class="o">=</span> <span class="n">D_p_inv</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">Ninv_sqrt_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">aux</span> <span class="o">=</span> <span class="n">U_i</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Sigma_inv_sqrt_i</span>
+        <span class="n">combined_matrix</span><span class="p">[:</span><span class="n">n_params</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">aux</span> <span class="o">@</span> <span class="n">aux</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">combined_matrix</span><span class="p">[</span><span class="n">n_params</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">aux</span> <span class="o">@</span> <span class="n">Sigma_inv_sqrt_i</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="p">(</span><span class="n">d_i</span> <span class="o">-</span> <span class="n">mu_i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">draw</span><span class="p">:</span>
+            <span class="c1"># white noise vector</span>
+            <span class="n">wn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">U_i</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">combined_matrix</span><span class="p">[</span><span class="n">n_params</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">aux</span> <span class="o">@</span> <span class="n">wn</span>
+
+    <span class="c1"># Reduce the combined matrix</span>
+
+    <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">global_combined_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">combined_matrix</span><span class="p">)</span>
+        <span class="n">comm</span><span class="o">.</span><span class="n">Allreduce</span><span class="p">(</span><span class="n">combined_matrix</span><span class="p">,</span> <span class="n">global_combined_matrix</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">SUM</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">rank</span> <span class="o">==</span> <span class="n">root</span><span class="p">:</span>
+        <span class="n">global_combined_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">combined_matrix</span><span class="p">)</span>
+        <span class="n">comm</span><span class="o">.</span><span class="n">Reduce</span><span class="p">(</span><span class="n">combined_matrix</span><span class="p">,</span> <span class="n">global_combined_matrix</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">SUM</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># non-root processes</span>
+        <span class="k">if</span> <span class="n">draw</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+    <span class="c1"># For root processes (or no specified root), extract UT_sigma_U and UT_sigma_d from the combined matrix</span>
+    <span class="n">UT_sigma_U</span> <span class="o">=</span> <span class="n">global_combined_matrix</span><span class="p">[:</span><span class="n">n_params</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">UT_sigma_d</span> <span class="o">=</span> <span class="n">global_combined_matrix</span><span class="p">[</span><span class="n">n_params</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="k">if</span> <span class="n">draw</span><span class="p">:</span>
+        <span class="n">UT_sigma_sqrt_wn</span> <span class="o">=</span> <span class="n">global_combined_matrix</span><span class="p">[</span><span class="n">n_params</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">return</span> <span class="n">UT_sigma_U</span><span class="p">,</span> <span class="n">UT_sigma_d</span><span class="p">,</span> <span class="n">UT_sigma_sqrt_wn</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">UT_sigma_U</span><span class="p">,</span> <span class="n">UT_sigma_d</span></div>
+
+
+
+<div class="viewcode-block" id="iterative_gls_mpi_list">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_sampler.iterative_gls_mpi_list">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">iterative_gls_mpi_list</span><span class="p">(</span>
+    <span class="n">local_d_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span>
+    <span class="n">local_U_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span>
+    <span class="n">local_Ninv_sqrt_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span>
+    <span class="n">local_mu_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">,</span>
+    <span class="n">min_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">cg</span><span class="p">,</span>
+    <span class="n">p_init</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
+    <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    MPI-parallel iteratively-reweighted GLS for multiple TODs.</span>
+
+<span class="sd">    Each MPI rank holds a local subset of TODs.  The algorithm iteratively</span>
+<span class="sd">    solves for the shared parameter vector ``p`` by reducing contributions</span>
+<span class="sd">    from all ranks, and upon convergence also produces a white-noise draw</span>
+<span class="sd">    for subsequent Gibbs sampling.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    local_d_list : list of NDArray[np.floating]</span>
+<span class="sd">        Data vectors local to this MPI rank.</span>
+<span class="sd">    local_U_list : list of NDArray[np.floating]</span>
+<span class="sd">        Projection matrices local to this MPI rank.</span>
+<span class="sd">    local_Ninv_sqrt_list : list of NDArray[np.floating]</span>
+<span class="sd">        Square root of inverse noise covariance for each local TOD.</span>
+<span class="sd">    local_mu_list : list of float or NDArray or None, optional</span>
+<span class="sd">        Offset terms for each local TOD. Default is ``None``.</span>
+<span class="sd">    tol : float, optional</span>
+<span class="sd">        Relative convergence tolerance. Default is 1e-10.</span>
+<span class="sd">    min_iter : int, optional</span>
+<span class="sd">        Minimum number of iterations. Default is 5.</span>
+<span class="sd">    max_iter : int, optional</span>
+<span class="sd">        Maximum number of iterations. Default is 100.</span>
+<span class="sd">    solver : callable or None, optional</span>
+<span class="sd">        Linear solver function.  If ``None``, uses ``scipy.linalg.solve``.</span>
+<span class="sd">        Default is :func:`cg`.</span>
+<span class="sd">    p_init : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Initial parameter estimate.  If ``None``, an OLS initialisation is</span>
+<span class="sd">        performed via MPI reduction.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    p_new : NDArray[np.floating]</span>
+<span class="sd">        Converged parameter estimate, shape ``(N,)``.</span>
+<span class="sd">    UT_Sigma_U : NDArray[np.floating] or None</span>
+<span class="sd">        Final parameter-space operator (root rank only when</span>
+<span class="sd">        ``root`` is specified inside sub-calls).</span>
+<span class="sd">    UT_Sigma_D : NDArray[np.floating] or None</span>
+<span class="sd">        Final parameter-space data vector.</span>
+<span class="sd">    draw_vec : NDArray[np.floating] or None</span>
+<span class="sd">        White-noise draw for Gibbs sampling.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_U_list</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">dim</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_Ninv_sqrt_list</span><span class="p">)</span> <span class="ow">and</span> <span class="n">dim</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+        <span class="n">local_d_list</span>
+    <span class="p">),</span> <span class="s2">&quot;U, d and N must have the same length if they are lists.&quot;</span>
+
+    <span class="n">n_params</span> <span class="o">=</span> <span class="n">local_U_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">p_init</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">local_UT_U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_params</span><span class="p">,</span> <span class="n">n_params</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">local_UT_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_params</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="c1"># local_Ninv_sqrt_list = []</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+            <span class="n">Ui</span> <span class="o">=</span> <span class="n">local_U_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">di</span> <span class="o">=</span> <span class="n">local_d_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">local_UT_U</span> <span class="o">+=</span> <span class="n">Ui</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Ui</span>
+            <span class="n">local_UT_d</span> <span class="o">+=</span> <span class="n">Ui</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">di</span>
+            <span class="c1"># local_Ninv_sqrt_list.append(cholesky(local_N_inv_list[i], upper=False))</span>
+
+        <span class="c1"># Ensure NumPy float64, contiguous buffers for MPI</span>
+        <span class="n">local_UT_U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">local_UT_U</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+        <span class="n">local_UT_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">local_UT_d</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+
+        <span class="c1"># initialize receive buffer on the root process</span>
+        <span class="k">if</span> <span class="n">rank0</span><span class="p">:</span>
+            <span class="n">UT_U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_params</span><span class="p">,</span> <span class="n">n_params</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">UT_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_params</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">UT_U</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">UT_d</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">comm</span><span class="o">.</span><span class="n">Reduce</span><span class="p">(</span><span class="n">local_UT_U</span><span class="p">,</span> <span class="n">UT_U</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">SUM</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">comm</span><span class="o">.</span><span class="n">Reduce</span><span class="p">(</span><span class="n">local_UT_d</span><span class="p">,</span> <span class="n">UT_d</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">SUM</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mpiutil</span><span class="o">.</span><span class="n">rank0</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">cg</span><span class="p">(</span><span class="n">UT_U</span><span class="p">,</span> <span class="n">UT_d</span><span class="p">)</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+                <span class="n">n_params</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+            <span class="p">)</span>  <span class="c1"># Initialize buffer on all processes</span>
+        <span class="c1"># broadcast p to all processes</span>
+        <span class="n">comm</span><span class="o">.</span><span class="n">Bcast</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p_init</span>
+
+    <span class="n">mpiutil</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+
+        <span class="n">UTSigma_invU</span><span class="p">,</span> <span class="n">UTSigma_invD</span> <span class="o">=</span> <span class="n">params_space_oper_and_data_list</span><span class="p">(</span>
+            <span class="n">local_d_list</span><span class="p">,</span>
+            <span class="n">local_U_list</span><span class="p">,</span>
+            <span class="n">p</span><span class="p">,</span>
+            <span class="n">local_Ninv_sqrt_list</span><span class="p">,</span>
+            <span class="n">local_mu_list</span><span class="p">,</span>
+            <span class="n">draw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># if rank==1:</span>
+        <span class="c1">#     # Calculate the rank of the matrix</span>
+        <span class="c1">#     print(f&quot;Rank of U^T Sigma_inv U is {np.linalg.matrix_rank(UTSigma_invU)}.&quot;)</span>
+        <span class="c1">#     # Evaluate the condition number</span>
+        <span class="c1">#     print(f&quot;Condition number of U^T Sigma_inv U is {np.linalg.cond(UTSigma_invU)}.&quot;)</span>
+
+        <span class="k">if</span> <span class="n">mpiutil</span><span class="o">.</span><span class="n">rank0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">solver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">p_new</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">UTSigma_invU</span><span class="p">,</span> <span class="n">UTSigma_invD</span><span class="p">,</span> <span class="n">assume_a</span><span class="o">=</span><span class="s2">&quot;sym&quot;</span><span class="p">)</span>
+                <span class="c1"># set the dtype of p_new to float64</span>
+                <span class="n">p_new</span> <span class="o">=</span> <span class="n">p_new</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">p_new</span> <span class="o">=</span> <span class="n">solver</span><span class="p">(</span><span class="n">UTSigma_invU</span><span class="p">,</span> <span class="n">UTSigma_invD</span><span class="p">)</span>
+                <span class="n">p_new</span> <span class="o">=</span> <span class="n">p_new</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">p_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+                <span class="n">n_params</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+            <span class="p">)</span>  <span class="c1"># Initialize buffer on all processes</span>
+
+        <span class="n">comm</span><span class="o">.</span><span class="n">Bcast</span><span class="p">(</span><span class="n">p_new</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">frac_norm_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p_new</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="c1"># Broadcast the norm error of rank 0 to all processes - make sure to use the same error value</span>
+        <span class="n">frac_norm_error</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">bcast</span><span class="p">(</span><span class="n">frac_norm_error</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Check for convergence</span>
+        <span class="k">if</span> <span class="n">frac_norm_error</span> <span class="o">&lt;</span> <span class="n">tol</span> <span class="ow">and</span> <span class="n">iteration</span> <span class="o">&gt;=</span> <span class="n">min_iter</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mpiutil</span><span class="o">.</span><span class="n">rank0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iterative GLS converged in </span><span class="si">{</span><span class="n">iteration</span><span class="si">}</span><span class="s2"> iterations.&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="k">elif</span> <span class="n">iteration</span> <span class="o">&gt;=</span> <span class="n">max_iter</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mpiutil</span><span class="o">.</span><span class="n">rank0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Reached max iterations with fractional norm error </span><span class="si">{</span><span class="n">frac_norm_error</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p_new</span>
+
+    <span class="c1"># Compute final covariance (and other products) for posterior sampling</span>
+    <span class="n">UT_Sigma_U</span><span class="p">,</span> <span class="n">UT_Sigma_D</span><span class="p">,</span> <span class="n">draw_vec</span> <span class="o">=</span> <span class="n">params_space_oper_and_data_list</span><span class="p">(</span>
+        <span class="n">local_d_list</span><span class="p">,</span>
+        <span class="n">local_U_list</span><span class="p">,</span>
+        <span class="n">p_new</span><span class="p">,</span>
+        <span class="n">local_Ninv_sqrt_list</span><span class="p">,</span>
+        <span class="n">local_mu_list</span><span class="p">,</span>
+        <span class="n">draw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">p_new</span><span class="p">,</span> <span class="n">UT_Sigma_U</span><span class="p">,</span> <span class="n">UT_Sigma_D</span><span class="p">,</span> <span class="n">draw_vec</span></div>
+
+
+
+<div class="viewcode-block" id="sample_p">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_sampler.sample_p">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_p</span><span class="p">(</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">U</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">Sigma_inv</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">prior_cov_inv</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prior_mean</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">cg</span><span class="p">,</span>
+    <span class="n">p_GLS</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draw samples from the posterior (or likelihood) distribution of parameters.</span>
+
+<span class="sd">    Constructs the normal equations ``A p = b`` from the data likelihood and</span>
+<span class="sd">    optional Gaussian prior, then draws from the resulting multivariate</span>
+<span class="sd">    Gaussian posterior.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    d : NDArray[np.floating]</span>
+<span class="sd">        Observed data vector of shape ``(M,)``.</span>
+<span class="sd">    U : NDArray[np.floating]</span>
+<span class="sd">        Projection matrix of shape ``(M, N)``.</span>
+<span class="sd">    Sigma_inv : NDArray[np.floating]</span>
+<span class="sd">        Inverse noise covariance of shape ``(M, M)``.</span>
+<span class="sd">    mu : float or NDArray[np.floating], optional</span>
+<span class="sd">        Offset term. Default is 0.0.</span>
+<span class="sd">    num_samples : int, optional</span>
+<span class="sd">        Number of samples to draw.  If 0, returns the MAP / GLS estimate</span>
+<span class="sd">        without sampling. Default is 1.</span>
+<span class="sd">    prior_cov_inv : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Inverse of the prior covariance matrix, shape ``(N, N)``.</span>
+<span class="sd">    prior_mean : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Prior mean vector, shape ``(N,)``.  Required if ``prior_cov_inv``</span>
+<span class="sd">        is provided.</span>
+<span class="sd">    solver : callable or None, optional</span>
+<span class="sd">        Linear solver function. Default is :func:`cg`.</span>
+<span class="sd">    p_GLS : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Pre-computed GLS estimate to avoid redundant solves.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    samples : NDArray[np.floating]</span>
+<span class="sd">        If ``num_samples &gt; 1``: array of shape ``(num_samples, N)``.</span>
+<span class="sd">        If ``num_samples == 1``: array of shape ``(N,)``.</span>
+<span class="sd">        If ``num_samples == 0``: MAP estimate of shape ``(N,)``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    If the covariance matrix is not positive definite (e.g. due to numerical</span>
+<span class="sd">    issues), the function attempts regularisation with progressively larger</span>
+<span class="sd">    diagonal perturbations.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Sigma_inv</span> <span class="o">@</span> <span class="n">U</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Sigma_inv</span> <span class="o">@</span> <span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">prior_cov_inv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">prior_mean</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">),</span> <span class="s2">&quot;Prior mean must be provided if prior covariance is provided..&quot;</span>
+        <span class="n">A</span> <span class="o">+=</span> <span class="n">prior_cov_inv</span>
+        <span class="n">b</span> <span class="o">+=</span> <span class="n">prior_cov_inv</span> <span class="o">@</span> <span class="n">prior_mean</span>
+
+        <span class="k">if</span> <span class="n">solver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p_est</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">assume_a</span><span class="o">=</span><span class="s2">&quot;sym&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">p_est</span> <span class="o">=</span> <span class="n">solver</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">p_GLS</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># No prior, and p_GLS estimation is provided</span>
+        <span class="n">p_est</span> <span class="o">=</span> <span class="n">p_GLS</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># No prior, and p_GLS estimation is not provided - solve for it</span>
+        <span class="n">p_est</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">assume_a</span><span class="o">=</span><span class="s2">&quot;sym&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num_samples</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">p_est</span>
+
+    <span class="n">p_cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+    <span class="c1"># return samples array with &quot;mean: p_est&quot; and &quot;covariance: p_cov&quot;</span>
+    <span class="c1"># return np.random.multivariate_normal(p_est, p_cov, num_samples) # shape: (num_samples, n_modes)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># First try with standard multivariate_normal</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">p_est</span><span class="p">,</span> <span class="n">p_cov</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
+        <span class="c1"># If that fails, try with regularization</span>
+        <span class="n">reg</span> <span class="o">=</span> <span class="mf">1e-6</span>
+        <span class="n">max_attempts</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_attempts</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">p_cov_reg</span> <span class="o">=</span> <span class="n">p_cov</span> <span class="o">+</span> <span class="n">reg</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">p_cov</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">p_est</span><span class="p">,</span> <span class="n">p_cov_reg</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
+                <span class="n">reg</span> <span class="o">*=</span> <span class="mi">10</span>
+        <span class="c1"># If all attempts fail, use Cholesky decomposition with regularization</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">p_cov</span> <span class="o">+</span> <span class="mf">1e-4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">p_cov</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">p_est</span> <span class="o">+</span> <span class="n">L</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">p_cov</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span></div>
+
+
+
+<div class="viewcode-block" id="sample_p_v2">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_sampler.sample_p_v2">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_p_v2</span><span class="p">(</span>
+    <span class="n">A</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">A_sqrt_wn</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">prior_cov_inv</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prior_mean</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">cg</span><span class="p">,</span>
+    <span class="n">Est_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draw a sample from the posterior using pre-computed normal-equation terms.</span>
+
+<span class="sd">    This is the preferred sampling interface for the Gibbs sampler, as it</span>
+<span class="sd">    avoids redundant matrix constructions.  In estimation mode, it returns</span>
+<span class="sd">    the MAP estimate; in sampling mode, it adds a white-noise realisation</span>
+<span class="sd">    to the right-hand side before solving.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A : NDArray[np.floating]</span>
+<span class="sd">        Left-hand side of the normal equations, shape ``(N, N)``.</span>
+<span class="sd">    b : NDArray[np.floating]</span>
+<span class="sd">        Right-hand side data vector, shape ``(N,)``.</span>
+<span class="sd">    A_sqrt_wn : NDArray[np.floating]</span>
+<span class="sd">        White-noise term ``U^T N^{-1/2} w`` where ``w ~ N(0, I)``,</span>
+<span class="sd">        shape ``(N,)``.</span>
+<span class="sd">    prior_cov_inv : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Inverse prior covariance.  Can be 1-D (diagonal) or 2-D (full</span>
+<span class="sd">        matrix).</span>
+<span class="sd">    prior_mean : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Prior mean vector.  Required if ``prior_cov_inv`` is provided.</span>
+<span class="sd">    solver : callable or None, optional</span>
+<span class="sd">        Linear solver function. Default is :func:`cg`.</span>
+<span class="sd">    Est_mode : bool, optional</span>
+<span class="sd">        If ``True``, return the MAP estimate (no noise added).  If</span>
+<span class="sd">        ``False``, draw one posterior sample. Default is ``True``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    p_sample : NDArray[np.floating]</span>
+<span class="sd">        A single parameter sample (or MAP estimate), shape ``(N,)``.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">left_op</span> <span class="o">=</span> <span class="n">A</span>
+    <span class="k">if</span> <span class="n">Est_mode</span><span class="p">:</span>
+        <span class="n">right_vec</span> <span class="o">=</span> <span class="n">b</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">right_vec</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">A_sqrt_wn</span>
+
+    <span class="k">if</span> <span class="n">prior_cov_inv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">prior_mean</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">),</span> <span class="s2">&quot;Prior mean must be provided if prior covariance is provided..&quot;</span>
+        <span class="c1"># if prior_cov_inv is 1D, then diagonalize it</span>
+        <span class="k">if</span> <span class="n">prior_cov_inv</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">left_op</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">prior_cov_inv</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">Est_mode</span><span class="p">:</span>
+                <span class="n">right_vec</span> <span class="o">+=</span> <span class="n">prior_cov_inv</span> <span class="o">*</span> <span class="n">prior_mean</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># right_vec += prior_cov_inv * prior_mean + np.diag(np.sqrt(prior_cov_inv)) @ np.random.normal(size=prior_mean.shape)</span>
+                <span class="n">right_vec</span> <span class="o">+=</span> <span class="n">prior_cov_inv</span> <span class="o">*</span> <span class="n">prior_mean</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                    <span class="n">prior_cov_inv</span>
+                <span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">prior_mean</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">left_op</span> <span class="o">+=</span> <span class="n">prior_cov_inv</span>
+            <span class="k">if</span> <span class="n">Est_mode</span><span class="p">:</span>
+                <span class="n">right_vec</span> <span class="o">+=</span> <span class="n">prior_cov_inv</span> <span class="o">@</span> <span class="n">prior_mean</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">right_vec</span> <span class="o">+=</span> <span class="n">prior_cov_inv</span> <span class="o">@</span> <span class="n">prior_mean</span> <span class="o">+</span> <span class="n">cholesky</span><span class="p">(</span>
+                    <span class="n">prior_cov_inv</span>
+                <span class="p">)</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">prior_mean</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">solver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">p_sample</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">left_op</span><span class="p">,</span> <span class="n">right_vec</span><span class="p">,</span> <span class="n">assume_a</span><span class="o">=</span><span class="s2">&quot;sym&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">p_sample</span> <span class="o">=</span> <span class="n">solver</span><span class="p">(</span><span class="n">left_op</span><span class="p">,</span> <span class="n">right_vec</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">p_sample</span></div>
+
+
+
+<div class="viewcode-block" id="sample_p_old">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_sampler.sample_p_old">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_p_old</span><span class="p">(</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">U</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">Sigma_inv</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">prior_cov_inv</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prior_mean</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">cg</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draw posterior samples using the explicit Cholesky-based sampling method.</span>
+
+<span class="sd">    This is an older implementation kept for reference and validation.  For</span>
+<span class="sd">    each sample, a white-noise realisation is projected through the square</span>
+<span class="sd">    root of the inverse covariance and added to the right-hand side before</span>
+<span class="sd">    solving.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    d : NDArray[np.floating]</span>
+<span class="sd">        Observed data vector of shape ``(M,)``.</span>
+<span class="sd">    U : NDArray[np.floating]</span>
+<span class="sd">        Projection matrix of shape ``(M, N)``.</span>
+<span class="sd">    Sigma_inv : NDArray[np.floating]</span>
+<span class="sd">        Inverse noise covariance of shape ``(M, M)``.</span>
+<span class="sd">    num_samples : int, optional</span>
+<span class="sd">        Number of samples to draw.  If 0, returns the GLS/MAP estimate.</span>
+<span class="sd">        Default is 1.</span>
+<span class="sd">    mu : float or NDArray[np.floating], optional</span>
+<span class="sd">        Offset term. Default is 0.0.</span>
+<span class="sd">    prior_cov_inv : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Inverse prior covariance.  Can be 1-D (diagonal) or 2-D.</span>
+<span class="sd">    prior_mean : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Prior mean vector.</span>
+<span class="sd">    solver : callable or None, optional</span>
+<span class="sd">        Linear solver function. Default is :func:`cg`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    p_samples : NDArray[np.floating]</span>
+<span class="sd">        If ``num_samples &gt; 1``: array of shape ``(num_samples, N)``.</span>
+<span class="sd">        If ``num_samples == 1``: array of shape ``(N,)``.</span>
+<span class="sd">        If ``num_samples == 0``: MAP estimate of shape ``(N,)``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Superseded by :func:`sample_p_v2` which is more efficient for the Gibbs</span>
+<span class="sd">    sampler.  Kept for backward compatibility and validation.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Sigma_inv</span> <span class="o">@</span> <span class="n">U</span>
+    <span class="n">aux</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Sigma_inv</span> <span class="o">@</span> <span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span>
+    <span class="n">Sigma_sqrt_inv</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">cholesky</span><span class="p">(</span>
+        <span class="n">Sigma_inv</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>  <span class="c1"># Careful with the convention of cholesky decomposition!</span>
+    <span class="n">num_d</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">n_modes</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">if</span> <span class="n">num_samples</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">p_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_modes</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">p_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">n_modes</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">prior_cov_inv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">prior_mean</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">),</span> <span class="s2">&quot;Prior mean must be provided if prior covariance is provided..&quot;</span>
+        <span class="k">if</span> <span class="n">prior_cov_inv</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">A</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">prior_cov_inv</span><span class="p">)</span>
+            <span class="n">prior_cov_sqrt_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">prior_cov_inv</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">A</span> <span class="o">+=</span> <span class="n">prior_cov_inv</span>
+            <span class="n">prior_cov_sqrt_inv</span> <span class="o">=</span> <span class="n">cholesky</span><span class="p">(</span>
+                <span class="n">prior_cov_inv</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>  <span class="c1"># Careful with the convention of cholesky decomposition!</span>
+        <span class="n">aux</span> <span class="o">+=</span> <span class="n">prior_cov_inv</span> <span class="o">@</span> <span class="n">prior_mean</span>
+
+    <span class="k">if</span> <span class="n">solver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num_samples</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">p_samples</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">aux</span><span class="p">,</span> <span class="n">assume_a</span><span class="o">=</span><span class="s2">&quot;sym&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span><span class="p">):</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">aux</span> <span class="o">+</span> <span class="n">Sigma_sqrt_inv</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_d</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">prior_cov_inv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">b</span> <span class="o">+=</span> <span class="n">prior_cov_sqrt_inv</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_modes</span><span class="p">)</span>
+                <span class="n">p_samples</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">assume_a</span><span class="o">=</span><span class="s2">&quot;sym&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num_samples</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">p_samples</span> <span class="o">=</span> <span class="n">solver</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">aux</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span><span class="p">):</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">aux</span> <span class="o">+</span> <span class="n">Sigma_sqrt_inv</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_d</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">prior_cov_inv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">b</span> <span class="o">+=</span> <span class="n">prior_cov_sqrt_inv</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_modes</span><span class="p">)</span>
+                <span class="n">p_samples</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">solver</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num_samples</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">p_samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">p_samples</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025-2026, Zheng Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

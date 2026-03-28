@@ -1,0 +1,1641 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hydra_tod.simulation &mdash; hydra_tod 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            hydra_tod
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#conda-environment">Conda Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/data_model.html">Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#observation-model">Observation Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#system-temperature">System Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gain-model">Gain Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/flicker_noise.html">Flicker Noise Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#power-spectral-density">Power Spectral Density</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#correlation-function">Correlation Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#covariance-matrix">Covariance Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#emulator">Emulator</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#visualization">Visualization</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/simulation.html">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/gibbs_sampler.html">Gibbs Sampler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/flicker_model.html">Flicker Noise Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/samplers.html">Parameter Samplers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/linear_algebra.html">Linear Algebra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/utilities.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.utils">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/diagnostics.html">MCMC Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/visualization.html">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citation.html">Citation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#plain-text">Plain text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#bibtex">BibTeX</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#id1">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hydra_tod</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hydra_tod.simulation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for hydra_tod.simulation</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">healpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">hp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.coordinates</span><span class="w"> </span><span class="kn">import</span> <span class="n">EarthLocation</span><span class="p">,</span> <span class="n">AltAz</span><span class="p">,</span> <span class="n">SkyCoord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">Time</span><span class="p">,</span> <span class="n">TimeDelta</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.units</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">u</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NDArray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Leg_poly_proj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">sim_noise</span><span class="p">,</span> <span class="n">flicker_cov</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpiutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+<span class="n">_comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+
+
+<div class="viewcode-block" id="sim_MeerKAT_scan">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sim_MeerKAT_scan</span><span class="p">(</span>
+    <span class="n">telescope_lat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">30.7130</span><span class="p">,</span>
+    <span class="n">telescope_lon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">21.4430</span><span class="p">,</span>
+    <span class="n">telescope_height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1054</span><span class="p">,</span>
+    <span class="n">elevation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">41.5</span><span class="p">,</span>
+    <span class="n">az_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">60.3</span><span class="p">,</span>
+    <span class="n">az_e</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">42.3</span><span class="p">,</span>
+    <span class="n">start_time_utc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2019-04-23 20:41:56.397&quot;</span><span class="p">,</span>
+    <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">return_eq_coords</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span> <span class="n">SkyCoord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a simulated MeerKAT telescope scan pattern.</span>
+
+<span class="sd">    Simulates a raster scan in azimuth at fixed elevation for the MeerKAT</span>
+<span class="sd">    radio telescope located in the Karoo, South Africa. The scan pattern</span>
+<span class="sd">    consists of 13 repeated back-and-forth sweeps across the specified</span>
+<span class="sd">    azimuth range (111 samples per sweep), producing a total of</span>
+<span class="sd">    ``13 * (2 * 111 - 2) = 2860`` time samples.</span>
+
+<span class="sd">    The horizontal (Az/El) coordinates are converted to equatorial (RA/Dec)</span>
+<span class="sd">    coordinates using the observation time and telescope location via</span>
+<span class="sd">    astropy coordinate transforms.</span>
+
+<span class="sd">    See Zhang et al. (2026), RASTI, rzag024 for details on the MeerKAT</span>
+<span class="sd">    observation model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    telescope_lat : float, optional</span>
+<span class="sd">        Telescope geodetic latitude in degrees. Default is -30.7130 (MeerKAT).</span>
+<span class="sd">    telescope_lon : float, optional</span>
+<span class="sd">        Telescope geodetic longitude in degrees. Default is 21.4430 (MeerKAT).</span>
+<span class="sd">    telescope_height : float, optional</span>
+<span class="sd">        Telescope height above sea level in metres. Default is 1054 (MeerKAT).</span>
+<span class="sd">    elevation : float, optional</span>
+<span class="sd">        Fixed telescope elevation angle in degrees. Default is 41.5.</span>
+<span class="sd">    az_s : float, optional</span>
+<span class="sd">        Start azimuth angle of the scan in degrees. Default is -60.3.</span>
+<span class="sd">    az_e : float, optional</span>
+<span class="sd">        End azimuth angle of the scan in degrees. Default is -42.3.</span>
+<span class="sd">    start_time_utc : str, optional</span>
+<span class="sd">        UTC start time of the observation in ISO format.</span>
+<span class="sd">        Default is ``&quot;2019-04-23 20:41:56.397&quot;``.</span>
+<span class="sd">    dt : float, optional</span>
+<span class="sd">        Time sampling interval in seconds. Default is 2.0.</span>
+<span class="sd">    return_eq_coords : bool, optional</span>
+<span class="sd">        If True, return an astropy ``SkyCoord`` object instead of</span>
+<span class="sd">        (theta, phi) arrays. Default is False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    t_list : NDArray[np.floating]</span>
+<span class="sd">        Array of time stamps in seconds, shape ``(ntime,)``.</span>
+<span class="sd">    theta_c : NDArray[np.floating]</span>
+<span class="sd">        HEALPix colatitude of beam centres in radians, shape ``(ntime,)``.</span>
+<span class="sd">        Only returned when ``return_eq_coords=False``.</span>
+<span class="sd">    phi_c : NDArray[np.floating]</span>
+<span class="sd">        HEALPix longitude (RA) of beam centres in radians, shape ``(ntime,)``.</span>
+<span class="sd">        Only returned when ``return_eq_coords=False``.</span>
+<span class="sd">    eq_coords : SkyCoord</span>
+<span class="sd">        Equatorial coordinates of beam centres. Only returned when</span>
+<span class="sd">        ``return_eq_coords=True``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">location</span> <span class="o">=</span> <span class="n">EarthLocation</span><span class="p">(</span>
+        <span class="n">lat</span><span class="o">=</span><span class="n">telescope_lat</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span>
+        <span class="n">lon</span><span class="o">=</span><span class="n">telescope_lon</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="n">telescope_height</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">aux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">az_s</span><span class="p">,</span> <span class="n">az_e</span><span class="p">,</span> <span class="mi">111</span><span class="p">)</span>
+    <span class="n">azimuths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">aux</span><span class="p">))</span>
+    <span class="n">azimuths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">azimuths</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
+
+    <span class="c1"># Length of TOD</span>
+    <span class="n">ntime</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">azimuths</span><span class="p">)</span>
+    <span class="n">t_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ntime</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span>
+
+    <span class="c1"># ---- Define start and end times in UTC ----</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">Time</span><span class="p">(</span><span class="n">start_time_utc</span><span class="p">)</span>
+    <span class="n">UTC_list</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">TimeDelta</span><span class="p">(</span><span class="n">t_list</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;sec&quot;</span><span class="p">)</span>  <span class="c1"># Time list in UTC</span>
+
+    <span class="c1"># ---- Create AltAz coordinate frame ----</span>
+    <span class="n">altaz_frame</span> <span class="o">=</span> <span class="n">AltAz</span><span class="p">(</span><span class="n">obstime</span><span class="o">=</span><span class="n">UTC_list</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span>
+
+    <span class="c1"># ---- Convert Az/El to Equatorial (RA, Dec) ----</span>
+    <span class="n">eq_coords</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span>
+        <span class="n">az</span><span class="o">=</span><span class="n">azimuths</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="n">elevation</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="n">altaz_frame</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">transform_to</span><span class="p">(</span><span class="s2">&quot;icrs&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">return_eq_coords</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">t_list</span><span class="p">,</span> <span class="n">eq_coords</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">theta_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">eq_coords</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">radian</span>  <span class="c1"># Convert Dec to theta</span>
+        <span class="n">phi_c</span> <span class="o">=</span> <span class="n">eq_coords</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">radian</span>  <span class="c1"># RA is already phi</span>
+
+        <span class="k">return</span> <span class="n">t_list</span><span class="p">,</span> <span class="n">theta_c</span><span class="p">,</span> <span class="n">phi_c</span></div>
+
+
+
+<div class="viewcode-block" id="sim_MeerKAT_scan_v2">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sim_MeerKAT_scan_v2</span><span class="p">(</span>
+    <span class="n">az_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">60.3</span><span class="p">,</span>
+    <span class="n">az_e</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">42.3</span><span class="p">,</span>
+    <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a simplified MeerKAT scan pattern in azimuth only.</span>
+
+<span class="sd">    Produces the same raster scan pattern as :func:`sim_MeerKAT_scan` but</span>
+<span class="sd">    returns azimuth values directly without converting to equatorial</span>
+<span class="sd">    coordinates. Useful for quick tests that do not require sky projection.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    az_s : float, optional</span>
+<span class="sd">        Start azimuth angle in degrees. Default is -60.3.</span>
+<span class="sd">    az_e : float, optional</span>
+<span class="sd">        End azimuth angle in degrees. Default is -42.3.</span>
+<span class="sd">    dt : float, optional</span>
+<span class="sd">        Time sampling interval in seconds. Default is 2.0.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    t_list : NDArray[np.floating]</span>
+<span class="sd">        Array of time stamps in seconds, shape ``(ntime,)``.</span>
+<span class="sd">    azimuths : NDArray[np.floating]</span>
+<span class="sd">        Azimuth angles in degrees at each time sample, shape ``(ntime,)``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">aux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">az_s</span><span class="p">,</span> <span class="n">az_e</span><span class="p">,</span> <span class="mi">111</span><span class="p">)</span>
+    <span class="n">azimuths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">aux</span><span class="p">))</span>
+    <span class="n">azimuths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">azimuths</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
+
+    <span class="c1"># Length of TOD</span>
+    <span class="n">ntime</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">azimuths</span><span class="p">)</span>
+    <span class="n">t_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ntime</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span>
+
+    <span class="k">return</span> <span class="n">t_list</span><span class="p">,</span> <span class="n">azimuths</span></div>
+
+
+
+<div class="viewcode-block" id="stacked_beam_map">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.stacked_beam_map">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">stacked_beam_map</span><span class="p">(</span>
+    <span class="n">theta_c</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">phi_c</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">FWHM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.1</span><span class="p">,</span>
+    <span class="n">NSIDE</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.011</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a stacked beam boolean map from a sequence of beam centres.</span>
+
+<span class="sd">    For each time sample, a Gaussian beam is evaluated on the HEALPix grid</span>
+<span class="sd">    and accumulated into a sum map. Pixels whose beam response exceeds</span>
+<span class="sd">    ``threshold`` in *any* time sample are flagged True in the boolean map.</span>
+
+<span class="sd">    The Gaussian beam profile is</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        B(\\psi) = \\exp\\!\\left(-\\frac{\\psi^2}{2\\sigma^2}\\right),</span>
+
+<span class="sd">    where :math:`\\psi` is the angular separation from the beam centre and</span>
+<span class="sd">    :math:`\\sigma = \\mathrm{FWHM} / (2\\sqrt{2\\ln 2})`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    theta_c : NDArray[np.floating]</span>
+<span class="sd">        HEALPix colatitudes of beam centres in radians, shape ``(ntime,)``.</span>
+<span class="sd">    phi_c : NDArray[np.floating]</span>
+<span class="sd">        HEALPix longitudes of beam centres in radians, shape ``(ntime,)``.</span>
+<span class="sd">    FWHM : float, optional</span>
+<span class="sd">        Full Width at Half Maximum of the Gaussian beam in degrees.</span>
+<span class="sd">        Default is 1.1.</span>
+<span class="sd">    NSIDE : int, optional</span>
+<span class="sd">        HEALPix ``NSIDE`` resolution parameter. Default is 64.</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        Minimum beam response for a pixel to be included in the boolean</span>
+<span class="sd">        map. Default is 0.011 (approximately the 3-sigma level).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool_map : NDArray[np.bool_]</span>
+<span class="sd">        Boolean HEALPix map of shape ``(NPIX,)`` indicating which pixels</span>
+<span class="sd">        fall within the beam footprint.</span>
+<span class="sd">    sum_map : NDArray[np.floating]</span>
+<span class="sd">        Sum of all beam responses at each pixel, shape ``(NPIX,)``.</span>
+<span class="sd">        Useful for assessing cumulative beam coverage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">FWHM</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>  <span class="c1"># Convert FWHM to sigma (degrees)</span>
+    <span class="n">sigma_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>  <span class="c1"># Convert to radians</span>
+
+    <span class="n">NPIX</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">nside2npix</span><span class="p">(</span><span class="n">NSIDE</span><span class="p">)</span>
+
+    <span class="c1"># Get HEALPix pixel coordinates (theta, phi)</span>
+    <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pix2ang</span><span class="p">(</span><span class="n">NSIDE</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">NPIX</span><span class="p">))</span>
+
+    <span class="c1"># Generate a initial boolean map with all pixels zero</span>
+    <span class="n">bool_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">NPIX</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">sum_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">NPIX</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">ntime</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">theta_c</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ti</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ntime</span><span class="p">):</span>
+        <span class="c1"># Compute angular separation between each pixel and the beam center</span>
+        <span class="n">cos_sep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_c</span><span class="p">[</span><span class="n">ti</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span>
+            <span class="n">theta_c</span><span class="p">[</span><span class="n">ti</span><span class="p">]</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span> <span class="o">-</span> <span class="n">phi_c</span><span class="p">[</span><span class="n">ti</span><span class="p">])</span>
+        <span class="n">cos_sep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">cos_sep</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Ensure within valid range</span>
+        <span class="n">angular_sep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">cos_sep</span><span class="p">)</span>  <span class="c1"># Separation in radians</span>
+        <span class="c1"># Compute Gaussian beam response centered at (RA_center, Dec_center)</span>
+        <span class="n">beam_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">angular_sep</span> <span class="o">/</span> <span class="n">sigma_rad</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># Normalize the beam (optional, ensures peak = 1)</span>
+        <span class="n">beam_map</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">beam_map</span><span class="p">)</span>
+        <span class="n">sum_map</span> <span class="o">+=</span> <span class="n">beam_map</span>
+        <span class="c1"># Get the &quot;or&quot; map of the bool_map and beam_map</span>
+        <span class="n">bool_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">bool_map</span><span class="p">,</span> <span class="n">beam_map</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">bool_map</span><span class="p">,</span> <span class="n">sum_map</span></div>
+
+
+
+<div class="viewcode-block" id="reduce_bool_maps_LOR">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">reduce_bool_maps_LOR</span><span class="p">(</span>
+    <span class="n">bool_maps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">intp</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reduce a list of boolean HEALPix maps using logical OR.</span>
+
+<span class="sd">    Combines multiple per-scan boolean beam coverage maps into a single</span>
+<span class="sd">    union map, identifying all pixels observed by *any* scan.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bool_maps : list of NDArray[np.bool\_]</span>
+<span class="sd">        List of boolean HEALPix maps, each of shape ``(NPIX,)``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    reduced_map : NDArray[np.bool_]</span>
+<span class="sd">        Combined boolean map, shape ``(NPIX,)``.</span>
+<span class="sd">    pixel_indices : NDArray[np.intp]</span>
+<span class="sd">        Indices of pixels that are True in the combined map.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">reduced_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">bool_maps</span><span class="p">)</span>
+    <span class="c1"># Get the pixel indices of the &quot;1&quot; pixels:</span>
+    <span class="n">pixel_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">reduced_map</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">reduced_map</span><span class="p">,</span> <span class="n">pixel_indices</span></div>
+
+
+
+<div class="viewcode-block" id="reduce_bool_maps_LAND">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">reduce_bool_maps_LAND</span><span class="p">(</span>
+    <span class="n">bool_maps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">intp</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reduce a list of boolean HEALPix maps using logical AND.</span>
+
+<span class="sd">    Combines multiple per-scan boolean beam coverage maps into a single</span>
+<span class="sd">    intersection map, identifying only pixels observed by *all* scans.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bool_maps : list of NDArray[np.bool\_]</span>
+<span class="sd">        List of boolean HEALPix maps, each of shape ``(NPIX,)``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    reduced_map : NDArray[np.bool_]</span>
+<span class="sd">        Combined boolean map, shape ``(NPIX,)``.</span>
+<span class="sd">    pixel_indices : NDArray[np.intp]</span>
+<span class="sd">        Indices of pixels that are True in the combined map.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">reduced_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">bool_maps</span><span class="p">)</span>
+    <span class="c1"># Get the pixel indices of the &quot;1&quot; pixels:</span>
+    <span class="n">pixel_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">reduced_map</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">reduced_map</span><span class="p">,</span> <span class="n">pixel_indices</span></div>
+
+
+
+<div class="viewcode-block" id="gaussian">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.gaussian">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gaussian</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate a peak-normalised 1-D Gaussian function.</span>
+
+<span class="sd">    Computes</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        G(x) = \\exp\\!\\left(-\\frac{(x - \\mu)^2}{2\\sigma^2}\\right),</span>
+
+<span class="sd">    which has a peak value of 1 at :math:`x = \\mu`. Note that this is</span>
+<span class="sd">    *not* the probability-normalised Gaussian; the :math:`1/(\\sigma\\sqrt{2\\pi})`</span>
+<span class="sd">    prefactor is omitted so that the beam peak equals unity.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : float or NDArray[np.floating]</span>
+<span class="sd">        Input value(s) at which to evaluate the Gaussian.</span>
+<span class="sd">    mu : float, optional</span>
+<span class="sd">        Mean (centre) of the Gaussian. Default is 0.</span>
+<span class="sd">    sigma : float, optional</span>
+<span class="sd">        Standard deviation (width) of the Gaussian. Default is 1.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or NDArray[np.floating]</span>
+<span class="sd">        Gaussian values at ``x``, same shape as the input.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># coefficient = 1 / (sigma * np.sqrt(2 * np.pi))</span>
+    <span class="n">exponent</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># Peak normalisation: peak = 1</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">exponent</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generate_Tsky_proj">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.generate_Tsky_proj">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_Tsky_proj</span><span class="p">(</span>
+    <span class="n">full_bool_map</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">],</span>
+    <span class="n">theta_c</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">phi_c</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">FWHM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.1</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the sky temperature projection (beam) operator.</span>
+
+<span class="sd">    Constructs a matrix :math:`\\mathbf{B}` of shape ``(ntime, npix)`` that</span>
+<span class="sd">    projects a sky temperature vector :math:`\\mathbf{T}_\\mathrm{sky}` into</span>
+<span class="sd">    the time domain via</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        T_\\mathrm{sky}(t) = \\sum_p B_{tp}\\, T_\\mathrm{sky}(p),</span>
+
+<span class="sd">    where each row of :math:`\\mathbf{B}` is a Gaussian beam response</span>
+<span class="sd">    evaluated at the observed pixels for the beam centre at time *t*.</span>
+
+<span class="sd">    The computation is parallelised across time samples using MPI via</span>
+<span class="sd">    :func:`mpiutil.local_parallel_func`.</span>
+
+<span class="sd">    See Zhang et al. (2026), RASTI, rzag024, Section 2 for the beam</span>
+<span class="sd">    convolution model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    full_bool_map : NDArray[np.bool_]</span>
+<span class="sd">        Boolean HEALPix map of shape ``(NPIX,)`` indicating the observed</span>
+<span class="sd">        pixel footprint. Only True pixels are included in the projection.</span>
+<span class="sd">    theta_c : NDArray[np.floating]</span>
+<span class="sd">        HEALPix colatitudes of beam centres in radians, shape ``(ntime,)``.</span>
+<span class="sd">    phi_c : NDArray[np.floating]</span>
+<span class="sd">        HEALPix longitudes of beam centres in radians, shape ``(ntime,)``.</span>
+<span class="sd">    FWHM : float, optional</span>
+<span class="sd">        Full Width at Half Maximum of the Gaussian beam in degrees.</span>
+<span class="sd">        Default is 1.1.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tsky_proj : NDArray[np.floating]</span>
+<span class="sd">        Beam projection operator of shape ``(ntime, npix)`` where</span>
+<span class="sd">        ``npix = sum(full_bool_map)``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NPIX</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">full_bool_map</span><span class="p">)</span>
+    <span class="n">NSIDE</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">npix2nside</span><span class="p">(</span><span class="n">NPIX</span><span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">FWHM</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
+    <span class="n">sigma_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>  <span class="c1"># Convert to radians</span>
+
+    <span class="n">ntime</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">theta_c</span><span class="p">)</span>
+
+    <span class="c1"># Get HEALPix pixel coordinates (theta, phi)</span>
+    <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pix2ang</span><span class="p">(</span><span class="n">NSIDE</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">NPIX</span><span class="p">))</span>
+
+    <span class="c1"># Count the number of &quot;1&quot; pixels in bool_map</span>
+    <span class="n">num_pixels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">full_bool_map</span><span class="p">)</span>
+    <span class="c1"># Get the pixel indices of the &quot;1&quot; pixels:</span>
+    <span class="n">pixel_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">full_bool_map</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">Tsky_proj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ntime</span><span class="p">,</span> <span class="n">num_pixels</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">ti</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+        <span class="n">theta_p</span> <span class="o">=</span> <span class="n">theta</span><span class="p">[</span><span class="n">pixel_indices</span><span class="p">]</span>
+        <span class="n">phi_p</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="n">pixel_indices</span><span class="p">]</span>
+        <span class="n">cos_sep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_p</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_c</span><span class="p">[</span><span class="n">ti</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_p</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span>
+            <span class="n">theta_c</span><span class="p">[</span><span class="n">ti</span><span class="p">]</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi_p</span> <span class="o">-</span> <span class="n">phi_c</span><span class="p">[</span><span class="n">ti</span><span class="p">])</span>
+        <span class="n">cos_sep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">cos_sep</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Ensure within valid range</span>
+        <span class="n">angular_sep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">cos_sep</span><span class="p">)</span>  <span class="c1"># Separation in radians</span>
+        <span class="c1"># Compute Gaussian beam response centered at (RA_center, Dec_center)</span>
+        <span class="n">beam_map</span> <span class="o">=</span> <span class="n">gaussian</span><span class="p">(</span><span class="n">angular_sep</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma_rad</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">beam_map</span>
+
+    <span class="n">Tsky_proj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mpiutil</span><span class="o">.</span><span class="n">local_parallel_func</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ntime</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">Tsky_proj</span></div>
+
+
+
+<div class="viewcode-block" id="TODSimulation">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.TODSimulation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TODSimulation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Single-scan Time-Ordered Data (TOD) simulation for MeerKAT.</span>
+
+<span class="sd">    Generates a realistic simulated radio telescope observation following the</span>
+<span class="sd">    data model described in Zhang et al. (2026), RASTI, rzag024:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        d(t) = T_\\mathrm{sys}(t)\\,\\bigl[1 + n(t)\\bigr]\\,g(t),</span>
+
+<span class="sd">    where</span>
+
+<span class="sd">    - :math:`T_\\mathrm{sys}(t) = T_\\mathrm{sky}(t) + T_\\mathrm{loc}(t)` is</span>
+<span class="sd">      the system temperature,</span>
+<span class="sd">    - :math:`T_\\mathrm{sky}(t) = \\mathbf{B}(t)\\,\\mathbf{T}_\\mathrm{sky}` is the</span>
+<span class="sd">      beam-convolved sky temperature,</span>
+<span class="sd">    - :math:`T_\\mathrm{loc}(t) = T_\\mathrm{ndiode}(t) + T_\\mathrm{rec}(t)` contains</span>
+<span class="sd">      the noise diode and receiver temperature,</span>
+<span class="sd">    - :math:`g(t) = \\exp(\\mathbf{G}\\,\\mathbf{p}_g)` is the time-varying</span>
+<span class="sd">      instrument gain modelled by Legendre polynomials,</span>
+<span class="sd">    - :math:`n(t)` is correlated flicker noise with a :math:`1/f^\\alpha`</span>
+<span class="sd">      power spectrum.</span>
+
+<span class="sd">    The simulation proceeds in the following steps:</span>
+
+<span class="sd">    1. Generate a MeerKAT raster scan pattern (Az/El to RA/Dec).</span>
+<span class="sd">    2. Build a Gaussian beam coverage map on the HEALPix grid.</span>
+<span class="sd">    3. Construct the beam projection operator :math:`\\mathbf{B}`.</span>
+<span class="sd">    4. Extract sky temperatures from the Global Sky Model (GSM) plus</span>
+<span class="sd">       optional point source catalogue.</span>
+<span class="sd">    5. Generate gain, noise diode, and receiver temperature time streams.</span>
+<span class="sd">    6. Draw a flicker noise realisation.</span>
+<span class="sd">    7. Combine all components into the final TOD.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nside : int</span>
+<span class="sd">        HEALPix ``NSIDE`` resolution parameter.</span>
+<span class="sd">    ntime : int</span>
+<span class="sd">        Number of time samples in the scan.</span>
+<span class="sd">    t_list : NDArray[np.floating]</span>
+<span class="sd">        Time stamps in seconds, shape ``(ntime,)``.</span>
+<span class="sd">    TOD_setting : NDArray[np.floating]</span>
+<span class="sd">        Simulated TOD data, shape ``(ntime,)``.</span>
+<span class="sd">    Tsys_setting : NDArray[np.floating]</span>
+<span class="sd">        System temperature time stream, shape ``(ntime,)``.</span>
+<span class="sd">    sky_params : NDArray[np.floating]</span>
+<span class="sd">        Sky temperature values at observed pixels, shape ``(npix,)``.</span>
+<span class="sd">    gains_setting : NDArray[np.floating]</span>
+<span class="sd">        Gain time stream, shape ``(ntime,)``.</span>
+<span class="sd">    noise_setting : NDArray[np.floating]</span>
+<span class="sd">        Flicker noise realisation, shape ``(ntime,)``.</span>
+<span class="sd">    Tsky_operator_setting : NDArray[np.floating]</span>
+<span class="sd">        Beam projection operator, shape ``(ntime, npix)``.</span>
+<span class="sd">    nd_rec_operator : NDArray[np.floating]</span>
+<span class="sd">        Local temperature operator (noise diode + receiver), shape ``(ntime, 5)``.</span>
+<span class="sd">    full_bool_map : NDArray[np.bool_]</span>
+<span class="sd">        Boolean HEALPix map of observed pixels.</span>
+<span class="sd">    pixel_indices : NDArray[np.intp]</span>
+<span class="sd">        HEALPix pixel indices of observed pixels.</span>
+<span class="sd">    gain_proj : NDArray[np.floating]</span>
+<span class="sd">        Legendre polynomial basis for gain model, shape ``(ntime, 4)``.</span>
+<span class="sd">    gain_params_setting : NDArray[np.floating]</span>
+<span class="sd">        True gain parameters, shape ``(4,)``.</span>
+<span class="sd">    nd_rec_params : NDArray[np.floating]</span>
+<span class="sd">        Combined noise diode and receiver parameters, shape ``(5,)``.</span>
+<span class="sd">    f0 : float</span>
+<span class="sd">        Noise knee frequency in Hz (angular).</span>
+<span class="sd">    fc : float</span>
+<span class="sd">        Low-frequency cutoff :math:`f_c = 2\\pi / (N \\Delta t)` in rad/s.</span>
+<span class="sd">    logf0 : float</span>
+<span class="sd">        :math:`\\log_{10}(f_0)`.</span>
+<span class="sd">    logfc : float</span>
+<span class="sd">        :math:`\\log_{10}(f_c)`.</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Flicker noise spectral index.</span>
+<span class="sd">    sigma_2 : float</span>
+<span class="sd">        White noise variance.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; sim = TODSimulation(nside=64, freq=750)</span>
+<span class="sd">    &gt;&gt;&gt; print(sim.TOD_setting.shape)</span>
+<span class="sd">    (2860,)</span>
+<span class="sd">    &gt;&gt;&gt; summary = sim.get_simulation_summary()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">nside</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+        <span class="n">elevation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">41.5</span><span class="p">,</span>
+        <span class="n">az_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">60.3</span><span class="p">,</span>
+        <span class="n">az_e</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">42.3</span><span class="p">,</span>
+        <span class="n">start_time_utc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2019-04-23 20:41:56.397&quot;</span><span class="p">,</span>
+        <span class="n">FWHM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.1</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0111</span><span class="p">,</span>
+        <span class="n">freq</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">750</span><span class="p">,</span>
+        <span class="n">T_ndiode</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">15.0</span><span class="p">,</span>
+        <span class="n">rec_params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gain_params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dtime</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">logf0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">4.874571109426952</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
+        <span class="n">sigma_2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ptsrc_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise and run a single-scan TOD simulation.</span>
+
+<span class="sd">        All simulation products are computed immediately upon construction</span>
+<span class="sd">        and stored as instance attributes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nside : int, optional</span>
+<span class="sd">            HEALPix ``NSIDE`` resolution parameter. Default is 64.</span>
+<span class="sd">        elevation : float, optional</span>
+<span class="sd">            Telescope elevation angle in degrees. Default is 41.5.</span>
+<span class="sd">        az_s : float, optional</span>
+<span class="sd">            Start azimuth angle in degrees. Default is -60.3.</span>
+<span class="sd">        az_e : float, optional</span>
+<span class="sd">            End azimuth angle in degrees. Default is -42.3.</span>
+<span class="sd">        start_time_utc : str, optional</span>
+<span class="sd">            UTC start time in ISO format.</span>
+<span class="sd">            Default is ``&quot;2019-04-23 20:41:56.397&quot;``.</span>
+<span class="sd">        FWHM : float, optional</span>
+<span class="sd">            Full Width at Half Maximum of the Gaussian beam in degrees.</span>
+<span class="sd">            Default is 1.1.</span>
+<span class="sd">        threshold : float, optional</span>
+<span class="sd">            Beam response threshold for pixel inclusion (approximately</span>
+<span class="sd">            3-sigma level). Default is 0.0111.</span>
+<span class="sd">        freq : float, optional</span>
+<span class="sd">            Observation frequency in MHz. Default is 750.</span>
+<span class="sd">        T_ndiode : float, optional</span>
+<span class="sd">            Noise diode temperature in Kelvin. Default is 15.0.</span>
+<span class="sd">        rec_params : array-like or None, optional</span>
+<span class="sd">            Legendre polynomial coefficients for the receiver temperature</span>
+<span class="sd">            model, shape ``(4,)``. Default is ``[12.6, 0.5, 0.5, 0.5]``.</span>
+<span class="sd">        gain_params : array-like or None, optional</span>
+<span class="sd">            Legendre polynomial coefficients for the gain model,</span>
+<span class="sd">            shape ``(4,)``. Default is</span>
+<span class="sd">            ``[6.312, 0.420, 0.264, 0.056]``.</span>
+<span class="sd">        dtime : float, optional</span>
+<span class="sd">            Time sampling interval in seconds. Default is 2.</span>
+<span class="sd">        logf0 : float, optional</span>
+<span class="sd">            :math:`\\log_{10}` of the flicker noise knee frequency (Hz).</span>
+<span class="sd">            Default is -4.875.</span>
+<span class="sd">        alpha : float, optional</span>
+<span class="sd">            Flicker noise spectral index :math:`\\alpha` in the power</span>
+<span class="sd">            spectrum :math:`P(f) \\propto 1/f^\\alpha`. Default is 2.0.</span>
+<span class="sd">        sigma_2 : float or None, optional</span>
+<span class="sd">            White noise variance. Default is ``1 / 4e5``.</span>
+<span class="sd">        ptsrc_path : str or None, optional</span>
+<span class="sd">            Path to a ``.npy`` file containing a point source catalogue</span>
+<span class="sd">            at 408 MHz (GLEAM format). If provided, sources are scaled</span>
+<span class="sd">            to the observation frequency assuming a spectral index of</span>
+<span class="sd">            -2.3. Default is None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Store input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nside</span> <span class="o">=</span> <span class="n">nside</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elevation</span> <span class="o">=</span> <span class="n">elevation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">az_s</span> <span class="o">=</span> <span class="n">az_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">az_e</span> <span class="o">=</span> <span class="n">az_e</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time_utc</span> <span class="o">=</span> <span class="n">start_time_utc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span> <span class="o">=</span> <span class="n">FWHM</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq</span> <span class="o">=</span> <span class="n">freq</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_ndiode</span> <span class="o">=</span> <span class="n">T_ndiode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtime</span> <span class="o">=</span> <span class="n">dtime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logf0</span> <span class="o">=</span> <span class="n">logf0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ptsrc_path</span> <span class="o">=</span> <span class="n">ptsrc_path</span>
+
+        <span class="c1"># Set default parameters if not provided</span>
+        <span class="k">if</span> <span class="n">rec_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rec_params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">12.6</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rec_params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rec_params</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">gain_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_setting</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="mf">6.31194264</span><span class="p">,</span> <span class="mf">0.42038942</span><span class="p">,</span> <span class="mf">0.264222</span><span class="p">,</span> <span class="mf">0.05578821</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_setting</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gain_params</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sigma_2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sigma_2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4e5</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sigma_2</span> <span class="o">=</span> <span class="n">sigma_2</span>
+
+        <span class="c1"># Run the simulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_simulate</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the complete simulation pipeline and populate all attributes.</span>
+
+<span class="sd">        This is called automatically by ``__init__`` and should not normally</span>
+<span class="sd">        be called directly. It performs the following steps:</span>
+
+<span class="sd">        1. Generate MeerKAT scan coordinates.</span>
+<span class="sd">        2. Build the beam coverage boolean map.</span>
+<span class="sd">        3. Construct the beam projection operator.</span>
+<span class="sd">        4. Extract sky temperatures from the Global Sky Model.</span>
+<span class="sd">        5. Build noise diode, receiver, and gain time streams.</span>
+<span class="sd">        6. Generate a flicker noise realisation.</span>
+<span class="sd">        7. Assemble the final TOD.</span>
+<span class="sd">        8. Identify calibration pixel indices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Get the timestream of beam centers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_c_setting</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_c_setting</span> <span class="o">=</span> <span class="n">sim_MeerKAT_scan</span><span class="p">(</span>
+            <span class="n">elevation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">elevation</span><span class="p">,</span>
+            <span class="n">az_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">az_s</span><span class="p">,</span>
+            <span class="n">az_e</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">az_e</span><span class="p">,</span>
+            <span class="n">start_time_utc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">start_time_utc</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Generate beam map</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bool_map_setting</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam_setting</span> <span class="o">=</span> <span class="n">stacked_beam_map</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">theta_c_setting</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi_c_setting</span><span class="p">,</span>
+            <span class="n">FWHM</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span><span class="p">,</span>
+            <span class="n">NSIDE</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Set up maps and indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">full_bool_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bool_map_setting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">full_bool_map</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam_setting</span>
+
+        <span class="c1"># Generate sky projection operator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Tsky_operator_setting</span> <span class="o">=</span> <span class="n">generate_Tsky_proj</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">full_bool_map</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_c_setting</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_c_setting</span><span class="p">,</span> <span class="n">FWHM</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Generate sky parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of pixels: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Set up time-dependent parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntime</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndiode_proj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntime</span><span class="p">)</span>
+
+        <span class="c1"># Set up noise diode and receiver operator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_operator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ntime</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_operator</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndiode_proj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_operator</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">Leg_poly_proj</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">)</span>
+
+        <span class="c1"># Combine noise diode and receiver parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_ndiode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rec_params</span>
+
+        <span class="c1"># Set up gain projection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gain_proj</span> <span class="o">=</span> <span class="n">Leg_poly_proj</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gains_setting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_proj</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_setting</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gain parameters: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gain_params_setting</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Calculate flicker noise parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntime</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logfc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f0</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">logf0</span>
+
+        <span class="c1"># Generate noise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_setting</span> <span class="o">=</span> <span class="n">sim_noise</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">f0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">,</span> <span class="n">white_n_variance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma_2</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Calculate system temperature and final TOD</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Tsys_setting</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Tsky_operator_setting</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_params</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_operator</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_params</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TOD_setting</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Tsys_setting</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_setting</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gains_setting</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Set up calibration indices</span>
+        <span class="n">top_200_beam_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam_setting</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span><span class="p">],</span> <span class="o">-</span><span class="mi">200</span>
+        <span class="p">)[</span><span class="o">-</span><span class="mi">200</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calibration_5_indices</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">top_200_beam_indices</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="mi">200</span> <span class="o">/</span> <span class="mi">5</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># For a 1D array &#39;integrated_beam_setting&#39;</span>
+        <span class="n">n_cal_pixs</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">top_20_beam_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam_setting</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span><span class="p">],</span> <span class="o">-</span><span class="mi">20</span>
+        <span class="p">)[</span><span class="o">-</span><span class="mi">20</span><span class="p">:]</span>
+        <span class="n">top_n_sky_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sky_params</span><span class="p">[</span><span class="n">top_20_beam_indices</span><span class="p">],</span> <span class="o">-</span><span class="n">n_cal_pixs</span>
+        <span class="p">)[</span><span class="o">-</span><span class="n">n_cal_pixs</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calibration_1_indice</span> <span class="o">=</span> <span class="n">top_20_beam_indices</span><span class="p">[</span><span class="n">top_n_sky_indices</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sky_vector</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">pixel_indices</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">intp</span><span class="p">],</span>
+        <span class="n">freq</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">Nside</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+        <span class="n">sky_model</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate sky temperature vector for observed pixels.</span>
+
+<span class="sd">        Produces the sky model using the Global Sky Model (GSM) at the</span>
+<span class="sd">        requested frequency, optionally adding point sources from the</span>
+<span class="sd">        GLEAM catalogue scaled with a spectral index of -2.3.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pixel_indices : NDArray[np.intp]</span>
+<span class="sd">            HEALPix pixel indices to extract, shape ``(npix,)``.</span>
+<span class="sd">        freq : float</span>
+<span class="sd">            Observation frequency in MHz.</span>
+<span class="sd">        Nside : int, optional</span>
+<span class="sd">            HEALPix ``NSIDE`` for the output map. Default is 64.</span>
+<span class="sd">        sky_model : callable or None, optional</span>
+<span class="sd">            Custom sky model function that takes frequency (MHz) and returns</span>
+<span class="sd">            a full-sky HEALPix map. If None, uses ``pygdsm.GlobalSkyModel``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NDArray[np.floating]</span>
+<span class="sd">            Sky temperatures at the requested pixels in Kelvin,</span>
+<span class="sd">            shape ``(npix,)``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">sky_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">pygdsm</span><span class="w"> </span><span class="kn">import</span> <span class="n">GlobalSkyModel</span>
+
+            <span class="n">gsm</span> <span class="o">=</span> <span class="n">GlobalSkyModel</span><span class="p">()</span>
+            <span class="n">skymap</span> <span class="o">=</span> <span class="n">gsm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">skymap</span> <span class="o">=</span> <span class="n">sky_model</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+
+        <span class="n">skymap</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ud_grade</span><span class="p">(</span><span class="n">skymap</span><span class="p">,</span> <span class="n">nside_out</span><span class="o">=</span><span class="n">Nside</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ptsrc_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ptsrc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ptsrc_path</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">freq</span> <span class="o">/</span> <span class="mi">408</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.3</span><span class="p">)</span>
+            <span class="n">ptsrc_map</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ud_grade</span><span class="p">(</span><span class="n">ptsrc</span><span class="p">,</span> <span class="n">nside_out</span><span class="o">=</span><span class="n">Nside</span><span class="p">)</span>
+            <span class="n">skymap</span> <span class="o">=</span> <span class="n">skymap</span> <span class="o">+</span> <span class="n">ptsrc_map</span>
+        <span class="k">return</span> <span class="n">skymap</span><span class="p">[</span><span class="n">pixel_indices</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntime</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a periodic noise diode injection pattern.</span>
+
+<span class="sd">        Creates a binary vector where the noise diode is fired every</span>
+<span class="sd">        10th time sample (duty cycle of 10%).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ntime : int</span>
+<span class="sd">            Total number of time samples.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NDArray[np.floating]</span>
+<span class="sd">            Binary vector of shape ``(ntime,)`` with 1 at every 10th</span>
+<span class="sd">            element and 0 elsewhere.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ntime</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ntime</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+            <span class="n">vector</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">vector</span>
+
+<div class="viewcode-block" id="TODSimulation.get_simulation_summary">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.TODSimulation.get_simulation_summary">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_simulation_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a summary of simulation parameters and key results.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict[str, Any]</span>
+<span class="sd">            Dictionary containing:</span>
+
+<span class="sd">            - ``nside``: HEALPix resolution</span>
+<span class="sd">            - ``n_pixels``: number of observed pixels</span>
+<span class="sd">            - ``n_time_samples``: number of time samples</span>
+<span class="sd">            - ``frequency_MHz``: observation frequency</span>
+<span class="sd">            - ``beam_FWHM_deg``: beam FWHM</span>
+<span class="sd">            - ``elevation_deg``: telescope elevation</span>
+<span class="sd">            - ``azimuth_range_deg``: (az_start, az_end) tuple</span>
+<span class="sd">            - ``gain_params``: gain polynomial coefficients</span>
+<span class="sd">            - ``noise_knee_freq_Hz``: knee frequency</span>
+<span class="sd">            - ``noise_spectral_index``: flicker noise alpha</span>
+<span class="sd">            - ``T_ndiode_K``: noise diode temperature</span>
+<span class="sd">            - ``receiver_params_K``: receiver temperature coefficients</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;nside&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">,</span>
+            <span class="s2">&quot;n_pixels&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span><span class="p">),</span>
+            <span class="s2">&quot;n_time_samples&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntime</span><span class="p">,</span>
+            <span class="s2">&quot;frequency_MHz&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq</span><span class="p">,</span>
+            <span class="s2">&quot;beam_FWHM_deg&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span><span class="p">,</span>
+            <span class="s2">&quot;elevation_deg&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">elevation</span><span class="p">,</span>
+            <span class="s2">&quot;azimuth_range_deg&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">az_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">az_e</span><span class="p">),</span>
+            <span class="s2">&quot;gain_params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_setting</span><span class="p">,</span>
+            <span class="s2">&quot;noise_knee_freq_Hz&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">f0</span><span class="p">,</span>
+            <span class="s2">&quot;noise_spectral_index&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span>
+            <span class="s2">&quot;T_ndiode_K&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_ndiode</span><span class="p">,</span>
+            <span class="s2">&quot;receiver_params_K&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rec_params</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">summary</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MultiTODSimulation">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.MultiTODSimulation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MultiTODSimulation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiple-scan Time-Ordered Data (TOD) simulation for MeerKAT.</span>
+
+<span class="sd">    Generates simulated TODs for two independent scans -- a &quot;setting&quot; scan</span>
+<span class="sd">    and a &quot;rising&quot; scan -- that observe overlapping regions of sky. This</span>
+<span class="sd">    enables testing of the joint Gibbs sampler that recovers a shared sky</span>
+<span class="sd">    map :math:`\\mathbf{T}_\\mathrm{sky}` from multiple observations, each</span>
+<span class="sd">    with independent gains and noise realisations.</span>
+
+<span class="sd">    The data model for each scan *i* is</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        d_i(t) = T_\\mathrm{sys,i}(t)\\,\\bigl[1 + n_i(t)\\bigr]\\,g_i(t),</span>
+
+<span class="sd">    where the sky component :math:`T_\\mathrm{sky}` is shared and</span>
+<span class="sd">    all other components are per-scan. See Zhang et al. (2026), RASTI,</span>
+<span class="sd">    rzag024 for the full hierarchical model.</span>
+
+<span class="sd">    The simulation proceeds by:</span>
+
+<span class="sd">    1. Generating scan patterns for both setting and rising scans.</span>
+<span class="sd">    2. Building per-scan beam coverage maps and combining them with</span>
+<span class="sd">       logical OR to define the full observed pixel footprint.</span>
+<span class="sd">    3. Constructing per-scan beam projection operators on the shared</span>
+<span class="sd">       pixel set.</span>
+<span class="sd">    4. Extracting sky temperatures from the GSM.</span>
+<span class="sd">    5. Generating per-scan gains, noise, and local temperature streams.</span>
+<span class="sd">    6. Assembling per-scan TODs.</span>
+<span class="sd">    7. Identifying calibration pixel indices.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nside : int</span>
+<span class="sd">        HEALPix ``NSIDE`` resolution parameter.</span>
+<span class="sd">    ntime : int</span>
+<span class="sd">        Number of time samples per scan.</span>
+<span class="sd">    t_list : NDArray[np.floating]</span>
+<span class="sd">        Time stamps in seconds, shape ``(ntime,)``.</span>
+<span class="sd">    TOD_setting : NDArray[np.floating]</span>
+<span class="sd">        Simulated TOD for the setting scan, shape ``(ntime,)``.</span>
+<span class="sd">    TOD_rising : NDArray[np.floating]</span>
+<span class="sd">        Simulated TOD for the rising scan, shape ``(ntime,)``.</span>
+<span class="sd">    Tsys_setting : NDArray[np.floating]</span>
+<span class="sd">        System temperature for the setting scan, shape ``(ntime,)``.</span>
+<span class="sd">    Tsys_rising : NDArray[np.floating]</span>
+<span class="sd">        System temperature for the rising scan, shape ``(ntime,)``.</span>
+<span class="sd">    sky_params : NDArray[np.floating]</span>
+<span class="sd">        Sky temperature values at observed pixels, shape ``(npix,)``.</span>
+<span class="sd">    gains_setting : NDArray[np.floating]</span>
+<span class="sd">        Gain time stream for the setting scan, shape ``(ntime,)``.</span>
+<span class="sd">    gains_rising : NDArray[np.floating]</span>
+<span class="sd">        Gain time stream for the rising scan, shape ``(ntime,)``.</span>
+<span class="sd">    noise_setting : NDArray[np.floating]</span>
+<span class="sd">        Flicker noise realisation for the setting scan, shape ``(ntime,)``.</span>
+<span class="sd">    noise_rising : NDArray[np.floating]</span>
+<span class="sd">        Flicker noise realisation for the rising scan, shape ``(ntime,)``.</span>
+<span class="sd">    Tsky_operator_setting : NDArray[np.floating]</span>
+<span class="sd">        Beam projection operator for setting scan, shape ``(ntime, npix)``.</span>
+<span class="sd">    Tsky_operator_rising : NDArray[np.floating]</span>
+<span class="sd">        Beam projection operator for rising scan, shape ``(ntime, npix)``.</span>
+<span class="sd">    nd_rec_operator : NDArray[np.floating]</span>
+<span class="sd">        Local temperature operator, shape ``(ntime, 5)``.</span>
+<span class="sd">    full_bool_map : NDArray[np.bool_]</span>
+<span class="sd">        Union boolean HEALPix map of observed pixels.</span>
+<span class="sd">    pixel_indices : NDArray[np.intp]</span>
+<span class="sd">        HEALPix pixel indices of the union footprint.</span>
+<span class="sd">    gain_proj : NDArray[np.floating]</span>
+<span class="sd">        Legendre polynomial basis for gain model, shape ``(ntime, 4)``.</span>
+<span class="sd">    gain_params_setting : NDArray[np.floating]</span>
+<span class="sd">        True gain parameters for the setting scan, shape ``(4,)``.</span>
+<span class="sd">    gain_params_rising : NDArray[np.floating]</span>
+<span class="sd">        True gain parameters for the rising scan, shape ``(4,)``.</span>
+<span class="sd">    calibration_1_index : NDArray[np.intp]</span>
+<span class="sd">        Index of the single brightest calibration pixel.</span>
+<span class="sd">    calibration_5_indices : list[int]</span>
+<span class="sd">        Indices of five calibration pixels spread across the beam.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; sim = MultiTODSimulation(nside=64, freq=750)</span>
+<span class="sd">    &gt;&gt;&gt; print(sim.TOD_setting.shape, sim.TOD_rising.shape)</span>
+<span class="sd">    (2860,) (2860,)</span>
+<span class="sd">    &gt;&gt;&gt; data = sim.get_tod_data()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">nside</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+        <span class="n">FWHM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.1</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0111</span><span class="p">,</span>
+        <span class="n">freq</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">750</span><span class="p">,</span>
+        <span class="n">T_ndiode</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">15.0</span><span class="p">,</span>
+        <span class="n">rec_params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dtime</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
+        <span class="n">logf0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">4.874571109426952</span><span class="p">,</span>
+        <span class="n">sigma_2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># Setting scan parameters</span>
+        <span class="n">setting_elevation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">41.5</span><span class="p">,</span>
+        <span class="n">setting_az_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">60.3</span><span class="p">,</span>
+        <span class="n">setting_az_e</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">42.3</span><span class="p">,</span>
+        <span class="n">setting_start_time</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2019-04-23 20:41:56.397&quot;</span><span class="p">,</span>
+        <span class="n">setting_gain_params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># Rising scan parameters</span>
+        <span class="n">rising_elevation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">40.5</span><span class="p">,</span>
+        <span class="n">rising_az_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">43.7</span><span class="p">,</span>
+        <span class="n">rising_az_e</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">61.7</span><span class="p">,</span>
+        <span class="n">rising_start_time</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2019-03-30 17:19:02.397&quot;</span><span class="p">,</span>
+        <span class="n">rising_gain_params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ptsrc_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise and run a multi-scan TOD simulation.</span>
+
+<span class="sd">        All simulation products for both setting and rising scans are</span>
+<span class="sd">        computed immediately upon construction and stored as instance</span>
+<span class="sd">        attributes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nside : int, optional</span>
+<span class="sd">            HEALPix ``NSIDE`` resolution parameter. Default is 64.</span>
+<span class="sd">        FWHM : float, optional</span>
+<span class="sd">            Full Width at Half Maximum of the Gaussian beam in degrees.</span>
+<span class="sd">            Default is 1.1.</span>
+<span class="sd">        threshold : float, optional</span>
+<span class="sd">            Beam response threshold for pixel inclusion (approximately</span>
+<span class="sd">            3-sigma level). Default is 0.0111.</span>
+<span class="sd">        freq : float, optional</span>
+<span class="sd">            Observation frequency in MHz. Default is 750.</span>
+<span class="sd">        T_ndiode : float, optional</span>
+<span class="sd">            Noise diode temperature in Kelvin. Default is 15.0.</span>
+<span class="sd">        rec_params : array-like or None, optional</span>
+<span class="sd">            Legendre polynomial coefficients for the receiver temperature</span>
+<span class="sd">            model, shape ``(4,)``. Default is ``[12.6, 0.5, 0.5, 0.5]``.</span>
+<span class="sd">        dtime : float, optional</span>
+<span class="sd">            Time sampling interval in seconds. Default is 2.</span>
+<span class="sd">        alpha : float, optional</span>
+<span class="sd">            Flicker noise spectral index :math:`\\alpha`. Default is 2.0.</span>
+<span class="sd">        logf0 : float, optional</span>
+<span class="sd">            :math:`\\log_{10}` of the flicker noise knee frequency (Hz).</span>
+<span class="sd">            Default is -4.875.</span>
+<span class="sd">        sigma_2 : float or None, optional</span>
+<span class="sd">            White noise variance. Default is ``1 / 4e5``.</span>
+<span class="sd">        setting_elevation : float, optional</span>
+<span class="sd">            Elevation angle for the setting scan in degrees. Default is 41.5.</span>
+<span class="sd">        setting_az_s : float, optional</span>
+<span class="sd">            Start azimuth for the setting scan in degrees. Default is -60.3.</span>
+<span class="sd">        setting_az_e : float, optional</span>
+<span class="sd">            End azimuth for the setting scan in degrees. Default is -42.3.</span>
+<span class="sd">        setting_start_time : str, optional</span>
+<span class="sd">            UTC start time for the setting scan. Default is</span>
+<span class="sd">            ``&quot;2019-04-23 20:41:56.397&quot;``.</span>
+<span class="sd">        setting_gain_params : array-like or None, optional</span>
+<span class="sd">            Gain polynomial coefficients for the setting scan, shape ``(4,)``.</span>
+<span class="sd">            Default is ``[6.312, 0.420, 0.264, 0.056]``.</span>
+<span class="sd">        rising_elevation : float, optional</span>
+<span class="sd">            Elevation angle for the rising scan in degrees. Default is 40.5.</span>
+<span class="sd">        rising_az_s : float, optional</span>
+<span class="sd">            Start azimuth for the rising scan in degrees. Default is 43.7.</span>
+<span class="sd">        rising_az_e : float, optional</span>
+<span class="sd">            End azimuth for the rising scan in degrees. Default is 61.7.</span>
+<span class="sd">        rising_start_time : str, optional</span>
+<span class="sd">            UTC start time for the rising scan. Default is</span>
+<span class="sd">            ``&quot;2019-03-30 17:19:02.397&quot;``.</span>
+<span class="sd">        rising_gain_params : array-like or None, optional</span>
+<span class="sd">            Gain polynomial coefficients for the rising scan, shape ``(4,)``.</span>
+<span class="sd">            Default is ``[6.845, 0.142, 0.744, 0.779]``.</span>
+<span class="sd">        ptsrc_path : str or None, optional</span>
+<span class="sd">            Path to a ``.npy`` file containing a point source catalogue</span>
+<span class="sd">            at 408 MHz. If provided, sources are scaled to the observation</span>
+<span class="sd">            frequency with spectral index -2.3. Default is None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Store input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nside</span> <span class="o">=</span> <span class="n">nside</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span> <span class="o">=</span> <span class="n">FWHM</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq</span> <span class="o">=</span> <span class="n">freq</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_ndiode</span> <span class="o">=</span> <span class="n">T_ndiode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtime</span> <span class="o">=</span> <span class="n">dtime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logf0</span> <span class="o">=</span> <span class="n">logf0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ptsrc_path</span> <span class="o">=</span> <span class="n">ptsrc_path</span>
+
+        <span class="c1"># Setting scan parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setting_elevation</span> <span class="o">=</span> <span class="n">setting_elevation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setting_az_s</span> <span class="o">=</span> <span class="n">setting_az_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setting_az_e</span> <span class="o">=</span> <span class="n">setting_az_e</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setting_start_time</span> <span class="o">=</span> <span class="n">setting_start_time</span>
+
+        <span class="c1"># Rising scan parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rising_elevation</span> <span class="o">=</span> <span class="n">rising_elevation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rising_az_s</span> <span class="o">=</span> <span class="n">rising_az_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rising_az_e</span> <span class="o">=</span> <span class="n">rising_az_e</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rising_start_time</span> <span class="o">=</span> <span class="n">rising_start_time</span>
+
+        <span class="c1"># Set default parameters if not provided</span>
+        <span class="k">if</span> <span class="n">rec_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rec_params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">12.6</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rec_params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rec_params</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">setting_gain_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_setting</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="mf">6.31194264</span><span class="p">,</span> <span class="mf">0.42038942</span><span class="p">,</span> <span class="mf">0.264222</span><span class="p">,</span> <span class="mf">0.05578821</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_setting</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">setting_gain_params</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">rising_gain_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_rising</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="mf">6.84507868</span><span class="p">,</span> <span class="mf">0.14156859</span><span class="p">,</span> <span class="mf">0.7441104</span><span class="p">,</span> <span class="mf">0.77863955</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_rising</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rising_gain_params</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sigma_2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sigma_2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4e5</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sigma_2</span> <span class="o">=</span> <span class="n">sigma_2</span>
+
+        <span class="c1"># Run the simulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_simulate</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the complete multi-scan simulation pipeline.</span>
+
+<span class="sd">        This is called automatically by ``__init__``. It generates scan</span>
+<span class="sd">        patterns, beam maps, sky projections, gains, noise, and TODs for</span>
+<span class="sd">        both the setting and rising scans, then sets up calibration indices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Generate setting scan</span>
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_c_setting</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_c_setting</span> <span class="o">=</span> <span class="n">sim_MeerKAT_scan</span><span class="p">(</span>
+            <span class="n">elevation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">setting_elevation</span><span class="p">,</span>
+            <span class="n">az_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">setting_az_s</span><span class="p">,</span>
+            <span class="n">az_e</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">setting_az_e</span><span class="p">,</span>
+            <span class="n">start_time_utc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">setting_start_time</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bool_map_setting</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam_setting</span> <span class="o">=</span> <span class="n">stacked_beam_map</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">theta_c_setting</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi_c_setting</span><span class="p">,</span>
+            <span class="n">FWHM</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span><span class="p">,</span>
+            <span class="n">NSIDE</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Generate rising scan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_c_rising</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_c_rising</span> <span class="o">=</span> <span class="n">sim_MeerKAT_scan</span><span class="p">(</span>
+            <span class="n">elevation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rising_elevation</span><span class="p">,</span>
+            <span class="n">az_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rising_az_s</span><span class="p">,</span>
+            <span class="n">az_e</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rising_az_e</span><span class="p">,</span>
+            <span class="n">start_time_utc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rising_start_time</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bool_map_rising</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam_rising</span> <span class="o">=</span> <span class="n">stacked_beam_map</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">theta_c_rising</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi_c_rising</span><span class="p">,</span>
+            <span class="n">FWHM</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span><span class="p">,</span>
+            <span class="n">NSIDE</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Combine maps using logical OR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">full_bool_map</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span> <span class="o">=</span> <span class="n">reduce_bool_maps_LOR</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bool_map_setting</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bool_map_rising</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam_setting</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam_rising</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Generate sky projection operators</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Tsky_operator_setting</span> <span class="o">=</span> <span class="n">generate_Tsky_proj</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">full_bool_map</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_c_setting</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_c_setting</span><span class="p">,</span> <span class="n">FWHM</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Tsky_operator_rising</span> <span class="o">=</span> <span class="n">generate_Tsky_proj</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">full_bool_map</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_c_rising</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_c_rising</span><span class="p">,</span> <span class="n">FWHM</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Generate sky parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of pixels: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Set up time-dependent parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntime</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndiode_proj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntime</span><span class="p">)</span>
+
+        <span class="c1"># Set up noise diode and receiver operator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_operator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ntime</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_operator</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndiode_proj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_operator</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">Leg_poly_proj</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">)</span>
+
+        <span class="c1"># Combine noise diode and receiver parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_ndiode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rec_params</span>
+
+        <span class="c1"># Set up gain projections and gains</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gain_proj</span> <span class="o">=</span> <span class="n">Leg_poly_proj</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gains_setting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_proj</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_setting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gains_rising</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_proj</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_rising</span>
+
+        <span class="c1"># Calculate flicker noise parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntime</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logfc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f0</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">logf0</span>
+
+        <span class="c1"># Generate noise for both scans</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_setting</span> <span class="o">=</span> <span class="n">sim_noise</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">f0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">,</span> <span class="n">white_n_variance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma_2</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_rising</span> <span class="o">=</span> <span class="n">sim_noise</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">f0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">,</span> <span class="n">white_n_variance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma_2</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Calculate system temperatures and final TODs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Tsys_setting</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Tsky_operator_setting</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_params</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_operator</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_params</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TOD_setting</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Tsys_setting</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_setting</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gains_setting</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Tsys_rising</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Tsky_operator_rising</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_params</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_operator</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_params</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TOD_rising</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Tsys_rising</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_rising</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gains_rising</span>
+
+        <span class="c1"># Generate additional maps for analysis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_analysis_maps</span><span class="p">()</span>
+
+        <span class="c1"># Set up calibration indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_calibration_indices</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sky_vector</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">pixel_indices</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">intp</span><span class="p">],</span>
+        <span class="n">freq</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">Nside</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+        <span class="n">sky_model</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate sky temperature vector for observed pixels.</span>
+
+<span class="sd">        Produces the sky model using the Global Sky Model (GSM) at the</span>
+<span class="sd">        requested frequency, optionally adding point sources from the</span>
+<span class="sd">        GLEAM catalogue scaled with a spectral index of -2.3.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pixel_indices : NDArray[np.intp]</span>
+<span class="sd">            HEALPix pixel indices to extract, shape ``(npix,)``.</span>
+<span class="sd">        freq : float</span>
+<span class="sd">            Observation frequency in MHz.</span>
+<span class="sd">        Nside : int, optional</span>
+<span class="sd">            HEALPix ``NSIDE`` for the output map. Default is 64.</span>
+<span class="sd">        sky_model : callable or None, optional</span>
+<span class="sd">            Custom sky model function that takes frequency (MHz) and returns</span>
+<span class="sd">            a full-sky HEALPix map. If None, uses ``pygdsm.GlobalSkyModel``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NDArray[np.floating]</span>
+<span class="sd">            Sky temperatures at the requested pixels in Kelvin,</span>
+<span class="sd">            shape ``(npix,)``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">sky_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">pygdsm</span><span class="w"> </span><span class="kn">import</span> <span class="n">GlobalSkyModel</span>
+
+            <span class="n">gsm</span> <span class="o">=</span> <span class="n">GlobalSkyModel</span><span class="p">()</span>
+            <span class="n">skymap</span> <span class="o">=</span> <span class="n">gsm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">skymap</span> <span class="o">=</span> <span class="n">sky_model</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+
+        <span class="n">skymap</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ud_grade</span><span class="p">(</span><span class="n">skymap</span><span class="p">,</span> <span class="n">nside_out</span><span class="o">=</span><span class="n">Nside</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ptsrc_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ptsrc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ptsrc_path</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">freq</span> <span class="o">/</span> <span class="mi">408</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.3</span><span class="p">)</span>
+            <span class="n">ptsrc_map</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ud_grade</span><span class="p">(</span><span class="n">ptsrc</span><span class="p">,</span> <span class="n">nside_out</span><span class="o">=</span><span class="n">Nside</span><span class="p">)</span>
+            <span class="n">skymap</span> <span class="o">=</span> <span class="n">skymap</span> <span class="o">+</span> <span class="n">ptsrc_map</span>
+        <span class="k">return</span> <span class="n">skymap</span><span class="p">[</span><span class="n">pixel_indices</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntime</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a periodic noise diode injection pattern.</span>
+
+<span class="sd">        Creates a binary vector where the noise diode is fired every</span>
+<span class="sd">        10th time sample (duty cycle of 10%).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ntime : int</span>
+<span class="sd">            Total number of time samples.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NDArray[np.floating]</span>
+<span class="sd">            Binary vector of shape ``(ntime,)`` with 1 at every 10th</span>
+<span class="sd">            element and 0 elsewhere.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ntime</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ntime</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+            <span class="n">vector</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">vector</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_analysis_maps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate additional HEALPix maps for diagnostic analysis.</span>
+
+<span class="sd">        Converts the beam centre coordinates of the setting scan to</span>
+<span class="sd">        HEALPix pixel indices and builds a boolean map of beam centre</span>
+<span class="sd">        locations (as opposed to the full beam footprint).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Convert theta/phi coordinates to HEALPix pixels for setting scan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixels_c_setting</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">hp</span><span class="o">.</span><span class="n">ang2pix</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_c_setting</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_c_setting</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bool_map_c_setting</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">nside2npix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bool_map_c_setting</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pixels_c_setting</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_calibration_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify calibration pixel indices for gain calibration.</span>
+
+<span class="sd">        Selects calibration pixels by finding the brightest sky pixels</span>
+<span class="sd">        within the most-observed beam region. Two sets are provided:</span>
+
+<span class="sd">        - A single pixel (``calibration_1_index``): the brightest sky</span>
+<span class="sd">          pixel among the top-20 most-observed pixels.</span>
+<span class="sd">        - Five pixels (``calibration_5_indices``): evenly spaced among</span>
+<span class="sd">          the top-200 most-observed pixels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Single calibration pixel</span>
+        <span class="n">n_cal_pixs</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">top_20_beam_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span><span class="p">],</span> <span class="o">-</span><span class="mi">20</span>
+        <span class="p">)[</span><span class="o">-</span><span class="mi">20</span><span class="p">:]</span>
+        <span class="n">top_n_sky_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sky_params</span><span class="p">[</span><span class="n">top_20_beam_indices</span><span class="p">],</span> <span class="o">-</span><span class="n">n_cal_pixs</span>
+        <span class="p">)[</span><span class="o">-</span><span class="n">n_cal_pixs</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calibration_1_index</span> <span class="o">=</span> <span class="n">top_20_beam_indices</span><span class="p">[</span><span class="n">top_n_sky_indices</span><span class="p">]</span>
+
+        <span class="c1"># Five calibration pixels</span>
+        <span class="n">n_cal_pixs</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">top_200_beam_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integrated_beam</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span><span class="p">],</span> <span class="o">-</span><span class="mi">200</span>
+        <span class="p">)[</span><span class="o">-</span><span class="mi">200</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calibration_5_indices</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">top_200_beam_indices</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="mi">200</span> <span class="o">/</span> <span class="n">n_cal_pixs</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cal_pixs</span><span class="p">)</span>
+        <span class="p">]</span>
+
+<div class="viewcode-block" id="MultiTODSimulation.get_simulation_summary">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.MultiTODSimulation.get_simulation_summary">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_simulation_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a summary of simulation parameters and key results.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict[str, Any]</span>
+<span class="sd">            Nested dictionary containing:</span>
+
+<span class="sd">            - ``nside``: HEALPix resolution</span>
+<span class="sd">            - ``n_pixels``: number of observed pixels in the union footprint</span>
+<span class="sd">            - ``n_time_samples``: number of time samples per scan</span>
+<span class="sd">            - ``frequency_MHz``: observation frequency</span>
+<span class="sd">            - ``beam_FWHM_deg``: beam FWHM</span>
+<span class="sd">            - ``setting_scan``: dict with elevation, azimuth range, and</span>
+<span class="sd">              gain parameters for the setting scan</span>
+<span class="sd">            - ``rising_scan``: dict with elevation, azimuth range, and</span>
+<span class="sd">              gain parameters for the rising scan</span>
+<span class="sd">            - ``noise_knee_freq_Hz``: knee frequency</span>
+<span class="sd">            - ``noise_spectral_index``: flicker noise alpha</span>
+<span class="sd">            - ``T_ndiode_K``: noise diode temperature</span>
+<span class="sd">            - ``receiver_params_K``: receiver temperature coefficients</span>
+<span class="sd">            - ``calibration_pixels``: dict with calibration pixel indices</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;nside&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">,</span>
+            <span class="s2">&quot;n_pixels&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_indices</span><span class="p">),</span>
+            <span class="s2">&quot;n_time_samples&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntime</span><span class="p">,</span>
+            <span class="s2">&quot;frequency_MHz&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq</span><span class="p">,</span>
+            <span class="s2">&quot;beam_FWHM_deg&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span><span class="p">,</span>
+            <span class="s2">&quot;setting_scan&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;elevation_deg&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">setting_elevation</span><span class="p">,</span>
+                <span class="s2">&quot;azimuth_range_deg&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setting_az_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">setting_az_e</span><span class="p">),</span>
+                <span class="s2">&quot;gain_params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_setting</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;rising_scan&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;elevation_deg&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rising_elevation</span><span class="p">,</span>
+                <span class="s2">&quot;azimuth_range_deg&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rising_az_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rising_az_e</span><span class="p">),</span>
+                <span class="s2">&quot;gain_params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_params_rising</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;noise_knee_freq_Hz&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">f0</span><span class="p">,</span>
+            <span class="s2">&quot;noise_spectral_index&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span>
+            <span class="s2">&quot;T_ndiode_K&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_ndiode</span><span class="p">,</span>
+            <span class="s2">&quot;receiver_params_K&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rec_params</span><span class="p">,</span>
+            <span class="s2">&quot;calibration_pixels&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;single_cal_index&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibration_1_index</span><span class="p">,</span>
+                <span class="s2">&quot;five_cal_indices&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibration_5_indices</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">summary</span></div>
+
+
+<div class="viewcode-block" id="MultiTODSimulation.get_tod_data">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.MultiTODSimulation.get_tod_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_tod_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return TOD data for both scans in a format suitable for the Gibbs sampler.</span>
+
+<span class="sd">        Packages the simulated data and operators needed by</span>
+<span class="sd">        :func:`hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler` into a</span>
+<span class="sd">        single dictionary.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict[str, Any]</span>
+<span class="sd">            Dictionary containing:</span>
+
+<span class="sd">            - ``TOD_setting``: setting scan TOD, shape ``(ntime,)``</span>
+<span class="sd">            - ``TOD_rising``: rising scan TOD, shape ``(ntime,)``</span>
+<span class="sd">            - ``t_list``: time stamps, shape ``(ntime,)``</span>
+<span class="sd">            - ``gain_proj``: Legendre polynomial basis, shape ``(ntime, 4)``</span>
+<span class="sd">            - ``Tsky_operators``: list of beam operators for</span>
+<span class="sd">              [setting, rising] scans</span>
+<span class="sd">            - ``nd_rec_operator``: local temperature operator,</span>
+<span class="sd">              shape ``(ntime, 5)``</span>
+<span class="sd">            - ``logfc``: :math:`\\log_{10}` of the low-frequency cutoff</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;TOD_setting&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">TOD_setting</span><span class="p">,</span>
+            <span class="s2">&quot;TOD_rising&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">TOD_rising</span><span class="p">,</span>
+            <span class="s2">&quot;t_list&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_list</span><span class="p">,</span>
+            <span class="s2">&quot;gain_proj&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_proj</span><span class="p">,</span>
+            <span class="s2">&quot;Tsky_operators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Tsky_operator_setting</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Tsky_operator_rising</span><span class="p">],</span>
+            <span class="s2">&quot;nd_rec_operator&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nd_rec_operator</span><span class="p">,</span>
+            <span class="s2">&quot;logfc&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logfc</span><span class="p">,</span>
+        <span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="eq_coordinates">
+<a class="viewcode-back" href="../../api/simulation.html#hydra_tod.simulation.eq_coordinates">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">eq_coordinates</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SkyCoord</span><span class="p">,</span> <span class="n">SkyCoord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute equatorial coordinates for default setting and rising scans.</span>
+
+<span class="sd">    Convenience function that calls :func:`sim_MeerKAT_scan` with</span>
+<span class="sd">    hard-coded parameters for the standard MeerKAT setting and rising</span>
+<span class="sd">    scan configurations, returning astropy ``SkyCoord`` objects for</span>
+<span class="sd">    each.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    eq_coords_setting : SkyCoord</span>
+<span class="sd">        Equatorial coordinates for the setting scan beam centres.</span>
+<span class="sd">    eq_coords_rising : SkyCoord</span>
+<span class="sd">        Equatorial coordinates for the rising scan beam centres.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the timestream of beam centers (theta_c, phi_c) for each scan</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">eq_coords_setting</span> <span class="o">=</span> <span class="n">sim_MeerKAT_scan</span><span class="p">(</span>
+        <span class="n">elevation</span><span class="o">=</span><span class="mf">41.5</span><span class="p">,</span>
+        <span class="n">az_s</span><span class="o">=-</span><span class="mf">60.3</span><span class="p">,</span>
+        <span class="n">az_e</span><span class="o">=-</span><span class="mf">42.3</span><span class="p">,</span>
+        <span class="n">start_time_utc</span><span class="o">=</span><span class="s2">&quot;2019-04-23 20:41:56.397&quot;</span><span class="p">,</span>
+        <span class="n">return_eq_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">eq_coords_rising</span> <span class="o">=</span> <span class="n">sim_MeerKAT_scan</span><span class="p">(</span>
+        <span class="n">elevation</span><span class="o">=</span><span class="mf">40.5</span><span class="p">,</span>
+        <span class="n">az_s</span><span class="o">=</span><span class="mf">43.7</span><span class="p">,</span>
+        <span class="n">az_e</span><span class="o">=</span><span class="mf">61.7</span><span class="p">,</span>
+        <span class="n">start_time_utc</span><span class="o">=</span><span class="s2">&quot;2019-03-30 17:19:02.397&quot;</span><span class="p">,</span>
+        <span class="n">return_eq_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">eq_coords_setting</span><span class="p">,</span> <span class="n">eq_coords_rising</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025-2026, Zheng Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

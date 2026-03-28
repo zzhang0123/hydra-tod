@@ -1,0 +1,954 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hydra_tod.linear_solver &mdash; hydra_tod 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            hydra_tod
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#conda-environment">Conda Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/data_model.html">Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#observation-model">Observation Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#system-temperature">System Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gain-model">Gain Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/flicker_noise.html">Flicker Noise Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#power-spectral-density">Power Spectral Density</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#correlation-function">Correlation Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#covariance-matrix">Covariance Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#emulator">Emulator</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#visualization">Visualization</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/simulation.html">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/gibbs_sampler.html">Gibbs Sampler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/flicker_model.html">Flicker Noise Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/samplers.html">Parameter Samplers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/linear_algebra.html">Linear Algebra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/utilities.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.utils">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/diagnostics.html">MCMC Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/visualization.html">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citation.html">Citation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#plain-text">Plain text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#bibtex">BibTeX</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#id1">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hydra_tod</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hydra_tod.linear_solver</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for hydra_tod.linear_solver</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="c1"># This is exactly the linear_solver in Hydra.</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py.MPI</span><span class="w"> </span><span class="kn">import</span> <span class="n">SUM</span> <span class="k">as</span> <span class="n">MPI_SUM</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py.MPI</span><span class="w"> </span><span class="kn">import</span> <span class="n">LAND</span> <span class="k">as</span> <span class="n">MPI_LAND</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NDArray</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+
+<div class="viewcode-block" id="matvec_mpi">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_solver.matvec_mpi">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">matvec_mpi</span><span class="p">(</span>
+    <span class="n">comm_row</span><span class="p">:</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Intracomm</span><span class="p">,</span>
+    <span class="n">mat_block</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">vec_block</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform a distributed matrix-vector product for one row of a block matrix.</span>
+
+<span class="sd">    Each block in the matrix row is multiplied by the corresponding row block</span>
+<span class="sd">    of the vector. The result on each worker is then summed together to give</span>
+<span class="sd">    the result for the corresponding row of the result vector.</span>
+
+<span class="sd">    All workers in the row will possess the result for the same row of the</span>
+<span class="sd">    result vector.</span>
+
+<span class="sd">    For example, for the first row of this (block) linear system::</span>
+
+<span class="sd">        ( A B C )     ( x )     ( r0 )</span>
+<span class="sd">        ( D E F )  .  ( y )  =  ( r1 )</span>
+<span class="sd">        ( G H I )     ( z )     ( r2 )</span>
+
+<span class="sd">    workers 0, 1, and 2 will compute Ax, By, and Cz respectively. They will</span>
+<span class="sd">    then collectively sum over their results to obtain ``r0 = Ax + By + Cz``.</span>
+<span class="sd">    The three workers will all possess copies of ``r0``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    comm_row : MPI.Intracomm</span>
+<span class="sd">        MPI group communicator for a row of the block matrix.</span>
+<span class="sd">    mat_block : NDArray[np.floating]</span>
+<span class="sd">        Block of the matrix belonging to this worker, shape ``(m, n)``.</span>
+<span class="sd">    vec_block : NDArray[np.floating]</span>
+<span class="sd">        Block of the vector belonging to this worker, shape ``(n,)``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    res_block : NDArray[np.floating]</span>
+<span class="sd">        Block of the result vector corresponding to this row, shape ``(m,)``.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Do matrix-vector product for the available blocks</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">mat_block</span> <span class="o">@</span> <span class="n">vec_block</span>
+
+    <span class="c1"># Do reduce to all members of this column group</span>
+    <span class="n">ytot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">comm_row</span><span class="o">.</span><span class="n">Allreduce</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">ytot</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="n">MPI_SUM</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ytot</span></div>
+
+
+
+<span class="c1"># Backward-compatible alias</span>
+<span class="n">matvec_mpi_v2</span> <span class="o">=</span> <span class="n">matvec_mpi</span>
+
+
+<div class="viewcode-block" id="setup_mpi_blocks">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_solver.setup_mpi_blocks">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_mpi_blocks</span><span class="p">(</span>
+    <span class="n">comm</span><span class="p">:</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Comm</span><span class="p">,</span>
+    <span class="n">matrix_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">split</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
+    <span class="nb">tuple</span><span class="p">[</span><span class="n">MPI</span><span class="o">.</span><span class="n">Intracomm</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+    <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span>
+<span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a scheme for dividing a linear system into MPI blocks.</span>
+
+<span class="sd">    This function determines the number and size of the blocks, creates a map</span>
+<span class="sd">    between MPI workers and blocks, and sets up MPI communicator groups needed</span>
+<span class="sd">    by the CG solver to communicate intermediate results.</span>
+
+<span class="sd">    The linear system matrix operator is assumed to be square, and the blocks</span>
+<span class="sd">    must also be square. The blocks will be zero-padded at the edges if the</span>
+<span class="sd">    operator cannot be evenly divided into the blocks.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    comm : MPI.Comm</span>
+<span class="sd">        MPI communicator object for all active workers.</span>
+<span class="sd">    matrix_shape : tuple of int</span>
+<span class="sd">        The shape ``(N, N)`` of the linear operator matrix that is to be</span>
+<span class="sd">        divided into blocks.</span>
+<span class="sd">    split : int, optional</span>
+<span class="sd">        How many rows and columns to split the matrix into. For instance,</span>
+<span class="sd">        ``split=2`` will split the matrix into 2 rows and 2 columns, for a</span>
+<span class="sd">        total of 4 blocks. Default is 1.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    comm_groups : tuple of MPI.Intracomm or None</span>
+<span class="sd">        Group communicators ``(active, row, col, diag)``.  These correspond to</span>
+<span class="sd">        the MPI workers that are active, and the ones for each row, each</span>
+<span class="sd">        column, and along the diagonal of the block structure, respectively.</span>
+<span class="sd">        Each worker returns its own set of communicators; where it is not a</span>
+<span class="sd">        member of a relevant group, ``None`` is returned instead.  Returns</span>
+<span class="sd">        ``None`` entirely for inactive workers.</span>
+<span class="sd">    block_map : dict</span>
+<span class="sd">        Dictionary mapping worker ID to ``(row_id, col_id)`` of the block it</span>
+<span class="sd">        manages.</span>
+<span class="sd">    block_shape : tuple of int</span>
+<span class="sd">        Shape of the square blocks ``(block_rows, block_cols)`` that the full</span>
+<span class="sd">        matrix and RHS vector should be split into.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;&#39;matrix_shape&#39; must be a tuple with 2 entries&quot;</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">matrix_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">matrix_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="p">),</span> <span class="s2">&quot;Only square matrices are currently supported&quot;</span>
+    <span class="n">myid</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+    <span class="n">nworkers</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+
+    <span class="c1"># Check that enough workers are available</span>
+    <span class="n">nblocks</span> <span class="o">=</span> <span class="n">split</span> <span class="o">*</span> <span class="n">split</span>
+    <span class="k">assert</span> <span class="n">nworkers</span> <span class="o">&gt;=</span> <span class="n">nblocks</span><span class="p">,</span> <span class="s2">&quot;Specified more blocks than workers&quot;</span>
+    <span class="n">workers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nblocks</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">split</span><span class="p">,</span> <span class="n">split</span><span class="p">))</span>
+
+    <span class="c1"># Handle workers that do not have an assigned block</span>
+    <span class="k">if</span> <span class="n">myid</span> <span class="o">&gt;=</span> <span class="n">nblocks</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span>
+
+    <span class="c1"># Construct map of block row/column IDs vs worker IDs</span>
+    <span class="n">block_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">workers</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
+        <span class="n">_row</span><span class="p">,</span> <span class="n">_col</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">workers</span> <span class="o">==</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">block_map</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">_row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">_col</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">myrow</span><span class="p">,</span> <span class="n">mycol</span> <span class="o">=</span> <span class="n">block_map</span><span class="p">[</span><span class="n">myid</span><span class="p">]</span>
+
+    <span class="c1"># Setup communicator groups for each row, columns, and the diagonals</span>
+    <span class="n">grp_active</span> <span class="o">=</span> <span class="n">workers</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">grp_row</span> <span class="o">=</span> <span class="n">workers</span><span class="p">[</span><span class="n">myrow</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">grp_col</span> <span class="o">=</span> <span class="n">workers</span><span class="p">[:,</span> <span class="n">mycol</span><span class="p">]</span>
+    <span class="n">grp_diag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">workers</span><span class="p">)</span>
+    <span class="n">comm_active</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">comm</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">Incl</span><span class="p">(</span><span class="n">grp_active</span><span class="p">))</span>
+    <span class="n">comm_row</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">comm</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">Incl</span><span class="p">(</span><span class="n">grp_row</span><span class="p">))</span>
+    <span class="n">comm_col</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">comm</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">Incl</span><span class="p">(</span><span class="n">grp_col</span><span class="p">))</span>
+    <span class="n">comm_diag</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">comm</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">Incl</span><span class="p">(</span><span class="n">grp_diag</span><span class="p">))</span>
+
+    <span class="c1"># Calculate block size (all blocks must have the same shape, so some zero-</span>
+    <span class="c1"># padding will be done if the matrix operator shape is not exactly</span>
+    <span class="c1"># divisible by &#39;split&#39;)</span>
+    <span class="n">block_rows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">matrix_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">split</span><span class="p">))</span>  <span class="c1"># rows per block</span>
+    <span class="n">block_cols</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">matrix_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">split</span><span class="p">))</span>  <span class="c1"># cols per block</span>
+    <span class="n">block_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">block_rows</span><span class="p">,</span> <span class="n">block_cols</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">block_rows</span> <span class="o">==</span> <span class="n">block_cols</span>
+    <span class="p">),</span> <span class="s2">&quot;Current implementation assumes that blocks are square&quot;</span>
+
+    <span class="n">comms</span> <span class="o">=</span> <span class="p">(</span><span class="n">comm_active</span><span class="p">,</span> <span class="n">comm_row</span><span class="p">,</span> <span class="n">comm_col</span><span class="p">,</span> <span class="n">comm_diag</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">comms</span><span class="p">,</span> <span class="n">block_map</span><span class="p">,</span> <span class="n">block_shape</span></div>
+
+
+
+<div class="viewcode-block" id="collect_linear_sys_blocks">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_solver.collect_linear_sys_blocks">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">collect_linear_sys_blocks</span><span class="p">(</span>
+    <span class="n">comm</span><span class="p">:</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Comm</span><span class="p">,</span>
+    <span class="n">block_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+    <span class="n">block_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">Amat</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bvec</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Distribute LHS operator matrix and RHS vector blocks to assigned workers.</span>
+
+<span class="sd">    The root worker (rank 0) splits the full matrix and vector into blocks and</span>
+<span class="sd">    sends each block to its assigned worker via point-to-point MPI</span>
+<span class="sd">    communication.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    comm : MPI.Comm</span>
+<span class="sd">        MPI communicator object for all active workers.</span>
+<span class="sd">    block_map : dict</span>
+<span class="sd">        Dictionary mapping worker ID to ``(row_id, col_id)`` of the block it</span>
+<span class="sd">        manages, as returned by :func:`setup_mpi_blocks`.</span>
+<span class="sd">    block_shape : tuple of int</span>
+<span class="sd">        Shape ``(block_rows, block_cols)`` of the square blocks that the full</span>
+<span class="sd">        matrix operator and RHS vector should be split into.</span>
+<span class="sd">    Amat : NDArray[np.floating] or None, optional</span>
+<span class="sd">        The full LHS matrix operator, which will be split into blocks.  Only</span>
+<span class="sd">        required on the root worker.</span>
+<span class="sd">    bvec : NDArray[np.floating] or None, optional</span>
+<span class="sd">        The full right-hand side vector, which will be split into blocks.  Only</span>
+<span class="sd">        required on the root worker.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        If ``True``, print status messages when MPI communication is complete.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    my_Amat : NDArray[np.floating] or None</span>
+<span class="sd">        The single block of the matrix operator belonging to this worker with</span>
+<span class="sd">        shape ``block_shape``.  Zero-padded at edges if the matrix cannot be</span>
+<span class="sd">        exactly divided.  Returns ``None`` if worker is not active.</span>
+<span class="sd">    my_bvec : NDArray[np.floating] or None</span>
+<span class="sd">        The single block of the RHS vector belonging to this worker.  Workers</span>
+<span class="sd">        in the same column receive the same block.  Returns ``None`` if worker</span>
+<span class="sd">        is not active.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">myid</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">bvec</span><span class="o">.</span><span class="n">dtype</span>
+
+    <span class="c1"># Determine whether this worker is participating</span>
+    <span class="n">workers_used</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">block_map</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="n">workers_used</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">myid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">workers_used</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+    <span class="c1"># Initialise blocks of A matrix and b vector</span>
+    <span class="n">block_rows</span><span class="p">,</span> <span class="n">block_cols</span> <span class="o">=</span> <span class="n">block_shape</span>
+    <span class="n">my_Amat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">block_rows</span><span class="p">,</span> <span class="n">block_cols</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">my_bvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">block_rows</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="c1"># Send blocks from root worker</span>
+    <span class="k">if</span> <span class="n">myid</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">reqs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">workers_used</span><span class="p">:</span>
+
+            <span class="c1"># Get row and column indices for this worker</span>
+            <span class="n">wrow</span><span class="p">,</span> <span class="n">wcol</span> <span class="o">=</span> <span class="n">block_map</span><span class="p">[</span><span class="n">w</span><span class="p">]</span>
+
+            <span class="c1"># Start and end indices of block (handles edges)</span>
+            <span class="n">ii</span> <span class="o">=</span> <span class="n">wrow</span> <span class="o">*</span> <span class="n">block_rows</span>
+            <span class="n">jj</span> <span class="o">=</span> <span class="n">wcol</span> <span class="o">*</span> <span class="n">block_cols</span>
+            <span class="n">iip</span> <span class="o">=</span> <span class="n">ii</span> <span class="o">+</span> <span class="n">block_rows</span>
+            <span class="n">jjp</span> <span class="o">=</span> <span class="n">jj</span> <span class="o">+</span> <span class="n">block_cols</span>
+            <span class="k">if</span> <span class="n">iip</span> <span class="o">&gt;</span> <span class="n">Amat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">iip</span> <span class="o">=</span> <span class="n">Amat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">jjp</span> <span class="o">&gt;</span> <span class="n">Amat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">jjp</span> <span class="o">=</span> <span class="n">Amat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Block belongs to root worker</span>
+                <span class="n">my_Amat</span><span class="p">[:</span> <span class="n">iip</span> <span class="o">-</span> <span class="n">ii</span><span class="p">,</span> <span class="p">:</span> <span class="n">jjp</span> <span class="o">-</span> <span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">Amat</span><span class="p">[</span><span class="n">ii</span><span class="p">:</span><span class="n">iip</span><span class="p">,</span> <span class="n">jj</span><span class="p">:</span><span class="n">jjp</span><span class="p">]</span>
+                <span class="n">my_bvec</span><span class="p">[:</span> <span class="n">jjp</span> <span class="o">-</span> <span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">bvec</span><span class="p">[</span><span class="n">jj</span><span class="p">:</span><span class="n">jjp</span><span class="p">]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Send blocks to other worker</span>
+                <span class="c1"># Handles zero-padding of blocks at edge of matrix</span>
+                <span class="c1"># FIXME: Do we have to copy here, to get contiguous memory?</span>
+                <span class="n">Amat_buf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">my_Amat</span><span class="p">)</span>
+                <span class="n">bvec_buf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">my_bvec</span><span class="p">)</span>
+
+                <span class="n">Amat_buf</span><span class="p">[:</span> <span class="n">iip</span> <span class="o">-</span> <span class="n">ii</span><span class="p">,</span> <span class="p">:</span> <span class="n">jjp</span> <span class="o">-</span> <span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">Amat</span><span class="p">[</span><span class="n">ii</span><span class="p">:</span><span class="n">iip</span><span class="p">,</span> <span class="n">jj</span><span class="p">:</span><span class="n">jjp</span><span class="p">]</span>
+                <span class="n">bvec_buf</span><span class="p">[:</span> <span class="n">jjp</span> <span class="o">-</span> <span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">bvec</span><span class="p">[</span><span class="n">jj</span><span class="p">:</span><span class="n">jjp</span><span class="p">]</span>
+
+                <span class="c1"># The flattened Amat_buf array is reshaped into 2D when received</span>
+                <span class="n">comm</span><span class="o">.</span><span class="n">Send</span><span class="p">(</span><span class="n">Amat_buf</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">dest</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
+                <span class="n">comm</span><span class="o">.</span><span class="n">Send</span><span class="p">(</span><span class="n">bvec_buf</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All send operations completed.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Receive this worker&#39;s assigned blocks of Amat and bvec</span>
+        <span class="n">comm</span><span class="o">.</span><span class="n">Recv</span><span class="p">(</span><span class="n">my_Amat</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">comm</span><span class="o">.</span><span class="n">Recv</span><span class="p">(</span><span class="n">my_bvec</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Worker </span><span class="si">%d</span><span class="s2"> finished receive&quot;</span> <span class="o">%</span> <span class="n">myid</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">my_Amat</span><span class="p">,</span> <span class="n">my_bvec</span></div>
+
+
+
+<div class="viewcode-block" id="cg_mpi">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_solver.cg_mpi">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cg_mpi</span><span class="p">(</span>
+    <span class="n">comm_groups</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">MPI</span><span class="o">.</span><span class="n">Intracomm</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">Amat_block</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">bvec_block</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">vec_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">block_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+    <span class="n">maxiters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">abs_tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Distributed Conjugate Gradient solver for block-partitioned linear systems.</span>
+
+<span class="sd">    The linear operator matrix is split into square blocks, each handled by a</span>
+<span class="sd">    single MPI worker.  The algorithm follows the standard CG iteration but</span>
+<span class="sd">    with distributed matrix-vector products and scalar reductions across ranks.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    comm_groups : tuple of MPI.Intracomm or None</span>
+<span class="sd">        Group communicators ``(active, row, col, diag)`` as set up by</span>
+<span class="sd">        :func:`setup_mpi_blocks`.  If ``None``, the worker is inactive and</span>
+<span class="sd">        the function returns immediately.</span>
+<span class="sd">    Amat_block : NDArray[np.floating]</span>
+<span class="sd">        The block of the matrix operator belonging to this worker.</span>
+<span class="sd">    bvec_block : NDArray[np.floating]</span>
+<span class="sd">        The block of the right-hand side vector corresponding to this</span>
+<span class="sd">        worker&#39;s matrix operator block.</span>
+<span class="sd">    vec_size : int</span>
+<span class="sd">        The size of the total result vector across all blocks.</span>
+<span class="sd">    block_map : dict</span>
+<span class="sd">        Dictionary mapping worker ID to ``(row_id, col_id)`` of the block it</span>
+<span class="sd">        manages.</span>
+<span class="sd">    maxiters : int, optional</span>
+<span class="sd">        Maximum number of solver iterations. Default is 1000.</span>
+<span class="sd">    abs_tol : float, optional</span>
+<span class="sd">        Absolute tolerance on each element of the residual. Once this</span>
+<span class="sd">        tolerance has been reached for all entries of the residual vector,</span>
+<span class="sd">        the solution is considered to have converged. Default is 1e-8.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x : NDArray[np.floating] or None</span>
+<span class="sd">        Solution vector for the full system.  Only workers on the diagonal</span>
+<span class="sd">        have the correct solution vector; other workers return ``None``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The initial guess is always the zero vector.  For non-zero initial</span>
+<span class="sd">    guesses, the residual computation would need to be adjusted.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">comm_groups</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># FIXME: Need to fix this so non-active workers are ignored without hanging</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">comm_active</span><span class="p">,</span> <span class="n">comm_row</span><span class="p">,</span> <span class="n">comm_col</span><span class="p">,</span> <span class="n">comm_diag</span> <span class="o">=</span> <span class="n">comm_groups</span>
+    <span class="c1"># grp_active, grp_row, grp_col, grp_diag = groups</span>
+    <span class="n">myid</span> <span class="o">=</span> <span class="n">comm_active</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+    <span class="n">myrow</span><span class="p">,</span> <span class="n">mycol</span> <span class="o">=</span> <span class="n">block_map</span><span class="p">[</span><span class="n">myid</span><span class="p">]</span>
+
+    <span class="c1"># Initialise solution vector</span>
+    <span class="n">x_block</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">bvec_block</span><span class="p">)</span>
+
+    <span class="c1"># Calculate initial residual (if x0 is not 0, need to rewrite this, i.e.</span>
+    <span class="c1"># be careful with x_block ordering)</span>
+    <span class="n">r_block</span> <span class="o">=</span> <span class="n">bvec_block</span><span class="p">[:]</span>  <span class="c1"># - matvec_mpi(comm_row, Amat_block, x_block)</span>
+    <span class="n">pvec_block</span> <span class="o">=</span> <span class="n">r_block</span><span class="p">[:]</span>
+
+    <span class="c1"># Iterate</span>
+    <span class="n">niter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">finished</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">while</span> <span class="n">niter</span> <span class="o">&lt;</span> <span class="n">maxiters</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">finished</span><span class="p">:</span>
+
+        <span class="c1"># Check convergence criterion from all workers</span>
+        <span class="n">converged</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">r_block</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">abs_tol</span><span class="p">)</span>
+
+        <span class="c1"># Check if convergence is reached</span>
+        <span class="c1"># (reduce with logical-AND operation)</span>
+        <span class="n">converged</span> <span class="o">=</span> <span class="n">comm_active</span><span class="o">.</span><span class="n">allreduce</span><span class="p">(</span><span class="n">converged</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="n">MPI_LAND</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">converged</span><span class="p">:</span>
+            <span class="n">finished</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+
+        <span class="c1"># Distribute pvec_block to all workers (identical in each column)</span>
+        <span class="c1"># NOTE: Assumes that the rank IDs in comm_col are in the same order as</span>
+        <span class="c1"># for the original comm_world communicator, in which case the rank with</span>
+        <span class="c1"># ID = mycol will be the one on the diagonal that we want to broadcast</span>
+        <span class="c1"># the up-to-date value of pvec_block from</span>
+        <span class="k">if</span> <span class="n">myrow</span> <span class="o">!=</span> <span class="n">mycol</span><span class="p">:</span>
+            <span class="n">pvec_block</span> <span class="o">*=</span> <span class="mf">0.0</span>
+        <span class="n">comm_col</span><span class="o">.</span><span class="n">Bcast</span><span class="p">(</span><span class="n">pvec_block</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">mycol</span><span class="p">)</span>
+
+        <span class="c1"># Calculate matrix operator product with p-vector (returns result for</span>
+        <span class="c1"># this row)</span>
+        <span class="n">A_dot_p</span> <span class="o">=</span> <span class="n">matvec_mpi</span><span class="p">(</span><span class="n">comm_row</span><span class="p">,</span> <span class="n">Amat_block</span><span class="p">,</span> <span class="n">pvec_block</span><span class="p">)</span>
+
+        <span class="c1"># Only workers with mycol == myrow will give correct updates, so only</span>
+        <span class="c1"># calculate using those</span>
+        <span class="k">if</span> <span class="n">mycol</span> <span class="o">==</span> <span class="n">myrow</span><span class="p">:</span>
+            <span class="c1"># Calculate residual norm, summed across all (diagonal) workers</span>
+            <span class="n">r_dot_r</span> <span class="o">=</span> <span class="n">comm_diag</span><span class="o">.</span><span class="n">allreduce</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_block</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">r_block</span><span class="p">),</span> <span class="n">op</span><span class="o">=</span><span class="n">MPI_SUM</span><span class="p">)</span>
+
+            <span class="c1"># Calculate quadratic, summed across all (diagonal) workers</span>
+            <span class="n">pAp</span> <span class="o">=</span> <span class="n">comm_diag</span><span class="o">.</span><span class="n">allreduce</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pvec_block</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">A_dot_p</span><span class="p">),</span> <span class="n">op</span><span class="o">=</span><span class="n">MPI_SUM</span><span class="p">)</span>
+
+            <span class="c1"># Calculate alpha (valid on all diagonal workers)</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="n">r_dot_r</span> <span class="o">/</span> <span class="n">pAp</span>
+
+            <span class="c1"># Update solution vector and residual for this worker</span>
+            <span class="n">x_block</span> <span class="o">=</span> <span class="n">x_block</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">pvec_block</span>
+            <span class="n">r_block</span> <span class="o">=</span> <span class="n">r_block</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">A_dot_p</span>
+
+            <span class="c1"># Calculate updated residual norm</span>
+            <span class="n">rnew_dot_rnew</span> <span class="o">=</span> <span class="n">comm_diag</span><span class="o">.</span><span class="n">allreduce</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r_block</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">r_block</span><span class="p">),</span> <span class="n">op</span><span class="o">=</span><span class="n">MPI_SUM</span><span class="p">)</span>
+
+            <span class="c1"># Calculate beta (valid on all diagonal workers)</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">rnew_dot_rnew</span> <span class="o">/</span> <span class="n">r_dot_r</span>
+
+            <span class="c1"># Update pvec_block (valid on all diagonal workers)</span>
+            <span class="n">pvec_block</span> <span class="o">=</span> <span class="n">r_block</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">pvec_block</span>
+
+        <span class="n">comm_active</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+        <span class="c1"># Increment iteration</span>
+        <span class="n">niter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># Gather all the blocks into a single array (on diagonal workers only)</span>
+    <span class="k">if</span> <span class="n">myrow</span> <span class="o">==</span> <span class="n">mycol</span><span class="p">:</span>
+        <span class="n">x_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">vec_size</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x_block</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">x_all_blocks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">x_block</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="n">comm_diag</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x_block</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="p">)</span>  <span class="c1"># needed for zero-padding</span>
+        <span class="n">comm_diag</span><span class="o">.</span><span class="n">Allgather</span><span class="p">(</span><span class="n">x_block</span><span class="p">,</span> <span class="n">x_all_blocks</span><span class="p">)</span>
+
+        <span class="c1"># Remove zero padding if necessary</span>
+        <span class="n">x_all</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">x_all_blocks</span><span class="p">[:</span><span class="n">vec_size</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x_all</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">comm_active</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">x_all</span></div>
+
+
+
+<div class="viewcode-block" id="cg">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_solver.cg">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cg</span><span class="p">(</span>
+    <span class="n">Amat</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bvec</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">maxiters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">abs_tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-18</span><span class="p">,</span>
+    <span class="n">use_norm_tol</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">x0</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">linear_op</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">comm</span><span class="p">:</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Comm</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Serial Conjugate Gradient solver with optional MPI broadcasting.</span>
+
+<span class="sd">    Implements the standard CG algorithm on a single process, with optional</span>
+<span class="sd">    broadcasting of the solution to all MPI workers.  Uses the same algorithm</span>
+<span class="sd">    as :func:`cg_mpi` and can be used for testing and comparison.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Amat : NDArray[np.floating] or None</span>
+<span class="sd">        Linear operator matrix.  Ignored if ``linear_op`` is provided.</span>
+<span class="sd">    bvec : NDArray[np.floating]</span>
+<span class="sd">        Right-hand side vector.</span>
+<span class="sd">    maxiters : int, optional</span>
+<span class="sd">        Maximum number of solver iterations. Default is 1000.</span>
+<span class="sd">    abs_tol : float, optional</span>
+<span class="sd">        Absolute tolerance on each element of the residual (or on the norm</span>
+<span class="sd">        if ``use_norm_tol=True``). Default is 1e-18.</span>
+<span class="sd">    use_norm_tol : bool, optional</span>
+<span class="sd">        If ``True``, check convergence on the norm of the residual rather</span>
+<span class="sd">        than per-element. Default is ``False``.</span>
+<span class="sd">    x0 : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Initial guess for the solution vector.  Defaults to zeros.</span>
+<span class="sd">    linear_op : callable or None, optional</span>
+<span class="sd">        If specified, this function ``f(x) -&gt; Ax`` is used instead of</span>
+<span class="sd">        explicit matrix multiplication.</span>
+<span class="sd">    comm : MPI.Comm or None, optional</span>
+<span class="sd">        If specified, the CG solver runs only on rank 0 and the solution is</span>
+<span class="sd">        broadcast to all workers.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x : NDArray[np.floating]</span>
+<span class="sd">        Solution vector for the full system.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Threading within NumPy is still permitted even though the algorithm</span>
+<span class="sd">    itself is serial.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># MPI worker ID</span>
+    <span class="n">myid</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">comm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">myid</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+
+    <span class="c1"># Use Amat as the linear operator if function not specified</span>
+    <span class="k">if</span> <span class="n">linear_op</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">linear_op</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">Amat</span> <span class="o">@</span> <span class="n">v</span>
+
+    <span class="c1"># Initialise solution vector</span>
+    <span class="k">if</span> <span class="n">x0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">bvec</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">x0</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">bvec</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;Initial guess x0 has a different shape to bvec&quot;</span>
+        <span class="k">assert</span> <span class="n">x0</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">bvec</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;Initial guess x0 has a different type to bvec&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># Calculate initial residual</span>
+    <span class="c1"># NOTE: linear_op may have internal MPI calls; we assume that it</span>
+    <span class="c1"># handles synchronising its input itself, but that only the root</span>
+    <span class="c1"># worker receives a correct return value.</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">bvec</span> <span class="o">-</span> <span class="n">linear_op</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">pvec</span> <span class="o">=</span> <span class="n">r</span><span class="p">[:]</span>
+
+    <span class="c1"># Blocks indexed by i,j: y = A . x = Sum_j A_ij b_j</span>
+    <span class="n">niter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">finished</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">while</span> <span class="n">niter</span> <span class="o">&lt;</span> <span class="n">maxiters</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">finished</span><span class="p">:</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">myid</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Root worker checks for convergence</span>
+                <span class="k">if</span> <span class="n">use_norm_tol</span><span class="p">:</span>
+                    <span class="c1"># Check tolerance on norm of r</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">abs_tol</span><span class="p">:</span>
+                        <span class="n">finished</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Check tolerance per array element</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">abs_tol</span><span class="p">):</span>
+                        <span class="n">finished</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># Broadcast finished flag to all workers (need to use a non-immutable type)</span>
+            <span class="n">finished_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">finished</span><span class="p">,</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">comm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">comm</span><span class="o">.</span><span class="n">Bcast</span><span class="p">(</span><span class="n">finished_arr</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">finished</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">finished_arr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">finished</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="c1"># Do CG iteration</span>
+            <span class="n">r_dot_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+            <span class="n">A_dot_p</span> <span class="o">=</span> <span class="n">linear_op</span><span class="p">(</span><span class="n">pvec</span><span class="p">)</span>  <span class="c1"># root worker will broadcast correct pvec</span>
+
+            <span class="c1"># Only root worker needs to do these updates; other workers idle</span>
+            <span class="k">if</span> <span class="n">myid</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">pAp</span> <span class="o">=</span> <span class="n">pvec</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">A_dot_p</span>
+                <span class="n">alpha</span> <span class="o">=</span> <span class="n">r_dot_r</span> <span class="o">/</span> <span class="n">pAp</span>
+
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">pvec</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">A_dot_p</span>
+
+                <span class="c1"># Update pvec</span>
+                <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="n">r_dot_r</span>
+                <span class="n">pvec</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">pvec</span>
+
+            <span class="c1"># Update pvec on all workers</span>
+            <span class="k">if</span> <span class="n">comm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">comm</span><span class="o">.</span><span class="n">Bcast</span><span class="p">(</span><span class="n">pvec</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="c1"># Increment iteration</span>
+            <span class="n">niter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span>
+
+    <span class="k">if</span> <span class="n">comm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">comm</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+    <span class="c1"># Synchronise solution across all workers</span>
+    <span class="k">if</span> <span class="n">comm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">comm</span><span class="o">.</span><span class="n">Bcast</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span></div>
+
+
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+    <span class="c1"># Specify device (MPS, CPU, or CUDA)</span>
+    <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;mps&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">torch</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="pytorch_lin_solver">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_solver.pytorch_lin_solver">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pytorch_lin_solver</span><span class="p">(</span>
+    <span class="n">A</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">device</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solve a linear system ``Ax = b`` using PyTorch.</span>
+
+<span class="sd">    Uses ``torch.linalg.solve`` for a direct solution. Handles the MPS</span>
+<span class="sd">    backend by falling back to CPU (MPS does not support ``linalg.solve``</span>
+<span class="sd">    in double precision).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A : NDArray[np.floating]</span>
+<span class="sd">        Coefficient matrix of shape ``(N, N)``.</span>
+<span class="sd">    b : NDArray[np.floating]</span>
+<span class="sd">        Right-hand side vector of shape ``(N,)`` or matrix ``(N, K)``.</span>
+<span class="sd">    device : torch.device or None, optional</span>
+<span class="sd">        Torch device to use (``cpu``, ``cuda``, or ``mps``).  Defaults to</span>
+<span class="sd">        the best available device detected at import time.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x : NDArray[np.floating]</span>
+<span class="sd">        Solution vector (or matrix) as a NumPy array.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ImportError</span>
+<span class="sd">        If PyTorch is not installed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">torch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+            <span class="s2">&quot;PyTorch is required for pytorch_lin_solver. Install with: pip install torch&quot;</span>
+        <span class="p">)</span>
+    <span class="c1"># Convert numpy arrays to PyTorch tensors</span>
+    <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;mps&quot;</span><span class="p">:</span>
+        <span class="c1"># Use CPU for lstsq operation</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
+            <span class="n">A_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">b_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">x_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A_torch</span><span class="p">,</span> <span class="n">b_torch</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Use specified device</span>
+        <span class="n">A_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">b_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">x_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A_torch</span><span class="p">,</span> <span class="n">b_torch</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">x_torch</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="pytorch_nnls">
+<a class="viewcode-back" href="../../api/linear_algebra.html#hydra_tod.linear_solver.pytorch_nnls">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pytorch_nnls</span><span class="p">(</span>
+    <span class="n">A</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">device</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solve non-negative least squares using PyTorch with L-BFGS optimisation.</span>
+
+<span class="sd">    Minimises ``||Ax - b||^2`` subject to ``x &gt;= 0`` by first running</span>
+<span class="sd">    unconstrained L-BFGS and then clamping the solution to non-negative</span>
+<span class="sd">    values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A : NDArray[np.floating]</span>
+<span class="sd">        Coefficient matrix of shape ``(M, N)``.</span>
+<span class="sd">    b : NDArray[np.floating]</span>
+<span class="sd">        Right-hand side vector of shape ``(M,)``.</span>
+<span class="sd">    device : torch.device or None, optional</span>
+<span class="sd">        Torch device to use. Defaults to the best available device.</span>
+<span class="sd">    max_iter : int, optional</span>
+<span class="sd">        Maximum number of L-BFGS iterations. Default is 1000.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x : NDArray[np.floating]</span>
+<span class="sd">        Non-negative solution vector of shape ``(N,)``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The non-negativity constraint is enforced by clamping after</span>
+<span class="sd">    optimisation, so the solution is only approximately NNLS-optimal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">A_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">b_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># Initialize with zeros</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">LBFGS</span><span class="p">([</span><span class="n">x</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">closure</span><span class="p">():</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">A_torch</span> <span class="o">@</span> <span class="n">x</span> <span class="o">-</span> <span class="n">b_torch</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">loss</span>
+
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">closure</span><span class="p">)</span>
+
+    <span class="c1"># Apply non-negativity constraint</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025-2026, Zheng Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

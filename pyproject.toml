@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "hydra-tod"
 version = "0.1.0"
-description = "Time-Ordered Data analysis package for radio astronomy"
+description = "Bayesian calibration and map-making for radio intensity mapping experiments"
 readme = "README.md"
 authors = [
     {name = "Zheng Zhang", email = "zheng_zhang1@alumni.brown.edu"}
@@ -13,7 +13,7 @@ authors = [
 license = {text = "MIT"}
 classifiers = [
     "Development Status :: 3 - Alpha",
-    "Intended Audience :: Science/Research", 
+    "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Astronomy",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
@@ -25,29 +25,53 @@ classifiers = [
 requires-python = ">=3.8"
 dependencies = [
     "numpy",
-    "scipy", 
+    "scipy",
     "matplotlib",
-    "healpy",
-    "h5py",
-    "mpi4py"
+    "astropy",
+    "mpmath",
+    "joblib",
 ]
 
 [project.optional-dependencies]
+mpi = ["mpi4py"]
+healpix = ["healpy"]
+jax = ["jax", "jaxlib", "numpyro"]
+torch = ["torch"]
+emcee = ["emcee"]
+sky = ["pygdsm", "healpy"]
+all = [
+    "hydra-tod[mpi,healpix,jax,torch,emcee,sky]",
+    "h5py",
+    "psutil",
+    "tqdm",
+]
+docs = [
+    "sphinx>=5.0",
+    "sphinx-rtd-theme>=1.0",
+    "sphinx-autodoc-typehints",
+    "numpydoc",
+    "myst-parser",
+]
 dev = [
-    "jupyter",
-    "notebook",
+    "hydra-tod[all,docs]",
     "pytest",
     "black",
-    "flake8"
+    "flake8",
+    "jupyter",
+    "notebook",
 ]
 
 [project.urls]
 Homepage = "https://github.com/zzhang0123/flicker"
 Repository = "https://github.com/zzhang0123/flicker.git"
+Documentation = "https://hydra-tod.readthedocs.io"
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["hydra_tod*"]
+
+[tool.setuptools.package-data]
+hydra_tod = ["*.pkl"]
 
 [tool.black]
 line-length = 88

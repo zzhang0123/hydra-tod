@@ -1,0 +1,576 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gibbs Sampler &mdash; hydra_tod 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Flicker Noise Model" href="flicker_model.html" />
+    <link rel="prev" title="Simulation" href="simulation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            hydra_tod
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#conda-environment">Conda Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/data_model.html">Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory/data_model.html#observation-model">Observation Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/data_model.html#system-temperature">System Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/data_model.html#gain-model">Gain Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/data_model.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory/flicker_noise.html">Flicker Noise Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory/flicker_noise.html#power-spectral-density">Power Spectral Density</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/flicker_noise.html#correlation-function">Correlation Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/flicker_noise.html#covariance-matrix">Covariance Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/flicker_noise.html#emulator">Emulator</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="simulation.html">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Gibbs Sampler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="flicker_model.html">Flicker Noise Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov_general"><code class="docutils literal notranslate"><span class="pre">flicker_cov_general()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="samplers.html">Parameter Samplers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="linear_algebra.html">Linear Algebra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html#module-hydra_tod.utils">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="diagnostics.html">MCMC Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="visualization.html">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../citation.html">Citation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../citation.html#plain-text">Plain text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../citation.html#bibtex">BibTeX</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">hydra_tod</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Gibbs Sampler</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gibbs_sampler.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-hydra_tod.full_Gibbs_sampler">
+<span id="gibbs-sampler"></span><h1>Gibbs Sampler<a class="headerlink" href="#module-hydra_tod.full_Gibbs_sampler" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.full_Gibbs_sampler.get_Tsys_operator">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.full_Gibbs_sampler.</span></span><span class="sig-name descname"><span class="pre">get_Tsys_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_Tsky_operator_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_Tloc_operator_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/full_Gibbs_sampler.html#get_Tsys_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.full_Gibbs_sampler.get_Tsys_operator" title="Link to this definition"></a></dt>
+<dd><p>Construct combined Tsys operator matrix from Tsky and Tloc operators.</p>
+<p>Assembles a block-structured system temperature operator that maps the
+joint parameter vector <code class="docutils literal notranslate"><span class="pre">[Tsky_params,</span> <span class="pre">Tloc1_params,</span> <span class="pre">Tloc2_params,</span> <span class="pre">...]</span></code>
+to time-ordered data for each TOD on this MPI rank. The Tsky columns are
+shared across all TODs (and ranks), while the Tloc columns are block-diagonal
+(each TOD has its own local temperature component).</p>
+<p>For example, with two ranks where rank 0 owns TODs 1–2 and rank 1 owns
+TOD 3, the global operator has the structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="p">(</span> <span class="n">U1</span>  <span class="n">R1</span>   <span class="mi">0</span>   <span class="mi">0</span>  <span class="p">)</span>
+<span class="n">U</span>  <span class="o">=</span>  <span class="p">(</span> <span class="n">U2</span>   <span class="mi">0</span>  <span class="n">R2</span>   <span class="mi">0</span>  <span class="p">)</span>
+      <span class="p">(</span> <span class="n">U3</span>   <span class="mi">0</span>   <span class="mi">0</span>  <span class="n">R3</span>  <span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">U_i</span></code> is the sky operator and <code class="docutils literal notranslate"><span class="pre">R_i</span></code> is the local operator for
+TOD <em>i</em>. Each rank stores only its own rows.</p>
+<p>The resulting linear system is:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{U} \begin{pmatrix} T_{\rm sky} \\ T_{\rm loc,1} \\
+T_{\rm loc,2} \\ T_{\rm loc,3} \end{pmatrix}
++ \mathbf{n} = \mathbf{d}\end{split}\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>local_Tsky_operator_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of sky temperature projection operators for each TOD on this rank.
+Each element has shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,</span> <span class="pre">n_sky_modes)</span></code>.</p></li>
+<li><p><strong>local_Tloc_operator_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of local temperature projection operators for each TOD on this
+rank. Each element has shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,</span> <span class="pre">n_loc_modes_i)</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of combined Tsys operators for each TOD on this rank. Each element
+has shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,</span> <span class="pre">n_sky_modes</span> <span class="pre">+</span> <span class="pre">total_loc_modes)</span></code> where
+<code class="docutils literal notranslate"><span class="pre">total_loc_modes</span></code> is the sum of all local mode dimensions across all
+ranks.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[np.ndarray]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function uses MPI collective operations (<code class="docutils literal notranslate"><span class="pre">allgather</span></code>) to determine
+the global block structure. All ranks must call this function together.</p>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Tsys_ops</span> <span class="o">=</span> <span class="n">get_Tsys_operator</span><span class="p">(</span><span class="n">Tsky_op_list</span><span class="p">,</span> <span class="n">Tloc_op_list</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tsys</span> <span class="o">=</span> <span class="n">Tsys_ops</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">Tsky_params</span><span class="p">,</span> <span class="n">Tloc_params_all</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.full_Gibbs_sampler.</span></span><span class="sig-name descname"><span class="pre">TOD_Gibbs_sampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">local_TOD_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">local_t_lists:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">local_gain_operator_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">local_Tsky_operator_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">local_Tloc_operator_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">init_Tsky_params:</span> <span class="pre">~numpy.ndarray,</span> <span class="pre">init_Tloc_params_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">init_noise_params_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">local_logfc_list:</span> <span class="pre">list[float],</span> <span class="pre">local_Tsys_injection_list:</span> <span class="pre">list[float</span> <span class="pre">|</span> <span class="pre">~numpy.ndarray]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">wnoise_var:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">2.5e-06,</span> <span class="pre">Tsky_prior_cov_inv:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">Tsky_prior_mean:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">local_Tloc_prior_cov_inv_list:</span> <span class="pre">list[~numpy.ndarray]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">local_Tloc_prior_mean_list:</span> <span class="pre">list[~numpy.ndarray]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">local_gain_prior_cov_inv_list:</span> <span class="pre">list[~numpy.ndarray]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">local_gain_prior_mean_list:</span> <span class="pre">list[~numpy.ndarray]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">local_noise_prior_func_list:</span> <span class="pre">list[~typing.Callable</span> <span class="pre">|</span> <span class="pre">None]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">joint_Tsys_sampling:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">smooth_gain_model:</span> <span class="pre">~typing.Literal['linear',</span> <span class="pre">'log',</span> <span class="pre">'factorized']</span> <span class="pre">=</span> <span class="pre">'linear',</span> <span class="pre">noise_sampler_type:</span> <span class="pre">~typing.Literal['emcee',</span> <span class="pre">'nuts']</span> <span class="pre">=</span> <span class="pre">'emcee',</span> <span class="pre">noise_Jeffreys_prior:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">noise_params_bounds:</span> <span class="pre">list[tuple[float,</span> <span class="pre">float]]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">[(-6.0,</span> <span class="pre">-3.0),</span> <span class="pre">(1.1,</span> <span class="pre">4.0)],</span> <span class="pre">n_samples:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">100,</span> <span class="pre">tol:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1e-12,</span> <span class="pre">linear_solver:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">cg&gt;,</span> <span class="pre">root:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">Est_mode:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">debug:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/full_Gibbs_sampler.html#TOD_Gibbs_sampler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler" title="Link to this definition"></a></dt>
+<dd><p>Run the full Gibbs sampler for multi-TOD Bayesian inference.</p>
+<p>This is the main inference engine of the <code class="docutils literal notranslate"><span class="pre">hydra_tod</span></code> package. It
+implements a Gibbs sampler that alternates between conditionally sampling
+the gain parameters, system temperature parameters, and noise parameters
+from a hierarchical Bayesian model for radio telescope time-ordered data.</p>
+<p>The data model is:</p>
+<div class="math notranslate nohighlight">
+\[d(t) = T_{\rm sys}(t) \, [1 + n(t)] \, g(t)\]</div>
+<p>where <span class="math notranslate nohighlight">\(T_{\rm sys} = T_{\rm sky} + T_{\rm loc}\)</span>, <span class="math notranslate nohighlight">\(g(t)\)</span> is
+the time-varying instrument gain, and <span class="math notranslate nohighlight">\(n(t)\)</span> is flicker noise with a
+<span class="math notranslate nohighlight">\(1/f^\alpha\)</span> power spectrum.</p>
+<p>The Gibbs sampling scheme iterates through the following conditional
+updates at each step <em>s</em>:</p>
+<ol class="arabic simple">
+<li><p><strong>Gain sampling</strong>: <span class="math notranslate nohighlight">\(g^{(s)} \sim p(g \mid T_{\rm sys}^{(s-1)},
+n^{(s-1)}, d)\)</span></p></li>
+<li><p><strong>Local temperature sampling</strong> (if not joint):
+<span class="math notranslate nohighlight">\(T_{\rm loc}^{(s)} \sim p(T_{\rm loc} \mid T_{\rm sky}^{(s-1)},
+g^{(s)}, n^{(s-1)}, d)\)</span></p></li>
+<li><p><strong>Noise parameter sampling</strong>: <span class="math notranslate nohighlight">\((\log f_0, \alpha)^{(s)} \sim
+p(\theta_n \mid T_{\rm sys}^{(s-1)}, g^{(s)}, d)\)</span></p></li>
+<li><p><strong>Sky temperature sampling</strong>: <span class="math notranslate nohighlight">\(T_{\rm sky}^{(s)} \sim
+p(T_{\rm sky} \mid T_{\rm loc}^{(s)}, g^{(s)}, n^{(s)}, d)\)</span></p></li>
+</ol>
+<p>Computation is parallelized across MPI ranks, where each rank processes a
+subset of TODs. Gain and noise parameters are local to each TOD, while
+sky temperature parameters are shared and synchronized across all ranks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>local_TOD_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of time-ordered data vectors for this MPI rank. Each element
+has shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,)</span></code>.</p></li>
+<li><p><strong>local_t_lists</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of time-lag arrays for each TOD on this rank. Each element has
+shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,)</span></code> and is used for constructing the flicker noise
+covariance matrix.</p></li>
+<li><p><strong>local_gain_operator_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of gain projection operators (design matrices) for each TOD.
+Each element has shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,</span> <span class="pre">n_gain_modes)</span></code>, mapping gain
+polynomial coefficients to time-domain gains.</p></li>
+<li><p><strong>local_Tsky_operator_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of sky temperature projection operators for each TOD. Each
+element has shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,</span> <span class="pre">n_sky_modes)</span></code>, typically a beam-
+weighted HEALPix pointing matrix.</p></li>
+<li><p><strong>local_Tloc_operator_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of local temperature projection operators for each TOD. Each
+element has shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,</span> <span class="pre">n_loc_modes)</span></code>.</p></li>
+<li><p><strong>init_Tsky_params</strong> (<em>np.ndarray</em>) – Initial sky temperature parameter vector, shape <code class="docutils literal notranslate"><span class="pre">(n_sky_modes,)</span></code>.
+Shared across all ranks.</p></li>
+<li><p><strong>init_Tloc_params_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – Initial local temperature parameter vectors for each TOD on this
+rank. Each element has shape <code class="docutils literal notranslate"><span class="pre">(n_loc_modes,)</span></code>.</p></li>
+<li><p><strong>init_noise_params_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – Initial noise parameter vectors for each TOD on this rank. Each
+element contains <code class="docutils literal notranslate"><span class="pre">[logf0,</span> <span class="pre">alpha]</span></code> (2 elements) or
+<code class="docutils literal notranslate"><span class="pre">[DC_gain,</span> <span class="pre">logf0,</span> <span class="pre">alpha]</span></code> (3 elements) if using the factorized
+gain model.</p></li>
+<li><p><strong>local_logfc_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – List of log10 cutoff frequencies for the flicker noise model for
+each TOD. Typically <code class="docutils literal notranslate"><span class="pre">log10(1</span> <span class="pre">/</span> <span class="pre">(N</span> <span class="pre">*</span> <span class="pre">dt)</span> <span class="pre">*</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi)</span></code>.</p></li>
+<li><p><strong>local_Tsys_injection_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – List of additional system temperature injections (e.g., noise diode
+contribution) for each TOD. Defaults to zeros.</p></li>
+<li><p><strong>wnoise_var</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – White noise variance, by default <code class="docutils literal notranslate"><span class="pre">2.5e-6</span></code>. This corresponds to
+<span class="math notranslate nohighlight">\(\sigma_w^2 = 1 / (B \tau)\)</span> where <em>B</em> is bandwidth and
+<span class="math notranslate nohighlight">\(\tau\)</span> is integration time.</p></li>
+<li><p><strong>Tsky_prior_cov_inv</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Inverse prior covariance matrix for sky temperature parameters.
+Shape <code class="docutils literal notranslate"><span class="pre">(n_sky_modes,)</span></code> for diagonal or
+<code class="docutils literal notranslate"><span class="pre">(n_sky_modes,</span> <span class="pre">n_sky_modes)</span></code> for full matrix. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, an
+uninformative prior is used.</p></li>
+<li><p><strong>Tsky_prior_mean</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Prior mean vector for sky temperature parameters, shape
+<code class="docutils literal notranslate"><span class="pre">(n_sky_modes,)</span></code>. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, zero mean is assumed.</p></li>
+<li><p><strong>local_Tloc_prior_cov_inv_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – List of inverse prior covariance matrices for local temperature
+parameters for each TOD. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, uninformative priors are used.</p></li>
+<li><p><strong>local_Tloc_prior_mean_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – List of prior mean vectors for local temperature parameters for
+each TOD. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, zero means are assumed.</p></li>
+<li><p><strong>local_gain_prior_cov_inv_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – List of inverse prior covariance matrices for gain parameters for
+each TOD. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, uninformative priors are used.</p></li>
+<li><p><strong>local_gain_prior_mean_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – List of prior mean vectors for gain parameters for each TOD.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, zero means are assumed.</p></li>
+<li><p><strong>local_noise_prior_func_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>Callable</em><em> | </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – List of custom log-prior functions for noise parameters for each
+TOD. Each callable takes a noise parameter vector and returns the
+log-prior probability. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, default priors are used.</p></li>
+<li><p><strong>joint_Tsys_sampling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, sample the full system temperature parameter vector
+<span class="math notranslate nohighlight">\([T_{\rm sky}, T_{\rm loc,1}, T_{\rm loc,2}, \ldots]\)</span>
+jointly using a single linear system. If <code class="docutils literal notranslate"><span class="pre">False</span></code> (default),
+sample <span class="math notranslate nohighlight">\(T_{\rm sky}\)</span> and <span class="math notranslate nohighlight">\(T_{\rm loc}\)</span> separately.</p></li>
+<li><p><strong>smooth_gain_model</strong> (<code class="docutils literal notranslate"><span class="pre">{'linear',</span> <span class="pre">'log',</span> <span class="pre">'factorized'}</span></code>, optional) – <p>Gain parameterization model:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'linear'</span></code>: <span class="math notranslate nohighlight">\(g(t) = \exp(\mathbf{G} \mathbf{p})\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'log'</span></code>: <span class="math notranslate nohighlight">\(\log g(t) = \mathbf{G} \mathbf{p}\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'factorized'</span></code>: <span class="math notranslate nohighlight">\(g(t) = g_0 \exp(\mathbf{G} \mathbf{p})\)</span>
+where <span class="math notranslate nohighlight">\(g_0\)</span> is a DC gain sampled with the noise parameters.</p></li>
+</ul>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">'linear'</span></code>.</p>
+</p></li>
+<li><p><strong>noise_sampler_type</strong> (<code class="docutils literal notranslate"><span class="pre">{'emcee',</span> <span class="pre">'nuts'}</span></code>, optional) – MCMC sampler used for noise parameter inference. Default is
+<code class="docutils literal notranslate"><span class="pre">'emcee'</span></code>.</p></li>
+<li><p><strong>noise_Jeffreys_prior</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, use a Jeffreys prior for noise scale parameters,
+providing scale invariance. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>noise_params_bounds</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Parameter bounds for noise MCMC sampling. Each tuple specifies
+<code class="docutils literal notranslate"><span class="pre">(lower,</span> <span class="pre">upper)</span></code> for one parameter. Default bounds are
+<code class="docutils literal notranslate"><span class="pre">[(-6.0,</span> <span class="pre">-3.0),</span> <span class="pre">(1.1,</span> <span class="pre">4.0)]</span></code> for <code class="docutils literal notranslate"><span class="pre">[logf0,</span> <span class="pre">alpha]</span></code>.</p></li>
+<li><p><strong>n_samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of Gibbs samples to draw. Default is <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+<li><p><strong>tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Tolerance for iterative linear solvers (CG, MINRES). Default is
+<code class="docutils literal notranslate"><span class="pre">1e-12</span></code>.</p></li>
+<li><p><strong>linear_solver</strong> (<em>Callable</em><em>, </em><em>optional</em>) – Linear solver function used for the conjugate sampling steps.
+Default is <a class="reference internal" href="linear_algebra.html#hydra_tod.linear_solver.cg" title="hydra_tod.linear_solver.cg"><code class="xref py py-func docutils literal notranslate"><span class="pre">hydra_tod.linear_solver.cg()</span></code></a>.</p></li>
+<li><p><strong>root</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – MPI rank to gather results onto. If <code class="docutils literal notranslate"><span class="pre">None</span></code> (default), results
+are gathered onto all ranks via <code class="docutils literal notranslate"><span class="pre">allgather</span></code>.</p></li>
+<li><p><strong>Est_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, return MAP estimates instead of posterior samples
+(no stochastic sampling step). Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>debug</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, print diagnostic information during sampling.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>Tsky_samples</strong> (<em>np.ndarray</em>) – Sky (or joint Tsys) temperature samples, shape
+<code class="docutils literal notranslate"><span class="pre">(n_samples,</span> <span class="pre">n_sky_modes)</span></code> or <code class="docutils literal notranslate"><span class="pre">(n_samples,</span> <span class="pre">n_sys_modes)</span></code> if
+<code class="docutils literal notranslate"><span class="pre">joint_Tsys_sampling=True</span></code>.</p></li>
+<li><p><strong>all_gain_samples</strong> (<em>list[np.ndarray]</em>) – Gain parameter samples gathered from all ranks. Each element has
+shape <code class="docutils literal notranslate"><span class="pre">(n_local_TODs,</span> <span class="pre">n_samples,</span> <span class="pre">n_gain_modes)</span></code>.</p></li>
+<li><p><strong>all_noise_samples</strong> (<em>list[np.ndarray]</em>) – Noise parameter samples gathered from all ranks. Each element has
+shape <code class="docutils literal notranslate"><span class="pre">(n_local_TODs,</span> <span class="pre">n_samples,</span> <span class="pre">n_noise_modes)</span></code>.</p></li>
+<li><p><strong>all_Tloc_samples</strong> (<em>list[np.ndarray], optional</em>) – Local temperature parameter samples, only returned when
+<code class="docutils literal notranslate"><span class="pre">joint_Tsys_sampling=False</span></code>. Each element has shape
+<code class="docutils literal notranslate"><span class="pre">(n_local_TODs,</span> <span class="pre">n_samples,</span> <span class="pre">n_loc_modes)</span></code>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>All ranks must call this function together due to MPI collective
+operations (barriers, allgather/gather).</p></li>
+<li><p>The function uses index <code class="docutils literal notranslate"><span class="pre">si</span> <span class="pre">-</span> <span class="pre">1</span></code> (i.e., the previous sample) for
+conditional parameters, which wraps to the last index at <code class="docutils literal notranslate"><span class="pre">si</span> <span class="pre">=</span> <span class="pre">0</span></code>,
+using the initialization values stored there.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">factorized</span></code> gain model includes a DC gain <span class="math notranslate nohighlight">\(g_0\)</span> that is
+sampled jointly with the noise parameters, yielding 3 noise parameter
+components instead of 2.</p></li>
+</ul>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc" title="hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc</span></code></a></dt><dd><p>Variant with joint local parameter sampling.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">gain_sampler</span></code></dt><dd><p>Conditional gain sampling step.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tsys_sampler_multi_TODs</span></code></dt><dd><p>Conditional Tsys sampling across multiple TODs.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">flicker_noise_sampler</span></code></dt><dd><p>Noise parameter MCMC sampling step.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc">
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.full_Gibbs_sampler.</span></span><span class="sig-name descname"><span class="pre">TOD_Gibbs_sampler_joint_loc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">local_TOD_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">local_t_lists:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">local_gain_operator_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">local_Tsky_operator_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">local_Tloc_operator_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">init_Tsky_params:</span> <span class="pre">~numpy.ndarray,</span> <span class="pre">init_Tloc_params_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">init_noise_params_list:</span> <span class="pre">list[~numpy.ndarray],</span> <span class="pre">local_logfc_list:</span> <span class="pre">list[float],</span> <span class="pre">wnoise_var:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">2.5e-06,</span> <span class="pre">Tsky_prior_cov_inv:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">Tsky_prior_mean:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">local_Tloc_prior_cov_inv_list:</span> <span class="pre">list[~numpy.ndarray]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">local_Tloc_prior_mean_list:</span> <span class="pre">list[~numpy.ndarray]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">local_gain_prior_cov_inv_list:</span> <span class="pre">list[~numpy.ndarray]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">local_gain_prior_mean_list:</span> <span class="pre">list[~numpy.ndarray]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">local_noise_prior_func_list:</span> <span class="pre">list[~typing.Callable</span> <span class="pre">|</span> <span class="pre">None]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">noise_sampler_type:</span> <span class="pre">~typing.Literal['emcee',</span> <span class="pre">'nuts']</span> <span class="pre">=</span> <span class="pre">'emcee',</span> <span class="pre">ploc_Jeffreys_prior:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">noise_Jeffreys_prior:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">noise_params_bounds:</span> <span class="pre">list[tuple[float,</span> <span class="pre">float]]</span> <span class="pre">=</span> <span class="pre">[(-6.0,</span> <span class="pre">-3.0),</span> <span class="pre">(1.1,</span> <span class="pre">4.0)],</span> <span class="pre">n_samples:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">100,</span> <span class="pre">tol:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1e-12,</span> <span class="pre">linear_solver:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">cg&gt;,</span> <span class="pre">Est_mode:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">root:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">debug:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/full_Gibbs_sampler.html#TOD_Gibbs_sampler_joint_loc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc" title="Link to this definition"></a></dt>
+<dd><p>Run the Gibbs sampler with joint gain and local temperature sampling.</p>
+<p>This is a variant of <a class="reference internal" href="#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler" title="hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="xref py py-func docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a> that samples the gain
+parameters and local temperature parameters jointly using a combined
+local parameter sampler, rather than sampling them in separate conditional
+steps.</p>
+<p>The data model is identical:</p>
+<div class="math notranslate nohighlight">
+\[d(t) = T_{\rm sys}(t) \, [1 + n(t)] \, g(t)\]</div>
+<p>where <span class="math notranslate nohighlight">\(T_{\rm sys} = T_{\rm sky} + T_{\rm loc}\)</span>. However, the
+Gibbs update scheme differs:</p>
+<ol class="arabic simple">
+<li><p><strong>Joint local parameter sampling</strong>: Sample gain and local temperature
+parameters jointly:
+<span class="math notranslate nohighlight">\((g, T_{\rm loc})^{(s)} \sim p(g, T_{\rm loc} \mid
+T_{\rm sky}^{(s-1)}, n^{(s-1)}, d)\)</span></p></li>
+<li><p><strong>Noise parameter sampling</strong>: <span class="math notranslate nohighlight">\((\log f_0, \alpha)^{(s)} \sim
+p(\theta_n \mid T_{\rm sys}^{(s)}, g^{(s)}, d)\)</span></p></li>
+<li><p><strong>Sky temperature sampling</strong>: <span class="math notranslate nohighlight">\(T_{\rm sky}^{(s)} \sim
+p(T_{\rm sky} \mid T_{\rm loc}^{(s)}, g^{(s)}, n^{(s)}, d)\)</span></p></li>
+</ol>
+<p>The joint sampling of gain and local temperature can improve mixing when
+these parameters are correlated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>local_TOD_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of time-ordered data vectors for this MPI rank. Each element
+has shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,)</span></code>.</p></li>
+<li><p><strong>local_t_lists</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of time-lag arrays for each TOD on this rank. Each element has
+shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,)</span></code>.</p></li>
+<li><p><strong>local_gain_operator_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of gain projection operators for each TOD. Each element has
+shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,</span> <span class="pre">n_gain_modes)</span></code>.</p></li>
+<li><p><strong>local_Tsky_operator_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of sky temperature projection operators for each TOD. Each
+element has shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,</span> <span class="pre">n_sky_modes)</span></code>.</p></li>
+<li><p><strong>local_Tloc_operator_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – List of local temperature projection operators for each TOD. Each
+element has shape <code class="docutils literal notranslate"><span class="pre">(n_time_i,</span> <span class="pre">n_loc_modes)</span></code>. The first column is
+expected to be the noise diode template, and the remaining columns
+are the receiver temperature basis functions.</p></li>
+<li><p><strong>init_Tsky_params</strong> (<em>np.ndarray</em>) – Initial sky temperature parameter vector, shape <code class="docutils literal notranslate"><span class="pre">(n_sky_modes,)</span></code>.</p></li>
+<li><p><strong>init_Tloc_params_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – Initial local temperature parameter vectors for each TOD on this
+rank. Each element has shape <code class="docutils literal notranslate"><span class="pre">(n_loc_modes,)</span></code>.</p></li>
+<li><p><strong>init_noise_params_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>) – Initial noise parameter vectors for each TOD. Each element contains
+<code class="docutils literal notranslate"><span class="pre">[logf0,</span> <span class="pre">alpha]</span></code>.</p></li>
+<li><p><strong>local_logfc_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – List of log10 cutoff frequencies for the flicker noise model for
+each TOD.</p></li>
+<li><p><strong>wnoise_var</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – White noise variance. Default is <code class="docutils literal notranslate"><span class="pre">2.5e-6</span></code>.</p></li>
+<li><p><strong>Tsky_prior_cov_inv</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Inverse prior covariance for sky temperature parameters. Shape
+<code class="docutils literal notranslate"><span class="pre">(n_sky_modes,)</span></code> for diagonal or <code class="docutils literal notranslate"><span class="pre">(n_sky_modes,</span> <span class="pre">n_sky_modes)</span></code>
+for full matrix.</p></li>
+<li><p><strong>Tsky_prior_mean</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Prior mean for sky temperature parameters, shape <code class="docutils literal notranslate"><span class="pre">(n_sky_modes,)</span></code>.</p></li>
+<li><p><strong>local_Tloc_prior_cov_inv_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – List of inverse prior covariance (diagonal) for local temperature
+parameters. Required for the joint sampler.</p></li>
+<li><p><strong>local_Tloc_prior_mean_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – List of prior mean vectors for local temperature parameters.
+Required for the joint sampler.</p></li>
+<li><p><strong>local_gain_prior_cov_inv_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – List of inverse prior covariance (diagonal) for gain parameters.
+Required for the joint sampler.</p></li>
+<li><p><strong>local_gain_prior_mean_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – List of prior mean vectors for gain parameters. Required for the
+joint sampler.</p></li>
+<li><p><strong>local_noise_prior_func_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>Callable</em><em> | </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – List of custom log-prior functions for noise parameters for each
+TOD. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, default priors are used.</p></li>
+<li><p><strong>noise_sampler_type</strong> (<code class="docutils literal notranslate"><span class="pre">{'emcee',</span> <span class="pre">'nuts'}</span></code>, optional) – MCMC sampler for noise parameter inference. Default is <code class="docutils literal notranslate"><span class="pre">'emcee'</span></code>.</p></li>
+<li><p><strong>ploc_Jeffreys_prior</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, use a Jeffreys prior in the joint local parameter
+sampler. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>noise_Jeffreys_prior</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, use a Jeffreys prior for noise scale parameters.
+Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>noise_params_bounds</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Parameter bounds for noise MCMC sampling. Default is
+<code class="docutils literal notranslate"><span class="pre">[(-6.0,</span> <span class="pre">-3.0),</span> <span class="pre">(1.1,</span> <span class="pre">4.0)]</span></code>.</p></li>
+<li><p><strong>n_samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of Gibbs samples to draw. Default is <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+<li><p><strong>tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Tolerance for iterative linear solvers. Default is <code class="docutils literal notranslate"><span class="pre">1e-12</span></code>.</p></li>
+<li><p><strong>linear_solver</strong> (<em>Callable</em><em>, </em><em>optional</em>) – Linear solver function. Default is
+<a class="reference internal" href="linear_algebra.html#hydra_tod.linear_solver.cg" title="hydra_tod.linear_solver.cg"><code class="xref py py-func docutils literal notranslate"><span class="pre">hydra_tod.linear_solver.cg()</span></code></a>.</p></li>
+<li><p><strong>Est_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, return MAP estimates instead of posterior samples.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>root</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – MPI rank to gather results onto. If <code class="docutils literal notranslate"><span class="pre">None</span></code> (default), results
+are gathered onto all ranks via <code class="docutils literal notranslate"><span class="pre">allgather</span></code>.</p></li>
+<li><p><strong>debug</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, print diagnostic information. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>Tsky_samples</strong> (<em>np.ndarray</em>) – Sky temperature parameter samples, shape
+<code class="docutils literal notranslate"><span class="pre">(n_samples,</span> <span class="pre">n_sky_modes)</span></code>.</p></li>
+<li><p><strong>all_gain_samples</strong> (<em>list[np.ndarray]</em>) – Gain parameter samples gathered from all ranks. Each element has
+shape <code class="docutils literal notranslate"><span class="pre">(n_local_TODs,</span> <span class="pre">n_samples,</span> <span class="pre">n_gain_modes)</span></code>.</p></li>
+<li><p><strong>all_noise_samples</strong> (<em>list[np.ndarray]</em>) – Noise parameter samples gathered from all ranks. Each element has
+shape <code class="docutils literal notranslate"><span class="pre">(n_local_TODs,</span> <span class="pre">n_samples,</span> <span class="pre">n_noise_modes)</span></code>.</p></li>
+<li><p><strong>all_Tloc_samples</strong> (<em>list[np.ndarray]</em>) – Local temperature parameter samples gathered from all ranks. Each
+element has shape <code class="docutils literal notranslate"><span class="pre">(n_local_TODs,</span> <span class="pre">n_samples,</span> <span class="pre">n_loc_modes)</span></code>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This variant uses <code class="xref py py-func docutils literal notranslate"><span class="pre">local_params_sampler()</span></code> from the
+<code class="docutils literal notranslate"><span class="pre">local_sampler</span></code> module for joint gain and local temperature
+inference.</p></li>
+<li><p>The local temperature operator is decomposed as
+<span class="math notranslate nohighlight">\(T_{\rm loc}(t) = T_{\rm nd}(t) \, e^{p_0}
++ e^{\mathbf{R}_{\rm res} \mathbf{p}_{1:}}\)</span> where <span class="math notranslate nohighlight">\(p_0\)</span>
+controls the noise diode amplitude and <span class="math notranslate nohighlight">\(\mathbf{p}_{1:}\)</span> are
+the receiver temperature coefficients.</p></li>
+<li><p>The gain model uses a log parameterization:
+<span class="math notranslate nohighlight">\(g(t) = \exp(\mathbf{G} \mathbf{p}_g)\)</span>.</p></li>
+</ul>
+<p class="rubric">References</p>
+<p>Zhang et al. (2026), RASTI, rzag024.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler" title="hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler</span></code></a></dt><dd><p>Standard Gibbs sampler with separate conditional steps.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">local_params_sampler</span></code></dt><dd><p>Joint local parameter sampler.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="simulation.html" class="btn btn-neutral float-left" title="Simulation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="flicker_model.html" class="btn btn-neutral float-right" title="Flicker Noise Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025-2026, Zheng Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

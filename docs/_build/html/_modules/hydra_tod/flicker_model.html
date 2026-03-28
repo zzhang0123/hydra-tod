@@ -1,0 +1,1277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hydra_tod.flicker_model &mdash; hydra_tod 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            hydra_tod
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#conda-environment">Conda Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/data_model.html">Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#observation-model">Observation Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#system-temperature">System Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gain-model">Gain Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/data_model.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/flicker_noise.html">Flicker Noise Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#power-spectral-density">Power Spectral Density</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#correlation-function">Correlation Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#covariance-matrix">Covariance Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory/flicker_noise.html#emulator">Emulator</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/simulation.html">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/gibbs_sampler.html">Gibbs Sampler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/flicker_model.html">Flicker Noise Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_general"><code class="docutils literal notranslate"><span class="pre">flicker_cov_general()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/samplers.html">Parameter Samplers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/linear_algebra.html">Linear Algebra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/utilities.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.utils">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/diagnostics.html">MCMC Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/visualization.html">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citation.html">Citation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#plain-text">Plain text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../citation.html#bibtex">BibTeX</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#id1">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hydra_tod</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hydra_tod.flicker_model</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for hydra_tod.flicker_model</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpiutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NDArray</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">gammainc</span><span class="p">,</span> <span class="n">mp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">toeplitz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">lag_list</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">Parallel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cmath</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">quad</span><span class="p">,</span> <span class="n">IntegrationWarning</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">tqdm</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">x</span>
+
+
+<div class="viewcode-block" id="my_gamma_inc">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.my_gamma_inc">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_gamma_inc</span><span class="p">(</span>
+    <span class="n">z</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">R_vals</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">epsabs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span>
+    <span class="n">epsrel</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span>
+    <span class="n">para_run</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the upper incomplete gamma function via line-integral representation.</span>
+
+<span class="sd">    Evaluates :math:`\Gamma(z, iR)` by numerically integrating along the</span>
+<span class="sd">    contour :math:`s = iR + t` for :math:`t \in [0, \infty)`:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \Gamma(z, iR) = \int_0^\infty e^{-(iR + t)} (iR + t)^{z-1} \, dt</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    z : complex or float</span>
+<span class="sd">        Complex (or real) order of the incomplete gamma function.</span>
+<span class="sd">    R_vals : float or array_like</span>
+<span class="sd">        Positive real shift(s) defining the imaginary starting point of the</span>
+<span class="sd">        contour. Must be strictly positive.</span>
+<span class="sd">    epsabs : float, optional</span>
+<span class="sd">        Absolute error tolerance for ``scipy.integrate.quad``.</span>
+<span class="sd">        Default is ``1e-6``.</span>
+<span class="sd">    epsrel : float, optional</span>
+<span class="sd">        Relative error tolerance for ``scipy.integrate.quad``.</span>
+<span class="sd">        Default is ``1e-6``.</span>
+<span class="sd">    para_run : bool, optional</span>
+<span class="sd">        If ``True`` (default), evaluate entries in parallel using</span>
+<span class="sd">        ``mpiutil.local_parallel_func``. Otherwise, use ``np.vectorize``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    complex or NDArray[np.complexfloating]</span>
+<span class="sd">        Result with the same shape as *R_vals*. Scalar input yields a scalar</span>
+<span class="sd">        output.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is a numerically robust alternative to ``mpmath.gammainc`` for</span>
+<span class="sd">    moderate-precision requirements where vectorised evaluation is needed.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">R_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">R_vals</span><span class="p">)</span>
+
+    <span class="c1"># function for single input R</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_integral_single</span><span class="p">(</span><span class="n">R_val</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">R_val</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;R must be positive&quot;</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">integrand</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">R_val</span> <span class="o">+</span> <span class="n">t</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">cmath</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">s</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">s</span> <span class="o">**</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">val</span>
+
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">IntegrationWarning</span><span class="p">)</span>
+            <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quad</span><span class="p">(</span>
+                <span class="n">integrand</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">epsabs</span><span class="o">=</span><span class="n">epsabs</span><span class="p">,</span> <span class="n">epsrel</span><span class="o">=</span><span class="n">epsrel</span><span class="p">,</span> <span class="n">complex_func</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="c1"># Or Parallelize the function:</span>
+    <span class="k">if</span> <span class="n">para_run</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mpiutil</span><span class="o">.</span><span class="n">local_parallel_func</span><span class="p">(</span><span class="n">_integral_single</span><span class="p">,</span> <span class="n">R_vals</span><span class="p">))</span>
+        <span class="c1"># Return scalar if input was scalar</span>
+        <span class="k">return</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">results</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="c1"># Vectorize the function</span>
+    <span class="n">vfunc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">_integral_single</span><span class="p">,</span> <span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">vfunc</span><span class="p">(</span><span class="n">R_vals</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="aux_int_v1">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v1">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">aux_int_v1</span><span class="p">(</span><span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Evaluate the auxiliary integral for the flicker correlation at a single lag.</span>
+
+<span class="sd">    Computes:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \operatorname{Re}\!\bigl[e^{-i\pi\mu/2}\,\Gamma(\mu, iu)\bigr]</span>
+<span class="sd">        = \operatorname{Re}(\Gamma(\mu, iu))\cos\!\bigl(\tfrac{\pi}{2}\mu\bigr)</span>
+<span class="sd">          + \operatorname{Im}(\Gamma(\mu, iu))\sin\!\bigl(\tfrac{\pi}{2}\mu\bigr)</span>
+
+<span class="sd">    Uses ``mpmath.gammainc`` for arbitrary-precision evaluation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mu : float</span>
+<span class="sd">        Order parameter, typically :math:`\mu = 1 - \alpha`.</span>
+<span class="sd">    u : float</span>
+<span class="sd">        Dimensionless lag argument :math:`u = \omega_c \tau`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Real-valued result of the auxiliary integral.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">aux</span> <span class="o">=</span> <span class="n">gammainc</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">u</span><span class="p">)</span>
+        <span class="n">ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mu</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">aux</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">aux</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in aux_int with mu=</span><span class="si">{</span><span class="n">mu</span><span class="si">}</span><span class="s2">, u=</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>  <span class="c1"># or some other default value</span></div>
+
+
+
+<div class="viewcode-block" id="aux_int_v2">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v2">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">aux_int_v2</span><span class="p">(</span><span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Vectorised auxiliary integral for the flicker correlation function.</span>
+
+<span class="sd">    Computes the same quantity as :func:`aux_int_v1` but for an array of lag</span>
+<span class="sd">    arguments, using :func:`my_gamma_inc` for parallel evaluation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mu : float</span>
+<span class="sd">        Order parameter, typically :math:`\mu = 1 - \alpha`.</span>
+<span class="sd">    u_list : NDArray[np.floating]</span>
+<span class="sd">        Array of dimensionless lag arguments :math:`u = \omega_c \tau`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NDArray[np.float64]</span>
+<span class="sd">        Real-valued results with the same shape as *u_list*.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Exp[- ( Pi / 2 ) I Mu]  Gamma[Mu, I  u]</span>
+    <span class="n">aux</span> <span class="o">=</span> <span class="n">my_gamma_inc</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">u_list</span><span class="p">)</span>  <span class="c1"># This is actually the same as gammainc(mu, 1j * u)</span>
+    <span class="n">cos_ang</span><span class="p">,</span> <span class="n">sin_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mu</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mu</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">aux</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="n">cos_ang</span> <span class="o">+</span> <span class="n">aux</span><span class="o">.</span><span class="n">imag</span> <span class="o">*</span> <span class="n">sin_ang</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="aux_calculation">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.aux_calculation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">aux_calculation</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the auxiliary integral (single-lag, argument-order swapped).</span>
+
+<span class="sd">    Identical to :func:`aux_int_v1` but with swapped argument order for</span>
+<span class="sd">    compatibility with legacy call sites.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    u : float</span>
+<span class="sd">        Dimensionless lag argument :math:`u = \omega_c \tau`.</span>
+<span class="sd">    mu : float</span>
+<span class="sd">        Order parameter, typically :math:`\mu = 1 - \alpha`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Real-valued result of the auxiliary integral.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">aux</span> <span class="o">=</span> <span class="n">gammainc</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">u</span><span class="p">)</span>
+        <span class="n">ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mu</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">aux</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">aux</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in aux calculation with mu=</span><span class="si">{</span><span class="n">mu</span><span class="si">}</span><span class="s2">, u=</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>  <span class="c1"># or some other default value</span></div>
+
+
+
+<div class="viewcode-block" id="flicker_corr">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flicker_corr</span><span class="p">(</span>
+    <span class="n">tau</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">f0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">fc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">var_w</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the flicker-noise correlation at a single time lag.</span>
+
+<span class="sd">    Evaluates the analytic covariance function of :math:`1/f^\alpha` noise with</span>
+<span class="sd">    a low-frequency cutoff:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        C(\tau) = \frac{(\omega_0 \tau)^\alpha}{\pi \tau}</span>
+<span class="sd">                  \operatorname{Re}\!\bigl[e^{-i\pi\mu/2}\,</span>
+<span class="sd">                  \Gamma(\mu, i\omega_c\tau)\bigr],</span>
+<span class="sd">        \quad \mu = 1 - \alpha</span>
+
+<span class="sd">    At zero lag (:math:`\tau = 0`):</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        C(0) = \frac{\omega_c}{\pi}</span>
+<span class="sd">               \left(\frac{\omega_0}{\omega_c}\right)^\alpha</span>
+<span class="sd">               \frac{1}{\alpha - 1} + \sigma_w^2</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tau : float</span>
+<span class="sd">        Time lag in seconds.</span>
+<span class="sd">    f0 : float</span>
+<span class="sd">        Knee angular frequency :math:`\omega_0 = 2\pi f_{\mathrm{knee}}`</span>
+<span class="sd">        (rad/s).</span>
+<span class="sd">    fc : float</span>
+<span class="sd">        Cutoff angular frequency :math:`\omega_c = 2\pi / (N \Delta t)`</span>
+<span class="sd">        (rad/s).</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Spectral index of the :math:`1/f^\alpha` noise (:math:`\alpha &gt; 1`).</span>
+<span class="sd">    var_w : float, optional</span>
+<span class="sd">        White-noise variance added at zero lag. Default is ``0.0``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Correlation value :math:`C(\tau)`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The angular frequency convention (:math:`\omega = 2\pi f`) is used</span>
+<span class="sd">    throughout, which differs from the FFT frequency convention by a factor</span>
+<span class="sd">    of :math:`2\pi`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">tau</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">f0</span> <span class="o">/</span> <span class="n">fc</span><span class="p">)</span> <span class="o">**</span> <span class="n">alpha</span> <span class="o">/</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">var_w</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
+    <span class="n">theta_c</span> <span class="o">=</span> <span class="n">fc</span> <span class="o">*</span> <span class="n">tau</span>
+    <span class="n">theta_0</span> <span class="o">=</span> <span class="n">f0</span> <span class="o">*</span> <span class="n">tau</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">tau</span><span class="p">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">theta_0</span><span class="o">**</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">aux_int_v1</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">theta_c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span> <span class="o">*</span> <span class="n">norm</span></div>
+
+
+
+<div class="viewcode-block" id="flicker_corr_vec">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flicker_corr_vec</span><span class="p">(</span>
+    <span class="n">taus</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">f0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">fc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Vectorised flicker-noise correlation for an array of non-zero lags.</span>
+
+<span class="sd">    Computes the same quantity as :func:`flicker_corr` but for multiple lags</span>
+<span class="sd">    simultaneously, using the vectorised auxiliary integral :func:`aux_int_v2`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    taus : NDArray[np.floating]</span>
+<span class="sd">        Array of **strictly positive** time lags (seconds).</span>
+<span class="sd">    f0 : float</span>
+<span class="sd">        Knee angular frequency :math:`\omega_0` (rad/s).</span>
+<span class="sd">    fc : float</span>
+<span class="sd">        Cutoff angular frequency :math:`\omega_c` (rad/s).</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Spectral index (:math:`\alpha &gt; 1`).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NDArray[np.float64]</span>
+<span class="sd">        Correlation values for each lag in *taus*.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The angular frequency convention (:math:`\omega = 2\pi f`) is used.</span>
+<span class="sd">    All elements of *taus* must be non-zero; use :func:`flicker_cov_vec` to</span>
+<span class="sd">    include the zero-lag term.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">theta_c</span> <span class="o">=</span> <span class="n">fc</span> <span class="o">*</span> <span class="n">taus</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">f0</span> <span class="o">*</span> <span class="n">taus</span><span class="p">)</span> <span class="o">**</span> <span class="n">alpha</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">taus</span><span class="p">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span>
+    <span class="c1"># result = np.array([aux_calculation(theta_c[i], mu)</span>
+    <span class="c1">#                                               for i in range(len(taus))])</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">aux_int_v2</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">theta_c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span> <span class="o">*</span> <span class="n">norm</span></div>
+
+
+
+<div class="viewcode-block" id="flicker_cov_vec">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flicker_cov_vec</span><span class="p">(</span>
+    <span class="n">tau_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">f0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">fc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">white_n_variance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.5e-6</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the first row of the flicker covariance matrix (vectorised).</span>
+
+<span class="sd">    Evaluates the correlation function at all lags in *tau_list*, handling</span>
+<span class="sd">    the zero-lag term separately (analytic expression plus white-noise</span>
+<span class="sd">    variance).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tau_list : NDArray[np.floating]</span>
+<span class="sd">        Array of time lags starting with ``0``. Typically produced by</span>
+<span class="sd">        :func:`hydra_tod.utils.lag_list`.</span>
+<span class="sd">    f0 : float</span>
+<span class="sd">        Knee angular frequency :math:`\omega_0` (rad/s).</span>
+<span class="sd">    fc : float</span>
+<span class="sd">        Cutoff angular frequency :math:`\omega_c` (rad/s).</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Spectral index (:math:`\alpha &gt; 1`).</span>
+<span class="sd">    white_n_variance : float, optional</span>
+<span class="sd">        White-noise variance :math:`\sigma_w^2` added at zero lag.</span>
+<span class="sd">        Default is ``2.5e-6``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NDArray[np.float64]</span>
+<span class="sd">        Correlation vector (first row of the Toeplitz covariance matrix).</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    AssertionError</span>
+<span class="sd">        If ``tau_list[0] != 0``.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">tau_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;tau_list[0] must be 0&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">tau_list</span><span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">fc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">f0</span> <span class="o">/</span> <span class="n">fc</span><span class="p">)</span> <span class="o">**</span> <span class="n">alpha</span> <span class="o">/</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">white_n_variance</span>
+    <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">flicker_corr_vec</span><span class="p">(</span><span class="n">tau_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">f0</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># Define the covariance matrix function</span>
+<div class="viewcode-block" id="flicker_cov">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flicker_cov</span><span class="p">(</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">f0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">fc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">white_n_variance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5e-6</span><span class="p">,</span>
+    <span class="n">only_row_0</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Construct the Toeplitz covariance matrix of flicker noise.</span>
+
+<span class="sd">    Computes the correlation at each unique lag from *time_list* and</span>
+<span class="sd">    assembles the full symmetric Toeplitz matrix, or optionally returns</span>
+<span class="sd">    only the first row.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    time_list : NDArray[np.floating]</span>
+<span class="sd">        Observation time stamps (seconds). The lag list is derived via</span>
+<span class="sd">        :func:`hydra_tod.utils.lag_list`.</span>
+<span class="sd">    f0 : float</span>
+<span class="sd">        Knee angular frequency :math:`\omega_0` (rad/s).</span>
+<span class="sd">    fc : float</span>
+<span class="sd">        Cutoff angular frequency :math:`\omega_c` (rad/s).</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Spectral index (:math:`\alpha &gt; 1`).</span>
+<span class="sd">    white_n_variance : float, optional</span>
+<span class="sd">        White-noise variance :math:`\sigma_w^2`. Default is ``5e-6``.</span>
+<span class="sd">    only_row_0 : bool, optional</span>
+<span class="sd">        If ``True``, return only the first row of the Toeplitz matrix.</span>
+<span class="sd">        Default is ``False``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NDArray[np.float64]</span>
+<span class="sd">        If *only_row_0* is ``False``, the full :math:`N \times N` Toeplitz</span>
+<span class="sd">        covariance matrix. Otherwise, a 1-D array of length :math:`N`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The matrix is constructed via ``scipy.linalg.toeplitz`` from the</span>
+<span class="sd">    correlation vector. For large :math:`N`, consider using</span>
+<span class="sd">    :class:`FlickerCorrEmulator` for faster evaluation.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lags</span> <span class="o">=</span> <span class="n">lag_list</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
+    <span class="n">corr_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">flicker_corr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">var_w</span><span class="o">=</span><span class="n">white_n_variance</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">lags</span><span class="p">]</span>
+    <span class="n">corr_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">corr_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="c1"># corr_list = flicker_cov_vec(lags, f0, fc, alpha, white_n_variance=white_n_variance)</span>
+    <span class="k">if</span> <span class="n">only_row_0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">corr_list</span>
+    <span class="k">return</span> <span class="n">toeplitz</span><span class="p">(</span><span class="n">corr_list</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># This is another flicker noise PSD model with non-vanishing DC mode and its adjacent modes.</span>
+<div class="viewcode-block" id="flicker_corr_full">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_full">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flicker_corr_full</span><span class="p">(</span>
+    <span class="n">tau</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">f0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">fc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">var_w</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the flicker-noise correlation including the DC mode contribution.</span>
+
+<span class="sd">    Extends :func:`flicker_corr` with an additional sinusoidal term that</span>
+<span class="sd">    accounts for non-vanishing power at the DC mode and its adjacent</span>
+<span class="sd">    frequencies:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        C_{\mathrm{full}}(\tau) = \frac{1}{\pi\tau}\Bigl[</span>
+<span class="sd">            (\omega_0\tau)^\alpha\,\operatorname{Re}[e^{-i\pi\mu/2}\Gamma(\mu,i\omega_c\tau)]</span>
+<span class="sd">            + \bigl(\omega_0/\omega_c\bigr)^\alpha\sin(\omega_c\tau)</span>
+<span class="sd">        \Bigr]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tau : float</span>
+<span class="sd">        Time lag in seconds.</span>
+<span class="sd">    f0 : float</span>
+<span class="sd">        Knee angular frequency :math:`\omega_0` (rad/s).</span>
+<span class="sd">    fc : float</span>
+<span class="sd">        Cutoff angular frequency :math:`\omega_c` (rad/s).</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Spectral index (:math:`\alpha &gt; 1`).</span>
+<span class="sd">    var_w : float, optional</span>
+<span class="sd">        White-noise variance added at zero lag. Default is ``0.0``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Correlation value including the DC contribution.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">tau</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">f0</span> <span class="o">/</span> <span class="n">fc</span><span class="p">)</span> <span class="o">**</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">/</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">var_w</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
+    <span class="n">theta_c</span> <span class="o">=</span> <span class="n">fc</span> <span class="o">*</span> <span class="n">tau</span>
+    <span class="n">theta_0</span> <span class="o">=</span> <span class="n">f0</span> <span class="o">*</span> <span class="n">tau</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">tau</span><span class="p">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">theta_0</span><span class="o">**</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">aux_int_v1</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">theta_c</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">f0</span> <span class="o">/</span> <span class="n">fc</span><span class="p">)</span> <span class="o">**</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span>
+        <span class="n">theta_c</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span> <span class="o">*</span> <span class="n">norm</span></div>
+
+
+
+<div class="viewcode-block" id="sim_noise">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.sim_noise">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sim_noise</span><span class="p">(</span>
+    <span class="n">f0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">fc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">white_n_variance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5e-6</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate realisations of correlated flicker noise.</span>
+
+<span class="sd">    Constructs the full Toeplitz covariance matrix from the analytic</span>
+<span class="sd">    correlation function and draws samples from the corresponding</span>
+<span class="sd">    multivariate normal distribution.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f0 : float</span>
+<span class="sd">        Knee angular frequency :math:`\omega_0` (rad/s).</span>
+<span class="sd">    fc : float</span>
+<span class="sd">        Cutoff angular frequency :math:`\omega_c` (rad/s).</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Spectral index (:math:`\alpha &gt; 1`).</span>
+<span class="sd">    time_list : NDArray[np.floating]</span>
+<span class="sd">        Observation time stamps (seconds).</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        Number of independent noise realisations. Default is ``1``.</span>
+<span class="sd">    white_n_variance : float, optional</span>
+<span class="sd">        White-noise variance :math:`\sigma_w^2`. Default is ``5e-6``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NDArray[np.float64]</span>
+<span class="sd">        If ``n_samples == 1``, a 1-D array of length ``len(time_list)``.</span>
+<span class="sd">        Otherwise, a 2-D array of shape ``(n_samples, len(time_list))``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function builds the dense covariance matrix and is therefore</span>
+<span class="sd">    :math:`O(N^2)` in memory and :math:`O(N^3)` in compute due to the</span>
+<span class="sd">    Cholesky decomposition inside ``np.random.multivariate_normal``.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lags</span> <span class="o">=</span> <span class="n">lag_list</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
+    <span class="n">corr_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">flicker_corr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">var_w</span><span class="o">=</span><span class="n">white_n_variance</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">lags</span><span class="p">]</span>
+    <span class="n">covmat</span> <span class="o">=</span> <span class="n">toeplitz</span><span class="p">(</span><span class="n">corr_list</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_samples</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">time_list</span><span class="p">),</span> <span class="n">covmat</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">time_list</span><span class="p">),</span> <span class="n">covmat</span><span class="p">,</span> <span class="n">n_samples</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="flicker_cov_general">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_general">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flicker_cov_general</span><span class="p">(</span>
+    <span class="n">time_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="n">f0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">fc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">white_n_variance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5e-6</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Construct the full covariance matrix for arbitrary (non-consecutive) time stamps.</span>
+
+<span class="sd">    Unlike :func:`flicker_cov`, which assumes evenly-spaced times and builds</span>
+<span class="sd">    a Toeplitz matrix from the first-row correlation vector, this function</span>
+<span class="sd">    computes all pairwise time differences and evaluates the correlation</span>
+<span class="sd">    function at each unique lag.  The result is a general symmetric positive-</span>
+<span class="sd">    definite matrix suitable for flagged / non-contiguous time samples.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    time_list : NDArray[np.floating]</span>
+<span class="sd">        Observation time stamps (seconds), not necessarily evenly spaced.</span>
+<span class="sd">    f0 : float</span>
+<span class="sd">        Knee angular frequency :math:`\omega_0` (rad/s).</span>
+<span class="sd">    fc : float</span>
+<span class="sd">        Cutoff angular frequency :math:`\omega_c` (rad/s).</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Spectral index (:math:`\alpha &gt; 1`).</span>
+<span class="sd">    white_n_variance : float, optional</span>
+<span class="sd">        White-noise variance :math:`\sigma_w^2` added to the diagonal.</span>
+<span class="sd">        Default is ``5e-6``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NDArray[np.float64]</span>
+<span class="sd">        Full :math:`N \times N` covariance matrix.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For consecutive (evenly-spaced) time stamps, prefer :func:`flicker_cov`</span>
+<span class="sd">    which exploits the Toeplitz structure for faster evaluation.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">time_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">time_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
+
+    <span class="c1"># All pairwise absolute time differences</span>
+    <span class="n">tau_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">time_list</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">time_list</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+
+    <span class="c1"># Find unique non-zero lags and evaluate correlation once</span>
+    <span class="n">unique_taus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">tau_matrix</span><span class="p">)</span>
+    <span class="n">unique_taus</span> <span class="o">=</span> <span class="n">unique_taus</span><span class="p">[</span><span class="n">unique_taus</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_taus</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">corr_values</span> <span class="o">=</span> <span class="n">flicker_corr_vec</span><span class="p">(</span><span class="n">unique_taus</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="c1"># Build a lookup: tau -&gt; correlation value</span>
+        <span class="n">tau_to_corr</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">unique_taus</span><span class="p">,</span> <span class="n">corr_values</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tau_to_corr</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Zero-lag value</span>
+    <span class="n">c0</span> <span class="o">=</span> <span class="n">fc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">f0</span> <span class="o">/</span> <span class="n">fc</span><span class="p">)</span> <span class="o">**</span> <span class="n">alpha</span> <span class="o">/</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">white_n_variance</span>
+
+    <span class="c1"># Assemble the matrix</span>
+    <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">cov</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">c0</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">tau_to_corr</span><span class="p">[</span><span class="n">tau_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]]</span>
+            <span class="n">cov</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="n">cov</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="k">return</span> <span class="n">cov</span></div>
+
+
+
+<div class="viewcode-block" id="FNoise_traditional">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.FNoise_traditional">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FNoise_traditional</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Traditional :math:`1/f^\alpha` noise generator using FFT filtering.</span>
+
+<span class="sd">    Generates time-domain noise realisations by shaping white noise in the</span>
+<span class="sd">    Fourier domain with a :math:`1/f^\alpha` power spectral density (PSD).</span>
+<span class="sd">    The white-noise variance is set by the radiometer equation:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \sigma^2 = \frac{1}{\Delta t \, \Delta\nu}</span>
+
+<span class="sd">    where :math:`\Delta t` is the integration time and :math:`\Delta\nu`</span>
+<span class="sd">    is the frequency channel width.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Spectral index of the :math:`1/f^\alpha` noise.</span>
+<span class="sd">    dtime : float, optional</span>
+<span class="sd">        Sampling / integration time per data point (seconds). Default is ``2``.</span>
+<span class="sd">    dnu : float, optional</span>
+<span class="sd">        Frequency channel width (Hz). Default is ``2e5``.</span>
+<span class="sd">    fknee : float, optional</span>
+<span class="sd">        Knee angular frequency :math:`\omega_{\mathrm{knee}} = 2\pi f_{\mathrm{knee}}`</span>
+<span class="sd">        (rad/s). Default is ``0.001``.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sigma_2 : float</span>
+<span class="sd">        White-noise variance :math:`1/(\Delta t \, \Delta\nu)`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">dtime</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">dnu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e5</span><span class="p">,</span>
+        <span class="n">fknee</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtime</span> <span class="o">=</span> <span class="n">dtime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fknee</span> <span class="o">=</span> <span class="n">fknee</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma_2</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">dtime</span> <span class="o">*</span> <span class="n">dnu</span><span class="p">)</span>  <span class="c1"># dtime is also the integration time.</span>
+
+<div class="viewcode-block" id="FNoise_traditional.generate">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.FNoise_traditional.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntime</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate a single realisation of :math:`1/f^\alpha` noise.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ntime : int</span>
+<span class="sd">            Number of time samples.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NDArray[np.float64]</span>
+<span class="sd">            Time-domain noise array of length *ntime*.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The procedure is:</span>
+
+<span class="sd">        1. Compute the FFT frequency axis and convert to angular frequency.</span>
+<span class="sd">        2. Build the PSD filter :math:`\sqrt{(\omega_{\mathrm{knee}}/|\omega|)^\alpha}`.</span>
+<span class="sd">        3. Generate white noise, FFT, multiply by the filter, and IFFT.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Frequency axis for the rFFT</span>
+        <span class="n">freqs</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">ntime</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="p">)</span>  <span class="c1"># Note that fftfreq is not in unit of angular frequency.</span>
+        <span class="n">freqs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>  <span class="c1"># Avoid division by zero at f=0</span>
+
+        <span class="c1"># Define the power spectrum scaling as 1/f^alpha plus white noise</span>
+        <span class="n">psd_sqrt</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fknee</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">freqs</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="p">)</span>  <span class="c1"># + 1  # Adding white noise component</span>
+
+        <span class="c1"># Generate random white noise</span>
+        <span class="n">white_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">freqs</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma_2</span><span class="p">)</span>
+        <span class="n">white_noise_fft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">white_noise</span><span class="p">)</span>
+
+        <span class="c1"># Weight the white noise by the power spectrum</span>
+        <span class="n">weighted_noise_fft</span> <span class="o">=</span> <span class="n">white_noise_fft</span> <span class="o">*</span> <span class="n">psd_sqrt</span>
+
+        <span class="c1"># Transform back to the time domain using irfft</span>
+        <span class="n">time_series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">weighted_noise_fft</span><span class="p">)</span>
+
+        <span class="c1"># Normalize the time series</span>
+        <span class="k">return</span> <span class="n">time_series</span><span class="o">.</span><span class="n">real</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="FlickerCorrEmulator">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FlickerCorrEmulator</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Polynomial emulator for the flicker-noise correlation function.</span>
+
+<span class="sd">    Trains a :class:`MomentEmu.PolyEmu` polynomial emulator to approximate</span>
+<span class="sd">    :func:`flicker_cov_vec` as a function of the spectral index</span>
+<span class="sd">    :math:`\alpha`, enabling fast evaluation without repeated numerical</span>
+<span class="sd">    integration.</span>
+
+<span class="sd">    The emulator is split into two parts:</span>
+
+<span class="sd">    * **Auto-correlation** (small lags, indices ``0:5``): emulates</span>
+<span class="sd">      :math:`\ln C(\tau)` to preserve positivity.</span>
+<span class="sd">    * **Cross-correlation** (remaining lags): emulates :math:`C(\tau)`</span>
+<span class="sd">      directly.</span>
+
+<span class="sd">    Scaling with :math:`\omega_0` is handled analytically:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        C(\tau;\,\omega_0,\alpha)</span>
+<span class="sd">        = 10^{(\log_{10}\omega_0 - \log_{10}\omega_0^{\mathrm{ref}})\,\alpha}</span>
+<span class="sd">          \; C(\tau;\,\omega_0^{\mathrm{ref}},\alpha)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logfc : float</span>
+<span class="sd">        Log10 of the cutoff angular frequency :math:`\log_{10}\omega_c`.</span>
+<span class="sd">    tau_list : NDArray[np.floating]</span>
+<span class="sd">        Array of time lags (seconds), starting with zero.</span>
+<span class="sd">    wnoise_var : float, optional</span>
+<span class="sd">        White-noise variance added at zero lag. Default is ``2.5e-6``.</span>
+<span class="sd">    alpha_training : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Training values of :math:`\alpha`. Default generates 3000 points</span>
+<span class="sd">        linearly spaced in ``[1.1, 4]``.</span>
+<span class="sd">    corr_training : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Pre-computed training correlation vectors. If ``None``, computed</span>
+<span class="sd">        from *alpha_training* via :func:`flicker_cov_vec`.</span>
+<span class="sd">    alpha_test : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Test values of :math:`\alpha`. Default generates 500 uniform</span>
+<span class="sd">        random points in ``[1.1, 4]``.</span>
+<span class="sd">    corr_test : NDArray[np.floating] or None, optional</span>
+<span class="sd">        Pre-computed test correlation vectors.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ref_logf0 : float</span>
+<span class="sd">        Reference :math:`\log_{10}\omega_0` used for training (``-4.0``).</span>
+<span class="sd">    lag_emulator : PolyEmu</span>
+<span class="sd">        Emulator for lags with index &gt;= 5.</span>
+<span class="sd">    auto_emulator : PolyEmu</span>
+<span class="sd">        Emulator for lags with index &lt; 5 (log-space).</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">logfc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">tau_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+        <span class="n">wnoise_var</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.5e-6</span><span class="p">,</span>
+        <span class="n">alpha_training</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">corr_training</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">alpha_test</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">corr_test</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref_logf0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">4.0</span>  <span class="c1"># Reference logf0 for the emulator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wnoise_var</span> <span class="o">=</span> <span class="n">wnoise_var</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logfc</span> <span class="o">=</span> <span class="n">logfc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_list</span> <span class="o">=</span> <span class="n">tau_list</span>
+
+        <span class="c1"># Generate training data</span>
+        <span class="k">if</span> <span class="n">alpha_training</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">alpha_training</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3000</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">corr_training</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">corr_training</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">flicker_cov_vec</span><span class="p">(</span>
+                        <span class="n">tau_list</span><span class="p">,</span>
+                        <span class="mf">10.0</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">ref_logf0</span><span class="p">,</span>
+                        <span class="mf">10.0</span><span class="o">**</span><span class="n">logfc</span><span class="p">,</span>
+                        <span class="n">alpha</span><span class="p">,</span>
+                        <span class="n">white_n_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">alpha_training</span><span class="p">)</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">alpha_test</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">alpha_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">corr_test</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">corr_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">flicker_cov_vec</span><span class="p">(</span>
+                        <span class="n">tau_list</span><span class="p">,</span>
+                        <span class="mf">10.0</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">ref_logf0</span><span class="p">,</span>
+                        <span class="mf">10.0</span><span class="o">**</span><span class="n">logfc</span><span class="p">,</span>
+                        <span class="n">alpha</span><span class="p">,</span>
+                        <span class="n">white_n_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">alpha_test</span><span class="p">)</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Train the emulator</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">MomentEmu</span><span class="w"> </span><span class="kn">import</span> <span class="n">PolyEmu</span>
+
+        <span class="n">ind</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Index separating lag=0 and lag&gt;0</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training emulator for lag&gt;0 ...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lag_emulator</span> <span class="o">=</span> <span class="n">PolyEmu</span><span class="p">(</span>
+            <span class="n">alpha_training</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">corr_training</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">:],</span>
+            <span class="n">X_test</span><span class="o">=</span><span class="n">alpha_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">Y_test</span><span class="o">=</span><span class="n">corr_test</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">:],</span>
+            <span class="n">RMSE_upper</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span>
+            <span class="n">RMSE_lower</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span>
+            <span class="n">fRMSE_tol</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+            <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">backward</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">max_degree_forward</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+            <span class="n">return_max_frac_err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training emulator for lag=0 ...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_emulator</span> <span class="o">=</span> <span class="n">PolyEmu</span><span class="p">(</span>
+            <span class="n">alpha_training</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">corr_training</span><span class="p">[:,</span> <span class="p">:</span><span class="n">ind</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ind</span><span class="p">),</span>
+            <span class="n">X_test</span><span class="o">=</span><span class="n">alpha_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">Y_test</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">corr_test</span><span class="p">[:,</span> <span class="p">:</span><span class="n">ind</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ind</span><span class="p">),</span>
+            <span class="n">RMSE_upper</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span>
+            <span class="n">RMSE_lower</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>
+            <span class="n">fRMSE_tol</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span>
+            <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">backward</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">max_degree_forward</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+            <span class="n">return_max_frac_err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">logf0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">indices</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">intp</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Emulate the flicker correlation vector for given noise parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        logf0 : float</span>
+<span class="sd">            Log10 of the knee angular frequency :math:`\log_{10}\omega_0`.</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Spectral index.</span>
+<span class="sd">        indices : NDArray[np.intp] or None, optional</span>
+<span class="sd">            If provided, return only the correlation values at these lag</span>
+<span class="sd">            indices. Default is ``None`` (return the full vector).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NDArray[np.float64]</span>
+<span class="sd">            Emulated correlation vector (or subset if *indices* is given).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">correction_factor</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">((</span><span class="n">logf0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_logf0</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">corr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auto_emulator</span><span class="o">.</span><span class="n">forward_emulator</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">alpha</span><span class="p">]))),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lag_emulator</span><span class="o">.</span><span class="n">forward_emulator</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">alpha</span><span class="p">])),</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">corr</span> <span class="o">*</span> <span class="n">correction_factor</span>
+        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wnoise_var</span>  <span class="c1"># Add white noise variance to the first element</span>
+        <span class="k">if</span> <span class="n">indices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+
+<div class="viewcode-block" id="FlickerCorrEmulator.create_jax">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator.create_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a JAX-autodifferentiable version of the emulator.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Callable</span>
+<span class="sd">            A JAX-compatible function with signature</span>
+<span class="sd">            ``(logf0, alpha, indices=None) -&gt; jnp.ndarray``.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Requires JAX and ``MomentEmu.jax_momentemu``. The returned function</span>
+<span class="sd">        is suitable for use with ``jax.jit`` and ``jax.grad``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get the JAX version of the emulators&quot;</span><span class="p">)</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">MomentEmu.jax_momentemu</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_jax_emulator</span>
+
+        <span class="n">lag_emulator_jax</span> <span class="o">=</span> <span class="n">create_jax_emulator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lag_emulator</span><span class="p">)</span>
+        <span class="n">auto_emulator_jax</span> <span class="o">=</span> <span class="n">create_jax_emulator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auto_emulator</span><span class="p">)</span>
+        <span class="n">wn_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wnoise_var</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">jax_emu</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="n">correction_factor</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">((</span><span class="n">logf0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_logf0</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">)</span>
+
+            <span class="c1"># Get emulator outputs (these need to be JAX-compatible)</span>
+            <span class="n">auto_output</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">auto_emulator_jax</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span>
+            <span class="n">lag_output</span> <span class="o">=</span> <span class="n">lag_emulator_jax</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+
+            <span class="n">corr</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">auto_output</span><span class="p">,</span> <span class="n">lag_output</span><span class="p">])</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">corr</span> <span class="o">*</span> <span class="n">correction_factor</span>
+
+            <span class="c1"># Add white noise variance to the first element</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">wn_var</span><span class="p">)</span>
+
+            <span class="c1"># Handle indices selection</span>
+            <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">indices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">jax_emu</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LogDetEmulator">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.LogDetEmulator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LogDetEmulator</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Polynomial emulator for the log-determinant of the flicker covariance.</span>
+
+<span class="sd">    Trains a :class:`MomentEmu.PolyEmu` emulator to approximate</span>
+<span class="sd">    :math:`\ln\det\mathbf{C}(\log_{10}\omega_0, \alpha)`, enabling fast</span>
+<span class="sd">    evaluation of the Gaussian log-likelihood normalisation term during</span>
+<span class="sd">    MCMC sampling.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params_list : NDArray[np.floating]</span>
+<span class="sd">        Training parameter array of shape ``(n_train, 2)`` with columns</span>
+<span class="sd">        ``[logf0, alpha]``.</span>
+<span class="sd">    log_det_list : NDArray[np.floating]</span>
+<span class="sd">        Corresponding log-determinant values, shape ``(n_train, 1)``.</span>
+<span class="sd">    X_test : NDArray[np.floating]</span>
+<span class="sd">        Test parameter array, shape ``(n_test, 2)``.</span>
+<span class="sd">    Y_test : NDArray[np.floating]</span>
+<span class="sd">        Test log-determinant values, shape ``(n_test, 1)``.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Zhang et al. (2026), RASTI, rzag024.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">params_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+        <span class="n">log_det_list</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+        <span class="n">X_test</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+        <span class="n">Y_test</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">MomentEmu</span><span class="w"> </span><span class="kn">import</span> <span class="n">PolyEmu</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_det_emulator</span> <span class="o">=</span> <span class="n">PolyEmu</span><span class="p">(</span>
+            <span class="n">params_list</span><span class="p">,</span>
+            <span class="n">log_det_list</span><span class="p">,</span>
+            <span class="n">X_test</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span>
+            <span class="n">Y_test</span><span class="o">=</span><span class="n">Y_test</span><span class="p">,</span>
+            <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">backward</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">max_degree_forward</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+            <span class="n">RMSE_upper</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span>
+            <span class="n">RMSE_lower</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>
+            <span class="n">fRMSE_tol</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span>
+            <span class="n">return_max_frac_err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">logf0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the emulated log-determinant.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        logf0 : float</span>
+<span class="sd">            Log10 of the knee angular frequency.</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Spectral index.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NDArray[np.float64]</span>
+<span class="sd">            Emulated :math:`\\ln\\det\\mathbf{C}` value(s).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_det_emulator</span><span class="o">.</span><span class="n">forward_emulator</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">]]))</span>
+
+<div class="viewcode-block" id="LogDetEmulator.create_jax">
+<a class="viewcode-back" href="../../api/flicker_model.html#hydra_tod.flicker_model.LogDetEmulator.create_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a JAX-autodifferentiable version of the log-det emulator.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Callable</span>
+<span class="sd">            A JAX-compatible function with signature</span>
+<span class="sd">            ``(logf0, alpha) -&gt; jnp.ndarray``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get the JAX version of the log-det emulator&quot;</span><span class="p">)</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">MomentEmu.jax_momentemu</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_jax_emulator</span>
+
+        <span class="n">log_det_emulator_jax</span> <span class="o">=</span> <span class="n">create_jax_emulator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_det_emulator</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">jax_emu</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">log_det_emulator_jax</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="n">jax_emu</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025-2026, Zheng Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
