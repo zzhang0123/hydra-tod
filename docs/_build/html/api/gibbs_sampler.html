@@ -54,8 +54,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">1. Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-full-gibbs-sampler">2. Running the Full Gibbs Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#inspecting-posterior-samples">3. Inspecting Posterior Samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#using-sub-samplers-directly">4. Using Sub-samplers Directly</a></li>
 </ul>
 </li>
 </ul>
@@ -89,80 +91,46 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="simulation.html">Simulation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#module-hydra_tod.simulation">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Gibbs Sampler</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-hydra_tod.full_Gibbs_sampler">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="flicker_model.html">Flicker Noise Model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov_general"><code class="docutils literal notranslate"><span class="pre">flicker_cov_general()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#covariance-path-selection">Covariance path selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#emulator-classes">Emulator classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#module-hydra_tod.flicker_model">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="samplers.html">Parameter Samplers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#gain-sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#system-temperature-sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#noise-sampler-fixed-cutoff">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#noise-sampler-legacy">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#mcmc-sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#nuts-sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#local-parameter-sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#bayesian-utilities">Bayesian Utilities</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="linear_algebra.html">Linear Algebra</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#linear-solvers">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#linear-sampler">Linear Sampler</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="utilities.html#module-hydra_tod.utils">General Utilities</a></li>
-<li class="toctree-l3"><a class="reference internal" href="utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html#general-utilities">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html#mpi-utilities">MPI Utilities</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="diagnostics.html">MCMC Diagnostics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#module-hydra_tod.mcmc_diagnostics">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="visualization.html">Visualization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#module-hydra_tod.visualisation">API Reference</a></li>
 </ul>
 </li>
 </ul>
@@ -209,8 +177,115 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-hydra_tod.full_Gibbs_sampler">
-<span id="gibbs-sampler"></span><h1>Gibbs Sampler<a class="headerlink" href="#module-hydra_tod.full_Gibbs_sampler" title="Link to this heading"></a></h1>
+  <section id="gibbs-sampler">
+<h1>Gibbs Sampler<a class="headerlink" href="#gibbs-sampler" title="Link to this heading"></a></h1>
+<p><a class="reference internal" href="#module-hydra_tod.full_Gibbs_sampler" title="hydra_tod.full_Gibbs_sampler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">hydra_tod.full_Gibbs_sampler</span></code></a> is the top-level entry point for
+Bayesian joint calibration and map-making.  It orchestrates four
+conditionally conjugate sampling steps that alternate until the Markov
+chain converges:</p>
+<ol class="arabic simple">
+<li><p><strong>Gain</strong> — draws smooth polynomial gain coefficients for each TOD
+independently (see <a class="reference internal" href="samplers.html#module-hydra_tod.gain_sampler" title="hydra_tod.gain_sampler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gain_sampler</span></code></a>).</p></li>
+<li><p><strong>Local temperatures</strong> — draws receiver-noise and noise-diode
+coefficients for each TOD independently
+(see <a class="reference internal" href="samplers.html#module-hydra_tod.tsys_sampler" title="hydra_tod.tsys_sampler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tsys_sampler</span></code></a>).</p></li>
+<li><p><strong>Noise parameters</strong> — draws <span class="math notranslate nohighlight">\((\log f_0, \alpha)\)</span> for each TOD
+independently via MCMC or NUTS
+(see <a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_fixed_fc" title="hydra_tod.noise_sampler_fixed_fc"><code class="xref py py-mod docutils literal notranslate"><span class="pre">noise_sampler_fixed_fc</span></code></a>).</p></li>
+<li><p><strong>Sky temperature</strong> — draws shared celestial pixel temperatures
+jointly across all TODs, synchronised over MPI ranks
+(see <a class="reference internal" href="samplers.html#module-hydra_tod.tsys_sampler" title="hydra_tod.tsys_sampler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tsys_sampler</span></code></a>).</p></li>
+</ol>
+<p>Steps 1–3 are independent per TOD and are parallelised across MPI ranks
+(one or more TODs per rank).  Step 4 uses an <code class="docutils literal notranslate"><span class="pre">MPI_Allreduce</span></code> over
+accumulated normal equations, so all ranks must call it collectively.</p>
+<p><a class="reference internal" href="#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler" title="hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="xref py py-func docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a> accepts its
+many arguments in four conceptual groups:</p>
+<ul class="simple">
+<li><p><strong>Data</strong> — <code class="docutils literal notranslate"><span class="pre">local_TOD_list</span></code>, <code class="docutils literal notranslate"><span class="pre">local_t_lists</span></code></p></li>
+<li><p><strong>Operators</strong> — <code class="docutils literal notranslate"><span class="pre">local_gain_operator_list</span></code>,
+<code class="docutils literal notranslate"><span class="pre">local_Tsky_operator_list</span></code>, <code class="docutils literal notranslate"><span class="pre">local_Tloc_operator_list</span></code></p></li>
+<li><p><strong>Priors</strong> — <code class="docutils literal notranslate"><span class="pre">prior_cov_inv_*</span></code>, <code class="docutils literal notranslate"><span class="pre">prior_mean_*</span></code></p></li>
+<li><p><strong>Config</strong> — <code class="docutils literal notranslate"><span class="pre">n_samples</span></code>, <code class="docutils literal notranslate"><span class="pre">gain_model</span></code>, <code class="docutils literal notranslate"><span class="pre">sampler</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Est_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">jeffreys</span></code>, <code class="docutils literal notranslate"><span class="pre">bounds</span></code>, solver tolerances</p></li>
+</ul>
+<p>For a working end-to-end example, see the <a class="reference internal" href="../quickstart.html"><span class="doc">Quick Start</span></a> page and
+the tutorial notebooks in the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> directory.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="samplers.html"><span class="doc">Parameter Samplers</span></a> — individual Gibbs step modules.
+<a class="reference internal" href="simulation.html"><span class="doc">Simulation</span></a> — generating synthetic TOD for input.
+<a class="reference internal" href="../quickstart.html"><span class="doc">Quick Start</span></a> — annotated end-to-end example.</p>
+</div>
+<section id="module-hydra_tod.full_Gibbs_sampler">
+<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-hydra_tod.full_Gibbs_sampler" title="Link to this heading"></a></h2>
+<p>Full Gibbs sampler orchestrating joint inference over all model parameters.</p>
+<p>This module is the top-level entry point for Bayesian calibration and
+map-making.  It implements the iterative Gibbs sampling loop described in
+Zhang et al. (2026), alternating between four conditionally conjugate steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Gain sampling</strong> — draws smooth gain coefficients <span class="math notranslate nohighlight">\(\mathbf{p}_g\)</span>
+conditioned on current system temperature and noise parameters, using an
+iterative generalised least-squares (GLS) scheme.</p></li>
+<li><p><strong>Local temperature sampling</strong> — draws receiver/noise-diode coefficients
+<span class="math notranslate nohighlight">\(\mathbf{p}_{\rm loc}\)</span> for each TOD independently.</p></li>
+<li><p><strong>Noise parameter sampling</strong> — draws <span class="math notranslate nohighlight">\((\log f_0, \alpha)\)</span> for each
+TOD using MCMC (emcee) or NUTS (NumPyro/JAX).</p></li>
+<li><p><strong>Sky temperature sampling</strong> — draws shared celestial parameters
+<span class="math notranslate nohighlight">\(\mathbf{p}_{\rm sky}\)</span> jointly from all TODs via an MPI
+<code class="docutils literal notranslate"><span class="pre">Allreduce</span></code> over the normal equations.</p></li>
+</ol>
+<p>Steps 1–3 are independent per TOD and run in parallel across MPI ranks.
+Step 4 synchronises across ranks.</p>
+<section id="public-api">
+<h3>Public API<a class="headerlink" href="#public-api" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>get_Tsys_operator</dt><dd><p>Assemble the combined sky + local temperature projection matrix.</p>
+</dd>
+<dt>TOD_Gibbs_sampler</dt><dd><p>Run the full Gibbs sampler and return posterior samples.</p>
+</dd>
+</dl>
+</section>
+<section id="typical-usage">
+<h3>Typical usage<a class="headerlink" href="#typical-usage" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hydra_tod.full_Gibbs_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">TOD_Gibbs_sampler</span>
+
+<span class="n">Tsky_samples</span><span class="p">,</span> <span class="n">gain_samples</span><span class="p">,</span> <span class="n">noise_samples</span><span class="p">,</span> <span class="n">Tloc_samples</span> <span class="o">=</span> <span class="n">TOD_Gibbs_sampler</span><span class="p">(</span>
+    <span class="n">local_TOD_list</span><span class="o">=</span><span class="p">[</span><span class="n">tod</span><span class="p">],</span>
+    <span class="n">local_t_lists</span><span class="o">=</span><span class="p">[</span><span class="n">t_list</span><span class="p">],</span>
+    <span class="n">local_gain_operator_list</span><span class="o">=</span><span class="p">[</span><span class="n">gain_proj</span><span class="p">],</span>
+    <span class="n">local_Tsky_operator_list</span><span class="o">=</span><span class="p">[</span><span class="n">Tsky_proj</span><span class="p">],</span>
+    <span class="n">local_Tloc_operator_list</span><span class="o">=</span><span class="p">[</span><span class="n">Tloc_proj</span><span class="p">],</span>
+    <span class="n">init_Tsky_params</span><span class="o">=</span><span class="n">init_sky</span><span class="p">,</span>
+    <span class="n">init_Tloc_params_list</span><span class="o">=</span><span class="p">[</span><span class="n">init_loc</span><span class="p">],</span>
+    <span class="n">init_noise_params_list</span><span class="o">=</span><span class="p">[[</span><span class="n">logf0_init</span><span class="p">,</span> <span class="n">alpha_init</span><span class="p">]],</span>
+    <span class="n">local_logfc_list</span><span class="o">=</span><span class="p">[</span><span class="n">logfc</span><span class="p">],</span>
+    <span class="n">n_samples</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Parameters are grouped as:</p>
+<ul class="simple">
+<li><p><strong>Data</strong> — <code class="docutils literal notranslate"><span class="pre">local_TOD_list</span></code>, <code class="docutils literal notranslate"><span class="pre">local_t_lists</span></code></p></li>
+<li><p><strong>Operators</strong> — <code class="docutils literal notranslate"><span class="pre">local_gain_operator_list</span></code>, <code class="docutils literal notranslate"><span class="pre">local_Tsky_operator_list</span></code>,
+<code class="docutils literal notranslate"><span class="pre">local_Tloc_operator_list</span></code></p></li>
+<li><p><strong>Priors</strong> — <code class="docutils literal notranslate"><span class="pre">prior_cov_inv_*</span></code>, <code class="docutils literal notranslate"><span class="pre">prior_mean_*</span></code></p></li>
+<li><p><strong>Config</strong> — <code class="docutils literal notranslate"><span class="pre">n_samples</span></code>, <code class="docutils literal notranslate"><span class="pre">gain_model</span></code>, <code class="docutils literal notranslate"><span class="pre">sampler</span></code>, <code class="docutils literal notranslate"><span class="pre">Est_mode</span></code>, etc.</p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="samplers.html#module-hydra_tod.gain_sampler" title="hydra_tod.gain_sampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hydra_tod.gain_sampler</span></code></a></dt><dd><p>Individual gain Gibbs step.</p>
+</dd>
+<dt><a class="reference internal" href="samplers.html#module-hydra_tod.tsys_sampler" title="hydra_tod.tsys_sampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hydra_tod.tsys_sampler</span></code></a></dt><dd><p>Individual system-temperature Gibbs step.</p>
+</dd>
+<dt><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_fixed_fc" title="hydra_tod.noise_sampler_fixed_fc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hydra_tod.noise_sampler_fixed_fc</span></code></a></dt><dd><p>Preferred noise-parameter Gibbs step.</p>
+</dd>
+<dt><a class="reference internal" href="simulation.html#module-hydra_tod.simulation" title="hydra_tod.simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hydra_tod.simulation</span></code></a></dt><dd><p>Generating synthetic TOD for testing.</p>
+</dd>
+</dl>
+</div>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="hydra_tod.full_Gibbs_sampler.get_Tsys_operator">
 <span class="sig-prename descclassname"><span class="pre">hydra_tod.full_Gibbs_sampler.</span></span><span class="sig-name descname"><span class="pre">get_Tsys_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_Tsky_operator_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_Tloc_operator_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/full_Gibbs_sampler.html#get_Tsys_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.full_Gibbs_sampler.get_Tsys_operator" title="Link to this definition"></a></dt>
@@ -540,6 +615,7 @@ the receiver temperature coefficients.</p></li>
 </div>
 </dd></dl>
 
+</section>
 </section>
 
 

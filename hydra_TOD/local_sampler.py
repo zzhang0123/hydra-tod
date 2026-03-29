@@ -101,6 +101,11 @@ def log_likelihood(
 
     d_vec = data / gains / (Tsys_loc + Tsys_nd + Tsys_sky) - 1.0
 
+    if flicker_cov_jax is None:
+        raise RuntimeError(
+            "Flicker covariance emulator not loaded. "
+            "local_sampler requires the .pkl emulator files."
+        )
     corr_list = flicker_cov_jax(logf0, alpha)[0]
 
     n = len(d_vec)

@@ -1,3 +1,63 @@
+"""Gibbs-sampling step for system-temperature (sky + local) parameters.
+
+This module draws posterior samples of the system-temperature coefficient
+vector conditioned on the current gain and noise parameters.  It handles
+both single-TOD and MPI-distributed multi-TOD inference.
+
+The two main entry points are:
+
+:func:`Tsys_coeff_sampler`
+    Single-TOD sampler.  Takes one TOD, its gain vector, and the combined
+    sky + local projection matrix, and returns a posterior sample of the
+    coefficient vector :math:`\\mathbf{p}` in
+    :math:`\\mathbf{T}_{\\rm sys} = \\mathbf{A}\\,\\mathbf{p}`.
+
+:func:`Tsys_sampler_multi_TODs`
+    Multi-TOD MPI sampler.  Each MPI rank holds a list of TODs; the
+    function accumulates normal-equation contributions via ``MPI_Allreduce``
+    and jointly samples the shared sky parameters while keeping local
+    temperature parameters rank-local.
+
+Both functions use the iterative GLS scheme from
+:mod:`~hydra_tod.linear_sampler` to handle the heteroskedastic
+multiplicative noise model (noise variance scales with
+:math:`T_{\\rm sys}^2`).
+
+Key parameters
+--------------
+``noise_params``
+    Tuple ``(logf0, alpha)`` or ``(logf0, logfc, alpha)``; the function
+    extracts the required elements automatically.
+``Est_mode``
+    If ``True``, return the MAP estimate instead of drawing a sample
+    (faster; useful for burn-in or debugging).
+``prior_cov_inv``
+    ``1-D`` array for diagonal prior, or ``2-D`` for full covariance.
+    Pass ``None`` for an uninformative prior.
+
+Typical usage
+-------------
+.. code-block:: python
+
+    from hydra_tod.tsys_sampler import Tsys_sampler_multi_TODs
+
+    Tsys_params = Tsys_sampler_multi_TODs(
+        local_data_list=[tod1, tod2],
+        local_t_list=[t1, t2],
+        local_gain_list=[gains1, gains2],
+        local_Tsys_proj_list=[proj1, proj2],
+        local_Noise_params_list=[(logf0, alpha), (logf0, alpha)],
+        local_logfc_list=[logfc, logfc],
+        prior_cov_inv=prior_cov_inv_tsys,
+        prior_mean=prior_mean_tsys,
+    )
+
+See Also
+--------
+hydra_tod.gain_sampler : Gain Gibbs step.
+hydra_tod.linear_sampler : Underlying GLS and Gaussian sampling machinery.
+hydra_tod.full_Gibbs_sampler : Orchestrates all Gibbs steps.
+"""
 from __future__ import annotations
 
 import numpy as np

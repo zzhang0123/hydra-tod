@@ -1,3 +1,74 @@
+"""Simulated MeerKAT-like time-ordered data for testing and validation.
+
+This module generates synthetic TOD that replicate MeerKLASS single-dish
+observations (Zhang et al. 2026).  It is used throughout the test suite
+and the tutorial notebooks to produce ground-truth data for the Gibbs
+sampler.
+
+The simulation pipeline is:
+
+1. **Scan pattern** — raster scan in azimuth at fixed elevation, converted
+   to equatorial (RA, Dec) via :func:`sim_MeerKAT_scan`.
+2. **Beam + sky** — Gaussian beam convolved with a HEALPix sky map
+   (GSM diffuse + GLEAM point sources) via :func:`generate_Tsky_proj`.
+3. **Gain** — smooth Legendre polynomial gain with optional DC component.
+4. **Noise** — periodic noise-diode injections plus correlated
+   :math:`1/f` flicker noise from :func:`~hydra_tod.flicker_model.sim_noise`.
+
+Main classes
+------------
+:class:`TODSimulation`
+    Single-scan simulation.  After construction all components are
+    accessible as attributes:
+
+    * ``TOD_setting`` — observed data vector
+    * ``sky_params`` — true sky pixel temperatures
+    * ``gains_setting`` — true gain time series
+    * ``noise_setting`` — true noise realisation
+    * ``time_list`` — observation times
+    * ``gain_proj`` — gain Legendre projection matrix
+    * ``Tsky_operator`` — sky beam projection matrix
+    * ``Tloc_operator`` — local-temperature projection matrix
+    * ``logfc``, ``logf0``, ``alpha`` — true noise parameters
+
+:class:`MultiTODSimulation`
+    Two-scan (setting + rising) simulation combining two
+    :class:`TODSimulation` instances.
+
+Utility functions
+-----------------
+:func:`sim_MeerKAT_scan`
+    Generate an Az/El raster-scan time list and pointing coordinates.
+:func:`stacked_beam_map`
+    Build the HEALPix boolean coverage map for a scan.
+:func:`generate_Tsky_proj`
+    Construct the beam projection matrix :math:`\\mathbf{U}_{\\rm sky}`.
+
+Typical usage
+-------------
+.. code-block:: python
+
+    from hydra_tod.simulation import TODSimulation
+
+    sim = TODSimulation(
+        nside=64,
+        elevation=41.5,
+        freq=750,
+        alpha=2.0,
+        logf0=-4.87,
+        ptsrc_path="gleam_nside512_K_allsky_408MHz.npy",
+    )
+
+    tod   = sim.TOD_setting
+    sky   = sim.sky_params
+    gains = sim.gains_setting
+
+See Also
+--------
+hydra_tod.flicker_model : :func:`~hydra_tod.flicker_model.sim_noise`
+    used internally for noise generation.
+hydra_tod.full_Gibbs_sampler : Consumes the operators produced here.
+"""
 from __future__ import annotations
 
 import numpy as np

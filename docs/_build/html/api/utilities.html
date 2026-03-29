@@ -54,8 +54,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">1. Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-full-gibbs-sampler">2. Running the Full Gibbs Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#inspecting-posterior-samples">3. Inspecting Posterior Samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#using-sub-samplers-directly">4. Using Sub-samplers Directly</a></li>
 </ul>
 </li>
 </ul>
@@ -89,80 +91,46 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="simulation.html">Simulation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#module-hydra_tod.simulation">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="gibbs_sampler.html">Gibbs Sampler</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#module-hydra_tod.full_Gibbs_sampler">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="flicker_model.html">Flicker Noise Model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov_general"><code class="docutils literal notranslate"><span class="pre">flicker_cov_general()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#covariance-path-selection">Covariance path selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#emulator-classes">Emulator classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#module-hydra_tod.flicker_model">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="samplers.html">Parameter Samplers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#gain-sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#system-temperature-sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#noise-sampler-fixed-cutoff">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#noise-sampler-legacy">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#mcmc-sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#nuts-sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#local-parameter-sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#bayesian-utilities">Bayesian Utilities</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="linear_algebra.html">Linear Algebra</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#linear-solvers">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#linear-sampler">Linear Sampler</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Utilities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-hydra_tod.utils">General Utilities</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-utilities">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mpi-utilities">MPI Utilities</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="diagnostics.html">MCMC Diagnostics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#module-hydra_tod.mcmc_diagnostics">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="visualization.html">Visualization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#module-hydra_tod.visualisation">API Reference</a></li>
 </ul>
 </li>
 </ul>
@@ -211,8 +179,101 @@
              
   <section id="utilities">
 <h1>Utilities<a class="headerlink" href="#utilities" title="Link to this heading"></a></h1>
-<section id="module-hydra_tod.utils">
-<span id="general-utilities"></span><h2>General Utilities<a class="headerlink" href="#module-hydra_tod.utils" title="Link to this heading"></a></h2>
+<section id="general-utilities">
+<h2>General Utilities<a class="headerlink" href="#general-utilities" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="#module-hydra_tod.utils" title="hydra_tod.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">hydra_tod.utils</span></code></a> collects low-level numerical routines organised
+into four groups:</p>
+<dl class="simple">
+<dt><strong>Matrix operations</strong></dt><dd><p><a class="reference internal" href="#hydra_tod.utils.cho_compute_mat_inv" title="hydra_tod.utils.cho_compute_mat_inv"><code class="xref py py-func docutils literal notranslate"><span class="pre">cho_compute_mat_inv()</span></code></a> — Cholesky-based inversion
+of symmetric positive-definite matrices (with automatic regularisation
+fallback).  <a class="reference internal" href="#hydra_tod.utils.cho_compute_mat_inv_sqrt" title="hydra_tod.utils.cho_compute_mat_inv_sqrt"><code class="xref py py-func docutils literal notranslate"><span class="pre">cho_compute_mat_inv_sqrt()</span></code></a> — returns
+the inverse Cholesky factor <span class="math notranslate nohighlight">\(L^{-T}\)</span> needed for drawing Gaussian
+samples.</p>
+</dd>
+<dt><strong>Polynomial projections</strong></dt><dd><p><a class="reference internal" href="#hydra_tod.utils.polyn_proj" title="hydra_tod.utils.polyn_proj"><code class="xref py py-class docutils literal notranslate"><span class="pre">polyn_proj</span></code></a> — callable class that stores a
+time list and returns a Legendre polynomial projection matrix on demand.
+Used to build gain and temperature design matrices.</p>
+</dd>
+<dt><strong>Log-likelihood evaluation</strong></dt><dd><p><a class="reference internal" href="#hydra_tod.utils.log_likeli" title="hydra_tod.utils.log_likeli"><code class="xref py py-func docutils literal notranslate"><span class="pre">log_likeli()</span></code></a> — fast <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span>
+Gaussian log-likelihood for Toeplitz covariances via the Levinson
+algorithm.  <a class="reference internal" href="#hydra_tod.utils.log_likeli_general" title="hydra_tod.utils.log_likeli_general"><code class="xref py py-func docutils literal notranslate"><span class="pre">log_likeli_general()</span></code></a> —
+<span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span> Cholesky-based log-likelihood for arbitrary
+symmetric positive-definite covariances (returns <code class="docutils literal notranslate"><span class="pre">-inf</span></code> on failure).
+<a class="reference internal" href="#hydra_tod.utils.log_det_symmetric_toeplitz" title="hydra_tod.utils.log_det_symmetric_toeplitz"><code class="xref py py-func docutils literal notranslate"><span class="pre">log_det_symmetric_toeplitz()</span></code></a> — standalone
+log-determinant for Toeplitz matrices.</p>
+</dd>
+<dt><strong>DFT and miscellaneous</strong></dt><dd><p><a class="reference internal" href="#hydra_tod.utils.DFT_matrix" title="hydra_tod.utils.DFT_matrix"><code class="xref py py-func docutils literal notranslate"><span class="pre">DFT_matrix()</span></code></a>,
+<a class="reference internal" href="#hydra_tod.utils.cov_conjugate" title="hydra_tod.utils.cov_conjugate"><code class="xref py py-func docutils literal notranslate"><span class="pre">cov_conjugate()</span></code></a> — transform covariances between
+time and frequency domains.
+<a class="reference internal" href="#hydra_tod.utils.lag_list" title="hydra_tod.utils.lag_list"><code class="xref py py-func docutils literal notranslate"><span class="pre">lag_list()</span></code></a>,
+<a class="reference internal" href="#hydra_tod.utils.overall_operator" title="hydra_tod.utils.overall_operator"><code class="xref py py-func docutils literal notranslate"><span class="pre">overall_operator()</span></code></a>,
+<a class="reference internal" href="#hydra_tod.utils.linear_model" title="hydra_tod.utils.linear_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">linear_model()</span></code></a>.</p>
+</dd>
+</dl>
+<p id="module-hydra_tod.utils">General-purpose utilities for matrix operations and likelihood evaluation.</p>
+<p>This module collects the low-level numerical building blocks used across
+the rest of the package.  It is organised into four functional groups:</p>
+<dl class="simple">
+<dt><strong>Matrix operations</strong></dt><dd><dl class="simple">
+<dt><a class="reference internal" href="#hydra_tod.utils.cho_compute_mat_inv" title="hydra_tod.utils.cho_compute_mat_inv"><code class="xref py py-func docutils literal notranslate"><span class="pre">cho_compute_mat_inv()</span></code></a></dt><dd><p>Invert a symmetric positive-definite matrix via Cholesky
+factorisation with automatic regularisation fallback.</p>
+</dd>
+<dt><a class="reference internal" href="#hydra_tod.utils.cho_compute_mat_inv_sqrt" title="hydra_tod.utils.cho_compute_mat_inv_sqrt"><code class="xref py py-func docutils literal notranslate"><span class="pre">cho_compute_mat_inv_sqrt()</span></code></a></dt><dd><p>Compute the inverse Cholesky factor <span class="math notranslate nohighlight">\(L^{-T}\)</span> such that
+<span class="math notranslate nohighlight">\(L^{-T} L^{-1} = C^{-1}\)</span>.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Polynomial projections</strong></dt><dd><dl class="simple">
+<dt><a class="reference internal" href="#hydra_tod.utils.polyn_proj" title="hydra_tod.utils.polyn_proj"><code class="xref py py-class docutils literal notranslate"><span class="pre">polyn_proj</span></code></a></dt><dd><p>Callable class storing a time list; returns the Legendre
+projection matrix when called with the number of polynomial
+modes.  Used to build gain and temperature design matrices.</p>
+</dd>
+<dt><a class="reference internal" href="#hydra_tod.utils.Leg_poly_proj" title="hydra_tod.utils.Leg_poly_proj"><code class="xref py py-func docutils literal notranslate"><span class="pre">Leg_poly_proj()</span></code></a></dt><dd><p>Lower-level Legendre matrix builder (rescales to <span class="math notranslate nohighlight">\([-1,1]\)</span>).</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Log-likelihood evaluation</strong></dt><dd><dl class="simple">
+<dt><a class="reference internal" href="#hydra_tod.utils.log_likeli" title="hydra_tod.utils.log_likeli"><code class="xref py py-func docutils literal notranslate"><span class="pre">log_likeli()</span></code></a></dt><dd><p>Gaussian log-likelihood for a symmetric Toeplitz covariance —
+fast <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span> via the Levinson algorithm.</p>
+</dd>
+<dt><a class="reference internal" href="#hydra_tod.utils.log_likeli_general" title="hydra_tod.utils.log_likeli_general"><code class="xref py py-func docutils literal notranslate"><span class="pre">log_likeli_general()</span></code></a></dt><dd><p>Gaussian log-likelihood for a <strong>general</strong> (non-Toeplitz)
+symmetric positive-definite covariance — <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span>
+via Cholesky.  Returns <code class="docutils literal notranslate"><span class="pre">-inf</span></code> for singular or NaN inputs.</p>
+</dd>
+<dt><a class="reference internal" href="#hydra_tod.utils.log_det_symmetric_toeplitz" title="hydra_tod.utils.log_det_symmetric_toeplitz"><code class="xref py py-func docutils literal notranslate"><span class="pre">log_det_symmetric_toeplitz()</span></code></a></dt><dd><p>Log-determinant of a symmetric Toeplitz matrix via Levinson
+reflection coefficients.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>DFT utilities</strong></dt><dd><dl class="simple">
+<dt><a class="reference internal" href="#hydra_tod.utils.DFT_matrix" title="hydra_tod.utils.DFT_matrix"><code class="xref py py-func docutils literal notranslate"><span class="pre">DFT_matrix()</span></code></a></dt><dd><p><span class="math notranslate nohighlight">\(N \times N\)</span> discrete Fourier transform matrix (unitary
+up to a factor of <span class="math notranslate nohighlight">\(N\)</span>).</p>
+</dd>
+<dt><a class="reference internal" href="#hydra_tod.utils.cov_conjugate" title="hydra_tod.utils.cov_conjugate"><code class="xref py py-func docutils literal notranslate"><span class="pre">cov_conjugate()</span></code></a></dt><dd><p>Transform a covariance matrix between time and frequency domains.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Miscellaneous</strong></dt><dd><dl class="simple">
+<dt><a class="reference internal" href="#hydra_tod.utils.lag_list" title="hydra_tod.utils.lag_list"><code class="xref py py-func docutils literal notranslate"><span class="pre">lag_list()</span></code></a></dt><dd><p>Time lags relative to the first sample.</p>
+</dd>
+<dt><a class="reference internal" href="#hydra_tod.utils.overall_operator" title="hydra_tod.utils.overall_operator"><code class="xref py py-func docutils literal notranslate"><span class="pre">overall_operator()</span></code></a></dt><dd><p>Stack projection operators into a single combined matrix.</p>
+</dd>
+<dt><a class="reference internal" href="#hydra_tod.utils.linear_model" title="hydra_tod.utils.linear_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">linear_model()</span></code></a></dt><dd><p>Evaluate <span class="math notranslate nohighlight">\(T_{\rm sys} = \sum_i \mathbf{U}_i \mathbf{p}_i\)</span>.</p>
+</dd>
+<dt><a class="reference internal" href="#hydra_tod.utils.pixel_angular_size" title="hydra_tod.utils.pixel_angular_size"><code class="xref py py-func docutils literal notranslate"><span class="pre">pixel_angular_size()</span></code></a></dt><dd><p>HEALPix pixel angular size in degrees and arcminutes.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="flicker_model.html#module-hydra_tod.flicker_model" title="hydra_tod.flicker_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hydra_tod.flicker_model</span></code></a></dt><dd><p>Produces the covariance first-rows consumed by <a class="reference internal" href="#hydra_tod.utils.log_likeli" title="hydra_tod.utils.log_likeli"><code class="xref py py-func docutils literal notranslate"><span class="pre">log_likeli()</span></code></a> and <a class="reference internal" href="#hydra_tod.utils.log_det_symmetric_toeplitz" title="hydra_tod.utils.log_det_symmetric_toeplitz"><code class="xref py py-func docutils literal notranslate"><span class="pre">log_det_symmetric_toeplitz()</span></code></a>.</p>
+</dd>
+<dt><a class="reference internal" href="linear_algebra.html#module-hydra_tod.linear_sampler" title="hydra_tod.linear_sampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hydra_tod.linear_sampler</span></code></a></dt><dd><p>Uses <a class="reference internal" href="#hydra_tod.utils.cho_compute_mat_inv" title="hydra_tod.utils.cho_compute_mat_inv"><code class="xref py py-func docutils literal notranslate"><span class="pre">cho_compute_mat_inv()</span></code></a> and <a class="reference internal" href="#hydra_tod.utils.cho_compute_mat_inv_sqrt" title="hydra_tod.utils.cho_compute_mat_inv_sqrt"><code class="xref py py-func docutils literal notranslate"><span class="pre">cho_compute_mat_inv_sqrt()</span></code></a>.</p>
+</dd>
+</dl>
+</div>
 <dl class="py function">
 <dt class="sig sig-object py" id="hydra_tod.utils.cho_compute_mat_inv">
 <span class="sig-prename descclassname"><span class="pre">hydra_tod.utils.</span></span><span class="sig-name descname"><span class="pre">cho_compute_mat_inv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ncov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/utils.html#cho_compute_mat_inv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.utils.cho_compute_mat_inv" title="Link to this definition"></a></dt>
@@ -512,9 +573,12 @@ fails (e.g. non-positive-definite matrix).</p>
 </dd></dl>
 
 </section>
-<section id="module-hydra_tod.mpiutil">
-<span id="mpi-utilities"></span><h2>MPI Utilities<a class="headerlink" href="#module-hydra_tod.mpiutil" title="Link to this heading"></a></h2>
-<dl class="py function">
+<section id="mpi-utilities">
+<h2>MPI Utilities<a class="headerlink" href="#mpi-utilities" title="Link to this heading"></a></h2>
+<p>Thin wrappers around <code class="docutils literal notranslate"><span class="pre">mpi4py</span></code> providing package-wide MPI communicator
+objects (<code class="docutils literal notranslate"><span class="pre">world</span></code>, <code class="docutils literal notranslate"><span class="pre">rank</span></code>, <code class="docutils literal notranslate"><span class="pre">rank0</span></code>) and helpers for parallel
+function execution and collective operations used across the pipeline.</p>
+<span class="target" id="module-hydra_tod.mpiutil"></span><dl class="py function">
 <dt class="sig sig-object py" id="hydra_tod.mpiutil.init_mpi">
 <span class="sig-prename descclassname"><span class="pre">hydra_tod.mpiutil.</span></span><span class="sig-name descname"><span class="pre">init_mpi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/hydra_tod/mpiutil.html#init_mpi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.mpiutil.init_mpi" title="Link to this definition"></a></dt>
 <dd><p>Initialise MPI once at module import.</p>

@@ -1,9 +1,92 @@
+"""Gibbs-sampling step for flicker-noise parameters with fixed cutoff frequency.
+
+This is the **preferred** noise-parameter sampler.  It draws posterior
+samples of :math:`(\\log f_0,\\, \\alpha)` — the knee frequency and spectral
+index of the :math:`1/f` noise model — conditioned on the current gain and
+system temperature.
+
+The cutoff frequency :math:`f_c` is treated as fixed (typically set to the
+inverse of the TOD duration) rather than sampled, which avoids the
+gain/noise-scale degeneracy described in Zhang et al. (2026, §2.4).
+
+Architecture
+------------
+The log-likelihood is evaluated via one of two paths, selected at import
+time:
+
+**Emulator path** (preferred)
+    If ``flicker_corr_emulator.pkl`` and ``flicker_logdet_emulator.pkl``
+    are found in the package directory, polynomial emulators
+    (:class:`~hydra_tod.flicker_model.FlickerCorrEmulator` /
+    :class:`~hydra_tod.flicker_model.LogDetEmulator`) are used.  These
+    speed up covariance evaluation by ~1700× compared to the ``mpmath``
+    reference implementation.
+
+**Direct path**
+    Falls back to :func:`~hydra_tod.flicker_model.flicker_cov_vec` if
+    the emulators are unavailable.
+
+MCMC backends
+-------------
+``sampler="emcee"`` (default)
+    Ensemble sampler via the :mod:`hydra_tod.mcmc_sampler` wrapper.
+    Differentiable gradients are *not* required.
+
+``sampler="NUTS"``
+    No-U-Turn Sampler (NumPyro/JAX).  Uses JAX-compatible
+    log-likelihood functions for automatic differentiation.
+
+Non-consecutive time lists
+--------------------------
+Pass ``consecutive=False`` together with the actual ``time_list`` when
+time samples have been flagged or removed (e.g., RFI excision).  The
+Toeplitz fast-path is replaced by the full
+:func:`~hydra_tod.flicker_model.flicker_cov_general` covariance matrix
+and a Cholesky-based log-likelihood.
+
+Public API
+----------
+flicker_sampler
+    High-level dispatcher — **use this function directly**.
+flicker_log_post_JAX
+    Builds a JAX-compatible log-posterior closure (used by NUTS).
+flicker_likeli_func
+    Builds a log-likelihood closure (used by emcee path).
+log_likeli_emu
+    Evaluates the log-likelihood directly (NumPy, non-differentiable).
+log_likeli_emu_jax
+    Evaluates the log-likelihood with JAX (differentiable).
+
+Typical usage
+-------------
+.. code-block:: python
+
+    from hydra_tod.noise_sampler_fixed_fc import flicker_sampler
+
+    noise_sample = flicker_sampler(
+        TOD=tod,
+        gains=gains,
+        Tsys=tsys,
+        init_params=[logf0_init, alpha_init],
+        n_samples=1,
+        jeffreys=True,
+        sampler="emcee",
+        consecutive=True,
+    )
+
+See Also
+--------
+hydra_tod.noise_sampler_old : Legacy emcee-only noise sampler.
+hydra_tod.flicker_model : Analytic correlation and covariance functions.
+hydra_tod.full_Gibbs_sampler : Orchestrates all Gibbs steps.
+"""
 from __future__ import annotations
 
 import numpy as np
 from numpy.typing import NDArray
 from typing import Any, Callable, Optional, Union
 
+from scipy.linalg import solve_toeplitz
 from .utils import lag_list, log_det_symmetric_toeplitz, log_likeli, log_likeli_general
 from .mcmc_sampler import mcmc_sampler
 import jax.numpy as jnp

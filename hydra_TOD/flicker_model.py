@@ -1,3 +1,63 @@
+"""Analytic 1/f flicker-noise covariance model.
+
+This module implements the time-domain flicker-noise correlation function
+derived via the Wiener–Khinchin theorem from the analytic power-spectral
+density (PSD)
+
+.. math::
+
+    P(f) = \\begin{cases} 0, & |f| < f_c, \\\\
+                          (f_0 / |f|)^\\alpha, & |f| \\geq f_c,
+           \\end{cases}
+
+where :math:`f_0` is the knee frequency, :math:`f_c` is the low-frequency
+cutoff (typically the inverse TOD duration), and :math:`\\alpha` is the
+spectral index.  Unlike the conventional DFT-diagonal model, this
+formulation avoids spurious periodic correlations in the time domain.
+
+The correlation function :math:`\\xi(\\tau)` is evaluated analytically
+using the upper incomplete gamma function.  For large data sizes this is
+accelerated by pre-trained polynomial emulators
+(:class:`FlickerCorrEmulator`, :class:`LogDetEmulator`).
+
+Key functions and classes
+--------------------------
+:func:`flicker_corr`
+    Analytic correlation at a single lag :math:`\\tau`.
+:func:`flicker_corr_vec`
+    Vectorised correlation for an array of non-zero lags.
+:func:`flicker_cov_vec`
+    First row of the symmetric Toeplitz covariance matrix (includes
+    zero-lag white-noise term).
+:func:`flicker_cov`
+    Full or partial Toeplitz covariance matrix for evenly-spaced times.
+:func:`flicker_cov_general`
+    Full :math:`N \\times N` covariance matrix for **arbitrary**
+    (non-consecutive) time stamps — use this when samples have been
+    flagged or removed.
+:func:`sim_noise`
+    Draw correlated :math:`1/f` noise realisations via Cholesky sampling.
+:class:`FlickerCorrEmulator`
+    Polynomial emulator for the correlation function (fast evaluation).
+:class:`LogDetEmulator`
+    Polynomial emulator for the log-determinant of the Toeplitz matrix.
+
+Covariance path selection
+--------------------------
+For **consecutive** (evenly-spaced) times, prefer :func:`flicker_cov`
+which exploits the Toeplitz structure.  For **non-consecutive** times
+(flagged data), use :func:`flicker_cov_general` which builds the full
+matrix — at :math:`\\mathcal{O}(N^2)` extra memory but correct for any
+time ordering.
+
+See Also
+--------
+hydra_tod.utils : :func:`~hydra_tod.utils.log_likeli` (Toeplitz
+    log-likelihood) and :func:`~hydra_tod.utils.log_likeli_general`
+    (general covariance log-likelihood).
+hydra_tod.noise_sampler_fixed_fc : Noise-parameter Gibbs step that
+    consumes these covariances.
+"""
 from __future__ import annotations
 
 from . import mpiutil

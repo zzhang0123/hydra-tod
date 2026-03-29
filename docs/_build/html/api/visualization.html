@@ -53,8 +53,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">1. Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-full-gibbs-sampler">2. Running the Full Gibbs Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#inspecting-posterior-samples">3. Inspecting Posterior Samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#using-sub-samplers-directly">4. Using Sub-samplers Directly</a></li>
 </ul>
 </li>
 </ul>
@@ -81,7 +83,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#visualization">Visualization</a></li>
 </ul>
 </li>
 </ul>
@@ -89,79 +90,46 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="simulation.html">Simulation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#module-hydra_tod.simulation">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="gibbs_sampler.html">Gibbs Sampler</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#module-hydra_tod.full_Gibbs_sampler">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="flicker_model.html">Flicker Noise Model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#covariance-path-selection">Covariance path selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#emulator-classes">Emulator classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#module-hydra_tod.flicker_model">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="samplers.html">Parameter Samplers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#gain-sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#system-temperature-sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#noise-sampler-fixed-cutoff">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#noise-sampler-legacy">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#mcmc-sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#nuts-sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#local-parameter-sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#bayesian-utilities">Bayesian Utilities</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="linear_algebra.html">Linear Algebra</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#linear-solvers">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear_algebra.html#linear-sampler">Linear Sampler</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="utilities.html#module-hydra_tod.utils">General Utilities</a></li>
-<li class="toctree-l3"><a class="reference internal" href="utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html#general-utilities">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html#mpi-utilities">MPI Utilities</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="diagnostics.html">MCMC Diagnostics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#module-hydra_tod.mcmc_diagnostics">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Visualization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-hydra_tod.visualisation">API Reference</a></li>
 </ul>
 </li>
 </ul>
@@ -208,8 +176,27 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-hydra_tod.visualisation">
-<span id="visualization"></span><h1>Visualization<a class="headerlink" href="#module-hydra_tod.visualisation" title="Link to this heading"></a></h1>
+  <section id="visualization">
+<h1>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h1>
+<p>This module collects plotting utilities for inspecting posterior samples,
+sky maps, and diagnostic summaries produced by the Gibbs sampler.
+Functions are designed to accept the output arrays of
+<a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler" title="hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="xref py py-func docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a> directly.</p>
+<p>Typical categories of plots include:</p>
+<ul class="simple">
+<li><p><strong>Sky maps</strong> — posterior mean, residual, uncertainty (std), and
+Z-score maps on HEALPix projections.</p></li>
+<li><p><strong>Parameter traces</strong> — per-iteration chains for noise parameters,
+gain coefficients, and temperature components.</p></li>
+<li><p><strong>Correlation matrices</strong> — full parameter correlation matrices and
+sky/nuisance cross-correlation blocks.</p></li>
+<li><p><strong>TOD reconstruction</strong> — posterior predictive data overlaid on the
+true simulated TOD with credible intervals.</p></li>
+<li><p><strong>PSD comparison</strong> — posterior noise power spectral density compared
+with the truth or prior model.</p></li>
+</ul>
+<section id="module-hydra_tod.visualisation">
+<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-hydra_tod.visualisation" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="hydra_tod.visualisation.view_samples">
 <span class="sig-prename descclassname"><span class="pre">hydra_tod.visualisation.</span></span><span class="sig-name descname"><span class="pre">view_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/hydra_tod/visualisation.html#view_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.visualisation.view_samples" title="Link to this definition"></a></dt>
@@ -528,6 +515,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
 <p>Zhang et al. (2026), RASTI, rzag024.</p>
 </dd></dl>
 
+</section>
 </section>
 
 

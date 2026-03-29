@@ -1,3 +1,64 @@
+"""Gibbs-sampling step for smooth gain coefficients.
+
+This module draws posterior samples of the time-varying instrument gain
+conditioned on the current system temperature and noise parameters.  It
+implements the iterative GLS formulation from Zhang et al. (2026, §3.2).
+
+Three gain parameterisations are supported:
+
+``"linear"``
+    :math:`g(t) = \\mathbf{G}\\,\\mathbf{p}_g` — direct polynomial model.
+    Noise covariance is heteroskedastic (scales with :math:`T_{\\rm sys}`),
+    so an iterative GLS step is required.
+
+``"log"``
+    :math:`g(t) = \\exp(\\mathbf{G}\\,\\mathbf{p}_g)` — log-gain model.
+    Data are log-transformed, converting the multiplicative noise to
+    additive.  No iterative GLS needed.
+
+``"factorized"``
+    :math:`g(t) = g_0 \\cdot (\\mathbf{G}\\,\\mathbf{p}_g + 1)` — smooth
+    fluctuation around a DC gain :math:`g_0`.  The DC gain is passed as
+    the first element of ``noise_params``.
+
+Public API
+----------
+gain_sampler
+    Dispatcher: select model via a string and return ``(coeffs, gains)``.
+linear_gain_sampler
+    Posterior sampler for the linear model.
+log_gain_sampler
+    Posterior sampler for the log model.
+factorized_gain_sampler
+    Posterior sampler for the factorized model.
+
+Typical usage
+-------------
+.. code-block:: python
+
+    from hydra_tod.gain_sampler import gain_sampler
+
+    gain_coeffs, gains = gain_sampler(
+        data=tod,
+        t_list=t_list,
+        gain_proj=gain_proj,   # Legendre projection matrix
+        Tsys=tsys_vector,
+        noise_params=(logf0, alpha),
+        logfc=logfc,
+        model="linear",
+        prior_cov_inv=prior_cov_inv_g,
+        prior_mean=prior_mean_g,
+    )
+
+These functions are called automatically by
+:func:`~hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler`.  Call them
+directly only when sampling gains in isolation.
+
+See Also
+--------
+hydra_tod.tsys_sampler : System-temperature Gibbs step.
+hydra_tod.linear_sampler : Underlying GLS and Gaussian sampling machinery.
+"""
 from __future__ import annotations
 
 import numpy as np

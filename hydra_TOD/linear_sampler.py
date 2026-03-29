@@ -1,3 +1,52 @@
+"""Core iterative GLS and Gaussian posterior-sampling machinery.
+
+This module provides the mathematical building blocks used by every
+Gibbs step in the pipeline.  End users normally do not call these
+functions directly — they are invoked by :mod:`~hydra_tod.gain_sampler`,
+:mod:`~hydra_tod.tsys_sampler`, and
+:mod:`~hydra_tod.full_Gibbs_sampler`.
+
+Background
+----------
+The data model is multiplicative:
+
+.. math::
+
+    \\mathbf{d} = (\\mathbf{U}\\,\\mathbf{p} + \\boldsymbol{\\mu})
+                  \\circ (\\mathbf{1} + \\mathbf{n}),
+
+where :math:`\\mathbf{n} \\sim \\mathcal{N}(0, \\mathbf{N})`.  Rearranging
+produces an additive model with heteroskedastic noise covariance
+:math:`\\boldsymbol{\\Sigma}(\\mathbf{p})`.  The iterative GLS algorithm
+alternates between estimating :math:`\\boldsymbol{\\Sigma}` and solving the
+resulting weighted normal equations until convergence.
+
+Key functions
+-------------
+iterative_gls
+    Serial iterative GLS: returns ``(p_gls, Sigma_inv)``.
+iterative_gls_mpi_list
+    MPI-parallel iterative GLS over a list of TODs: accumulates normal
+    equations via ``MPI_Allreduce``.
+sample_p_v2
+    Preferred Gaussian sampler: takes pre-computed ``(A, b, A_sqrt_wn)``
+    and adds the white-noise perturbation needed for a GCR draw.
+sample_p
+    Alternative sampler: recomputes normal equations internally.
+params_space_oper_and_data
+    Projects the GLS model into parameter space, returning
+    :math:`\\mathbf{A} = \\mathbf{U}^\\top \\boldsymbol{\\Sigma}^{-1}
+    \\mathbf{U}` and :math:`\\mathbf{b} = \\mathbf{U}^\\top
+    \\boldsymbol{\\Sigma}^{-1}(\\mathbf{d} - \\boldsymbol{\\mu})`.
+params_space_oper_and_data_list
+    MPI version of ``params_space_oper_and_data`` for multiple TODs.
+
+See Also
+--------
+hydra_tod.linear_solver : CG solvers consumed by the iterative GLS step.
+hydra_tod.gain_sampler : Uses this module for gain Gibbs steps.
+hydra_tod.tsys_sampler : Uses this module for temperature Gibbs steps.
+"""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable

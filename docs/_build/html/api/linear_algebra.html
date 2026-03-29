@@ -16,6 +16,7 @@
       <script src="../_static/documentation_options.js?v=01f34227"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -53,8 +54,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">1. Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-full-gibbs-sampler">2. Running the Full Gibbs Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#inspecting-posterior-samples">3. Inspecting Posterior Samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#using-sub-samplers-directly">4. Using Sub-samplers Directly</a></li>
 </ul>
 </li>
 </ul>
@@ -81,7 +84,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#single-tod-analysis">Single-TOD Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#multi-tod-analysis">Multi-TOD Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#visualization">Visualization</a></li>
 </ul>
 </li>
 </ul>
@@ -89,79 +91,46 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="simulation.html">Simulation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="simulation.html#module-hydra_tod.simulation">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="gibbs_sampler.html">Gibbs Sampler</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gibbs_sampler.html#module-hydra_tod.full_Gibbs_sampler">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="flicker_model.html">Flicker Noise Model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#covariance-path-selection">Covariance path selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#emulator-classes">Emulator classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flicker_model.html#module-hydra_tod.flicker_model">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="samplers.html">Parameter Samplers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#gain-sampler">Gain Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#system-temperature-sampler">System Temperature Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#noise-sampler-fixed-cutoff">Noise Sampler (Fixed Cutoff)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#noise-sampler-legacy">Noise Sampler (Legacy)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#mcmc-sampler">MCMC Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#nuts-sampler">NUTS Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#local-parameter-sampler">Local Parameter Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="samplers.html#bayesian-utilities">Bayesian Utilities</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Linear Algebra</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-hydra_tod.linear_solver">Linear Solvers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linear-solvers">Linear Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linear-sampler">Linear Sampler</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="utilities.html#module-hydra_tod.utils">General Utilities</a></li>
-<li class="toctree-l3"><a class="reference internal" href="utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html#general-utilities">General Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html#mpi-utilities">MPI Utilities</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="diagnostics.html">MCMC Diagnostics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostics.html#module-hydra_tod.mcmc_diagnostics">API Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="visualization.html">Visualization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#module-hydra_tod.visualisation">API Reference</a></li>
 </ul>
 </li>
 </ul>
@@ -210,8 +179,84 @@
              
   <section id="linear-algebra">
 <h1>Linear Algebra<a class="headerlink" href="#linear-algebra" title="Link to this heading"></a></h1>
-<section id="module-hydra_tod.linear_solver">
-<span id="linear-solvers"></span><h2>Linear Solvers<a class="headerlink" href="#module-hydra_tod.linear_solver" title="Link to this heading"></a></h2>
+<p>This page documents the two modules that form the numerical core of
+every Gibbs sampling step: the <strong>linear solvers</strong> consumed by the normal
+equations, and the <strong>linear sampler</strong> that assembles those normal
+equations and draws posterior samples from the resulting Gaussian.</p>
+<p>Most users will not need to call these functions directly — they are
+invoked through the high-level gain and temperature samplers.  The
+information here is most useful when:</p>
+<ul class="simple">
+<li><p>swapping in a different linear solver (e.g. PyTorch MPS backend on
+Apple Silicon);</p></li>
+<li><p>implementing a new Gibbs step that reuses the iterative GLS machinery;</p></li>
+<li><p>debugging convergence of the inner linear solves.</p></li>
+</ul>
+<section id="linear-solvers">
+<h2>Linear Solvers<a class="headerlink" href="#linear-solvers" title="Link to this heading"></a></h2>
+<p>All Gibbs steps reduce to solving <span class="math notranslate nohighlight">\(\mathbf{A}\mathbf{x} =
+\mathbf{b}\)</span> with a symmetric positive-definite matrix.
+<a class="reference internal" href="#hydra_tod.linear_solver.cg" title="hydra_tod.linear_solver.cg"><code class="xref py py-func docutils literal notranslate"><span class="pre">cg()</span></code></a> is the default serial CG solver
+throughout the package; it accepts either an explicit matrix or an
+implicit <code class="docutils literal notranslate"><span class="pre">linear_op</span></code> callable.  For block-distributed systems across
+MPI ranks, use <a class="reference internal" href="#hydra_tod.linear_solver.cg_mpi" title="hydra_tod.linear_solver.cg_mpi"><code class="xref py py-func docutils literal notranslate"><span class="pre">cg_mpi()</span></code></a> together with
+<a class="reference internal" href="#hydra_tod.linear_solver.setup_mpi_blocks" title="hydra_tod.linear_solver.setup_mpi_blocks"><code class="xref py py-func docutils literal notranslate"><span class="pre">setup_mpi_blocks()</span></code></a>.  On Apple Silicon,
+<a class="reference internal" href="#hydra_tod.linear_solver.pytorch_lin_solver" title="hydra_tod.linear_solver.pytorch_lin_solver"><code class="xref py py-func docutils literal notranslate"><span class="pre">pytorch_lin_solver()</span></code></a> may be faster for
+small-to-medium systems.</p>
+<p>To use a different solver, pass it as the <code class="docutils literal notranslate"><span class="pre">solver</span></code> keyword argument to
+any sampler function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hydra_tod.linear_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">pytorch_lin_solver</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">hydra_tod.gain_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">gain_sampler</span>
+
+<span class="n">gain_coeffs</span><span class="p">,</span> <span class="n">gains</span> <span class="o">=</span> <span class="n">gain_sampler</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">pytorch_lin_solver</span><span class="p">)</span>
+</pre></div>
+</div>
+<p id="module-hydra_tod.linear_solver">Linear solvers for serial and MPI-distributed systems.</p>
+<p>This module provides Conjugate Gradient (CG) solvers used throughout the
+pipeline.  All Gibbs sampling steps reduce to solving a linear system
+<span class="math notranslate nohighlight">\(\mathbf{A}\,\mathbf{x} = \mathbf{b}\)</span> with a symmetric positive
+definite matrix <span class="math notranslate nohighlight">\(\mathbf{A}\)</span>.</p>
+<section id="solver-overview">
+<h3>Solver overview<a class="headerlink" href="#solver-overview" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><a class="reference internal" href="#hydra_tod.linear_solver.cg" title="hydra_tod.linear_solver.cg"><code class="xref py py-func docutils literal notranslate"><span class="pre">cg()</span></code></a></dt><dd><p><strong>Default serial solver.</strong>  Accepts either an explicit matrix
+<code class="docutils literal notranslate"><span class="pre">Amat</span></code> or an implicit <code class="docutils literal notranslate"><span class="pre">linear_op</span></code> callable.  Optionally
+broadcasts the result to all MPI ranks via <code class="docutils literal notranslate"><span class="pre">comm</span></code>.  This is the
+solver passed as <code class="docutils literal notranslate"><span class="pre">solver=cg</span></code> throughout the package.</p>
+</dd>
+<dt><a class="reference internal" href="#hydra_tod.linear_solver.cg_mpi" title="hydra_tod.linear_solver.cg_mpi"><code class="xref py py-func docutils literal notranslate"><span class="pre">cg_mpi()</span></code></a></dt><dd><p>Block-distributed CG for large systems partitioned across MPI ranks.
+Uses <a class="reference internal" href="#hydra_tod.linear_solver.matvec_mpi" title="hydra_tod.linear_solver.matvec_mpi"><code class="xref py py-func docutils literal notranslate"><span class="pre">matvec_mpi()</span></code></a> for the distributed matrix–vector product and
+<code class="docutils literal notranslate"><span class="pre">MPI_Allreduce</span></code> for scalar reductions.  Set up the block structure
+first with <a class="reference internal" href="#hydra_tod.linear_solver.setup_mpi_blocks" title="hydra_tod.linear_solver.setup_mpi_blocks"><code class="xref py py-func docutils literal notranslate"><span class="pre">setup_mpi_blocks()</span></code></a> and distribute matrix/vector
+blocks with <a class="reference internal" href="#hydra_tod.linear_solver.collect_linear_sys_blocks" title="hydra_tod.linear_solver.collect_linear_sys_blocks"><code class="xref py py-func docutils literal notranslate"><span class="pre">collect_linear_sys_blocks()</span></code></a>.</p>
+</dd>
+<dt><a class="reference internal" href="#hydra_tod.linear_solver.pytorch_lin_solver" title="hydra_tod.linear_solver.pytorch_lin_solver"><code class="xref py py-func docutils literal notranslate"><span class="pre">pytorch_lin_solver()</span></code></a></dt><dd><p>Direct solve via <code class="docutils literal notranslate"><span class="pre">torch.linalg.solve</span></code> on MPS (Apple Silicon) or
+CPU.  Useful as a drop-in replacement for <code class="docutils literal notranslate"><span class="pre">cg</span></code> when the system is
+small enough for a direct solve and a GPU/MPS device is available.</p>
+</dd>
+<dt><a class="reference internal" href="#hydra_tod.linear_solver.pytorch_nnls" title="hydra_tod.linear_solver.pytorch_nnls"><code class="xref py py-func docutils literal notranslate"><span class="pre">pytorch_nnls()</span></code></a></dt><dd><p>Non-negative least squares via L-BFGS with clamping.  Rarely needed
+in the main pipeline but available for constrained estimation.</p>
+</dd>
+</dl>
+</section>
+<section id="usage-pattern">
+<h3>Usage pattern<a class="headerlink" href="#usage-pattern" title="Link to this heading"></a></h3>
+<p>All Gibbs step functions accept a <code class="docutils literal notranslate"><span class="pre">solver</span></code> keyword argument defaulting
+to <a class="reference internal" href="#hydra_tod.linear_solver.cg" title="hydra_tod.linear_solver.cg"><code class="xref py py-func docutils literal notranslate"><span class="pre">cg()</span></code></a>.  To switch solver globally:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hydra_tod.linear_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">pytorch_lin_solver</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">hydra_tod.gain_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">gain_sampler</span>
+
+<span class="n">gain_coeffs</span><span class="p">,</span> <span class="n">gains</span> <span class="o">=</span> <span class="n">gain_sampler</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">pytorch_lin_solver</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#module-hydra_tod.linear_sampler" title="hydra_tod.linear_sampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hydra_tod.linear_sampler</span></code></a></dt><dd><p>Iterative GLS that calls these solvers.</p>
+</dd>
+</dl>
+</div>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="hydra_tod.linear_solver.matvec_mpi">
 <span class="sig-prename descclassname"><span class="pre">hydra_tod.linear_solver.</span></span><span class="sig-name descname"><span class="pre">matvec_mpi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comm_row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MPI.Intracomm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat_block</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">np.floating</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vec_block</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">np.floating</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">np.floating</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/linear_solver.html#matvec_mpi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.linear_solver.matvec_mpi" title="Link to this definition"></a></dt>
@@ -500,8 +545,75 @@ optimisation, so the solution is only approximately NNLS-optimal.</p>
 </dd></dl>
 
 </section>
-<section id="module-hydra_tod.linear_sampler">
-<span id="linear-sampler"></span><h2>Linear Sampler<a class="headerlink" href="#module-hydra_tod.linear_sampler" title="Link to this heading"></a></h2>
+<section id="linear-sampler">
+<h2>Linear Sampler<a class="headerlink" href="#linear-sampler" title="Link to this heading"></a></h2>
+<p>The iterative GLS and Gaussian constrained realisation (GCR) machinery.
+The data model is multiplicative — <span class="math notranslate nohighlight">\(\mathbf{d} =
+(\mathbf{U}\mathbf{p} + \boldsymbol{\mu})\circ(\mathbf{1} +
+\mathbf{n})\)</span> — so the noise covariance depends on the current parameter
+estimate.  <a class="reference internal" href="#hydra_tod.linear_sampler.iterative_gls" title="hydra_tod.linear_sampler.iterative_gls"><code class="xref py py-func docutils literal notranslate"><span class="pre">iterative_gls()</span></code></a> alternates
+between updating the effective additive noise covariance
+<span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}(\mathbf{p})\)</span> and solving the resulting
+weighted normal equations until convergence.</p>
+<p><a class="reference internal" href="#hydra_tod.linear_sampler.sample_p_v2" title="hydra_tod.linear_sampler.sample_p_v2"><code class="xref py py-func docutils literal notranslate"><span class="pre">sample_p_v2()</span></code></a> is the <strong>preferred
+sampling interface</strong>: it takes pre-computed normal equation matrices
+<code class="docutils literal notranslate"><span class="pre">(A,</span> <span class="pre">b,</span> <span class="pre">A_sqrt_wn)</span></code> — already output by the iterative GLS step — and
+adds the white-noise perturbation needed for a proper GCR draw without
+recomputing the covariance.</p>
+<p>For MPI-parallel use over a list of TODs, use
+<a class="reference internal" href="#hydra_tod.linear_sampler.iterative_gls_mpi_list" title="hydra_tod.linear_sampler.iterative_gls_mpi_list"><code class="xref py py-func docutils literal notranslate"><span class="pre">iterative_gls_mpi_list()</span></code></a> and
+<a class="reference internal" href="#hydra_tod.linear_sampler.params_space_oper_and_data_list" title="hydra_tod.linear_sampler.params_space_oper_and_data_list"><code class="xref py py-func docutils literal notranslate"><span class="pre">params_space_oper_and_data_list()</span></code></a>.</p>
+<p id="module-hydra_tod.linear_sampler">Core iterative GLS and Gaussian posterior-sampling machinery.</p>
+<p>This module provides the mathematical building blocks used by every
+Gibbs step in the pipeline.  End users normally do not call these
+functions directly — they are invoked by <a class="reference internal" href="samplers.html#module-hydra_tod.gain_sampler" title="hydra_tod.gain_sampler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gain_sampler</span></code></a>,
+<a class="reference internal" href="samplers.html#module-hydra_tod.tsys_sampler" title="hydra_tod.tsys_sampler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tsys_sampler</span></code></a>, and
+<a class="reference internal" href="gibbs_sampler.html#module-hydra_tod.full_Gibbs_sampler" title="hydra_tod.full_Gibbs_sampler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">full_Gibbs_sampler</span></code></a>.</p>
+<section id="background">
+<h3>Background<a class="headerlink" href="#background" title="Link to this heading"></a></h3>
+<p>The data model is multiplicative:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{d} = (\mathbf{U}\,\mathbf{p} + \boldsymbol{\mu})
+              \circ (\mathbf{1} + \mathbf{n}),\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{n} \sim \mathcal{N}(0, \mathbf{N})\)</span>.  Rearranging
+produces an additive model with heteroskedastic noise covariance
+<span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}(\mathbf{p})\)</span>.  The iterative GLS algorithm
+alternates between estimating <span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}\)</span> and solving the
+resulting weighted normal equations until convergence.</p>
+</section>
+<section id="key-functions">
+<h3>Key functions<a class="headerlink" href="#key-functions" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>iterative_gls</dt><dd><p>Serial iterative GLS: returns <code class="docutils literal notranslate"><span class="pre">(p_gls,</span> <span class="pre">Sigma_inv)</span></code>.</p>
+</dd>
+<dt>iterative_gls_mpi_list</dt><dd><p>MPI-parallel iterative GLS over a list of TODs: accumulates normal
+equations via <code class="docutils literal notranslate"><span class="pre">MPI_Allreduce</span></code>.</p>
+</dd>
+<dt>sample_p_v2</dt><dd><p>Preferred Gaussian sampler: takes pre-computed <code class="docutils literal notranslate"><span class="pre">(A,</span> <span class="pre">b,</span> <span class="pre">A_sqrt_wn)</span></code>
+and adds the white-noise perturbation needed for a GCR draw.</p>
+</dd>
+<dt>sample_p</dt><dd><p>Alternative sampler: recomputes normal equations internally.</p>
+</dd>
+<dt>params_space_oper_and_data</dt><dd><p>Projects the GLS model into parameter space, returning
+<span class="math notranslate nohighlight">\(\mathbf{A} = \mathbf{U}^\top \boldsymbol{\Sigma}^{-1}
+\mathbf{U}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{b} = \mathbf{U}^\top
+\boldsymbol{\Sigma}^{-1}(\mathbf{d} - \boldsymbol{\mu})\)</span>.</p>
+</dd>
+<dt>params_space_oper_and_data_list</dt><dd><p>MPI version of <code class="docutils literal notranslate"><span class="pre">params_space_oper_and_data</span></code> for multiple TODs.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#module-hydra_tod.linear_solver" title="hydra_tod.linear_solver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hydra_tod.linear_solver</span></code></a></dt><dd><p>CG solvers consumed by the iterative GLS step.</p>
+</dd>
+<dt><a class="reference internal" href="samplers.html#module-hydra_tod.gain_sampler" title="hydra_tod.gain_sampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hydra_tod.gain_sampler</span></code></a></dt><dd><p>Uses this module for gain Gibbs steps.</p>
+</dd>
+<dt><a class="reference internal" href="samplers.html#module-hydra_tod.tsys_sampler" title="hydra_tod.tsys_sampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hydra_tod.tsys_sampler</span></code></a></dt><dd><p>Uses this module for temperature Gibbs steps.</p>
+</dd>
+</dl>
+</div>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="hydra_tod.linear_sampler.params_space_oper_and_data">
 <span class="sig-prename descclassname"><span class="pre">hydra_tod.linear_sampler.</span></span><span class="sig-name descname"><span class="pre">params_space_oper_and_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_inv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ninv_sqrt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><span class="pre">floating</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/hydra_tod/linear_sampler.html#params_space_oper_and_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.linear_sampler.params_space_oper_and_data" title="Link to this definition"></a></dt>

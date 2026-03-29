@@ -1,3 +1,60 @@
+"""General-purpose utilities for matrix operations and likelihood evaluation.
+
+This module collects the low-level numerical building blocks used across
+the rest of the package.  It is organised into four functional groups:
+
+**Matrix operations**
+    :func:`cho_compute_mat_inv`
+        Invert a symmetric positive-definite matrix via Cholesky
+        factorisation with automatic regularisation fallback.
+    :func:`cho_compute_mat_inv_sqrt`
+        Compute the inverse Cholesky factor :math:`L^{-T}` such that
+        :math:`L^{-T} L^{-1} = C^{-1}`.
+
+**Polynomial projections**
+    :class:`polyn_proj`
+        Callable class storing a time list; returns the Legendre
+        projection matrix when called with the number of polynomial
+        modes.  Used to build gain and temperature design matrices.
+    :func:`Leg_poly_proj`
+        Lower-level Legendre matrix builder (rescales to :math:`[-1,1]`).
+
+**Log-likelihood evaluation**
+    :func:`log_likeli`
+        Gaussian log-likelihood for a symmetric Toeplitz covariance —
+        fast :math:`\\mathcal{O}(N^2)` via the Levinson algorithm.
+    :func:`log_likeli_general`
+        Gaussian log-likelihood for a **general** (non-Toeplitz)
+        symmetric positive-definite covariance — :math:`\\mathcal{O}(N^3)`
+        via Cholesky.  Returns ``-inf`` for singular or NaN inputs.
+    :func:`log_det_symmetric_toeplitz`
+        Log-determinant of a symmetric Toeplitz matrix via Levinson
+        reflection coefficients.
+
+**DFT utilities**
+    :func:`DFT_matrix`
+        :math:`N \\times N` discrete Fourier transform matrix (unitary
+        up to a factor of :math:`N`).
+    :func:`cov_conjugate`
+        Transform a covariance matrix between time and frequency domains.
+
+**Miscellaneous**
+    :func:`lag_list`
+        Time lags relative to the first sample.
+    :func:`overall_operator`
+        Stack projection operators into a single combined matrix.
+    :func:`linear_model`
+        Evaluate :math:`T_{\\rm sys} = \\sum_i \\mathbf{U}_i \\mathbf{p}_i`.
+    :func:`pixel_angular_size`
+        HEALPix pixel angular size in degrees and arcminutes.
+
+See Also
+--------
+hydra_tod.flicker_model : Produces the covariance first-rows consumed by
+    :func:`log_likeli` and :func:`log_det_symmetric_toeplitz`.
+hydra_tod.linear_sampler : Uses :func:`cho_compute_mat_inv` and
+    :func:`cho_compute_mat_inv_sqrt`.
+"""
 from __future__ import annotations
 
 from typing import Callable

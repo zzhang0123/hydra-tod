@@ -1,3 +1,64 @@
+"""Full Gibbs sampler orchestrating joint inference over all model parameters.
+
+This module is the top-level entry point for Bayesian calibration and
+map-making.  It implements the iterative Gibbs sampling loop described in
+Zhang et al. (2026), alternating between four conditionally conjugate steps:
+
+1. **Gain sampling** — draws smooth gain coefficients :math:`\\mathbf{p}_g`
+   conditioned on current system temperature and noise parameters, using an
+   iterative generalised least-squares (GLS) scheme.
+2. **Local temperature sampling** — draws receiver/noise-diode coefficients
+   :math:`\\mathbf{p}_{\\rm loc}` for each TOD independently.
+3. **Noise parameter sampling** — draws :math:`(\\log f_0, \\alpha)` for each
+   TOD using MCMC (emcee) or NUTS (NumPyro/JAX).
+4. **Sky temperature sampling** — draws shared celestial parameters
+   :math:`\\mathbf{p}_{\\rm sky}` jointly from all TODs via an MPI
+   ``Allreduce`` over the normal equations.
+
+Steps 1–3 are independent per TOD and run in parallel across MPI ranks.
+Step 4 synchronises across ranks.
+
+Public API
+----------
+get_Tsys_operator
+    Assemble the combined sky + local temperature projection matrix.
+TOD_Gibbs_sampler
+    Run the full Gibbs sampler and return posterior samples.
+
+Typical usage
+-------------
+.. code-block:: python
+
+    from hydra_tod.full_Gibbs_sampler import TOD_Gibbs_sampler
+
+    Tsky_samples, gain_samples, noise_samples, Tloc_samples = TOD_Gibbs_sampler(
+        local_TOD_list=[tod],
+        local_t_lists=[t_list],
+        local_gain_operator_list=[gain_proj],
+        local_Tsky_operator_list=[Tsky_proj],
+        local_Tloc_operator_list=[Tloc_proj],
+        init_Tsky_params=init_sky,
+        init_Tloc_params_list=[init_loc],
+        init_noise_params_list=[[logf0_init, alpha_init]],
+        local_logfc_list=[logfc],
+        n_samples=2000,
+    )
+
+Parameters are grouped as:
+
+* **Data** — ``local_TOD_list``, ``local_t_lists``
+* **Operators** — ``local_gain_operator_list``, ``local_Tsky_operator_list``,
+  ``local_Tloc_operator_list``
+* **Priors** — ``prior_cov_inv_*``, ``prior_mean_*``
+* **Config** — ``n_samples``, ``gain_model``, ``sampler``, ``Est_mode``, etc.
+
+See Also
+--------
+hydra_tod.gain_sampler : Individual gain Gibbs step.
+hydra_tod.tsys_sampler : Individual system-temperature Gibbs step.
+hydra_tod.noise_sampler_fixed_fc : Preferred noise-parameter Gibbs step.
+hydra_tod.simulation : Generating synthetic TOD for testing.
+"""
 from __future__ import annotations
 
 # This file contains the full Gibbs sampler for all the parameters in data model,

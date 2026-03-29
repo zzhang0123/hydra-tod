@@ -1,3 +1,49 @@
+"""Legacy flicker-noise parameter sampler (emcee backend).
+
+.. note::
+   For new code, prefer :mod:`hydra_tod.noise_sampler_fixed_fc`, which
+   supports both emcee and NUTS backends, JAX-differentiable likelihoods,
+   and the ``consecutive=False`` path for flagged time samples.
+   This module is retained because it is still called internally by
+   :func:`~hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler` when
+   ``sampler="emcee_old"`` is requested.
+
+This module samples the flicker-noise parameters
+:math:`(\\log f_0,\\, \\alpha)` using the ``emcee`` ensemble sampler.  The
+cutoff frequency :math:`f_c` is fixed (passed as ``logfc``).
+
+The emulator for the correlation function is loaded at import time if
+available; otherwise :func:`~hydra_tod.flicker_model.flicker_cov_vec` is
+used directly.
+
+Public API
+----------
+flicker_noise_sampler
+    High-level convenience wrapper — **use this function directly**.
+flicker_likeli_func
+    Builds a log-likelihood closure from pre-processed data.
+
+Typical usage
+-------------
+.. code-block:: python
+
+    from hydra_tod.noise_sampler_old import flicker_noise_sampler
+
+    noise_sample = flicker_noise_sampler(
+        TOD=tod,
+        t_list=t_list,
+        gains=gains,
+        Tsys=tsys,
+        init_params=[logf0_init, alpha_init],
+        logfc=logfc,
+        n_samples=1,
+    )
+
+See Also
+--------
+hydra_tod.noise_sampler_fixed_fc : Preferred noise sampler (emcee + NUTS).
+hydra_tod.flicker_model : Analytic correlation and covariance functions.
+"""
 from __future__ import annotations
 
 import numpy as np

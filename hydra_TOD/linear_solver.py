@@ -1,3 +1,50 @@
+"""Linear solvers for serial and MPI-distributed systems.
+
+This module provides Conjugate Gradient (CG) solvers used throughout the
+pipeline.  All Gibbs sampling steps reduce to solving a linear system
+:math:`\\mathbf{A}\\,\\mathbf{x} = \\mathbf{b}` with a symmetric positive
+definite matrix :math:`\\mathbf{A}`.
+
+Solver overview
+---------------
+:func:`cg`
+    **Default serial solver.**  Accepts either an explicit matrix
+    ``Amat`` or an implicit ``linear_op`` callable.  Optionally
+    broadcasts the result to all MPI ranks via ``comm``.  This is the
+    solver passed as ``solver=cg`` throughout the package.
+
+:func:`cg_mpi`
+    Block-distributed CG for large systems partitioned across MPI ranks.
+    Uses :func:`matvec_mpi` for the distributed matrix–vector product and
+    ``MPI_Allreduce`` for scalar reductions.  Set up the block structure
+    first with :func:`setup_mpi_blocks` and distribute matrix/vector
+    blocks with :func:`collect_linear_sys_blocks`.
+
+:func:`pytorch_lin_solver`
+    Direct solve via ``torch.linalg.solve`` on MPS (Apple Silicon) or
+    CPU.  Useful as a drop-in replacement for ``cg`` when the system is
+    small enough for a direct solve and a GPU/MPS device is available.
+
+:func:`pytorch_nnls`
+    Non-negative least squares via L-BFGS with clamping.  Rarely needed
+    in the main pipeline but available for constrained estimation.
+
+Usage pattern
+-------------
+All Gibbs step functions accept a ``solver`` keyword argument defaulting
+to :func:`cg`.  To switch solver globally:
+
+.. code-block:: python
+
+    from hydra_tod.linear_solver import pytorch_lin_solver
+    from hydra_tod.gain_sampler import gain_sampler
+
+    gain_coeffs, gains = gain_sampler(..., solver=pytorch_lin_solver)
+
+See Also
+--------
+hydra_tod.linear_sampler : Iterative GLS that calls these solvers.
+"""
 from __future__ import annotations
 
 # This is exactly the linear_solver in Hydra.
