@@ -39,14 +39,7 @@ The package accompanies the paper:
    :caption: API Reference
    :titlesonly:
 
-   api/simulation
-   api/gibbs_sampler
-   api/flicker_model
-   api/samplers
-   api/linear_algebra
-   api/utilities
-   api/diagnostics
-   api/visualization
+   api/index
 
 .. toctree::
    :maxdepth: 2

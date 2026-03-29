@@ -71,6 +71,15 @@ source_suffix = {
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+# Suppress numpydoc/autodoc warnings for numpy type annotations
+# (e.g., np.bool_ is parsed as an RST hyperlink due to trailing underscore)
+nitpicky = False
+numpydoc_validation_checks = set()
+
+# Suppress unknown reference target warnings from type annotations
+# (e.g., NDArray[np.bool_] where trailing _ is parsed as RST hyperlink)
+suppress_warnings = ["ref.ref", "docutils"]
+
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = "sphinx_rtd_theme"

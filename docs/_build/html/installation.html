@@ -47,7 +47,6 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#basic-installation">Basic Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#optional-dependencies">Optional Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#development-installation">Development Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#conda-environment">Conda Environment</a></li>
 </ul>
@@ -88,14 +87,17 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api/simulation.html">Simulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/gibbs_sampler.html">Gibbs Sampler</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/flicker_model.html">Flicker Noise Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/samplers.html">Parameter Samplers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/linear_algebra.html">Linear Algebra</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/utilities.html">Utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/diagnostics.html">MCMC Diagnostics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/simulation.html">Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/gibbs_sampler.html">Gibbs Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/flicker_model.html">Flicker Noise Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/samplers.html">Parameter Samplers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/linear_algebra.html">Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/utilities.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/diagnostics.html">MCMC Diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/visualization.html">Visualization</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Project</span></p>
 <ul>
@@ -105,7 +107,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#changelog">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">Changelog</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
 </ul>
 </li>
@@ -146,37 +148,14 @@ matplotlib, astropy, mpmath, joblib) are installed automatically.</p>
 </section>
 <section id="basic-installation">
 <h2>Basic Installation<a class="headerlink" href="#basic-installation" title="Link to this heading"></a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>hydra-tod
-</pre></div>
-</div>
-</section>
-<section id="optional-dependencies">
-<h2>Optional Dependencies<a class="headerlink" href="#optional-dependencies" title="Link to this heading"></a></h2>
-<p>The package has several optional dependency groups for different features:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># MPI parallelization (recommended for multi-TOD analysis)</span>
-pip<span class="w"> </span>install<span class="w"> </span>hydra-tod<span class="o">[</span>mpi<span class="o">]</span>
-
-<span class="c1"># HEALPix sky maps</span>
-pip<span class="w"> </span>install<span class="w"> </span>hydra-tod<span class="o">[</span>healpix<span class="o">]</span>
-
-<span class="c1"># JAX + NumPyro (for NUTS sampling and JIT compilation)</span>
-pip<span class="w"> </span>install<span class="w"> </span>hydra-tod<span class="o">[</span>jax<span class="o">]</span>
-
-<span class="c1"># PyTorch (for GPU-accelerated linear solvers)</span>
-pip<span class="w"> </span>install<span class="w"> </span>hydra-tod<span class="o">[</span>torch<span class="o">]</span>
-
-<span class="c1"># emcee (for MCMC noise parameter sampling)</span>
-pip<span class="w"> </span>install<span class="w"> </span>hydra-tod<span class="o">[</span>emcee<span class="o">]</span>
-
-<span class="c1"># All optional dependencies</span>
-pip<span class="w"> </span>install<span class="w"> </span>hydra-tod<span class="o">[</span>all<span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/zzhang0123/hydra-tod.git
 </pre></div>
 </div>
 </section>
 <section id="development-installation">
 <h2>Development Installation<a class="headerlink" href="#development-installation" title="Link to this heading"></a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/zzhang0123/flicker.git
-<span class="nb">cd</span><span class="w"> </span>flicker
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/zzhang0123/hydra-tod.git
+<span class="nb">cd</span><span class="w"> </span>hydra-tod
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </pre></div>
 </div>
