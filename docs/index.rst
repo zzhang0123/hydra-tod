@@ -29,13 +29,13 @@ The package accompanies the paper:
    theory/flicker_noise
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Tutorials
 
    Example Notebooks <tutorials/index>
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: API Reference
    :titlesonly:
 
@@ -49,7 +49,7 @@ The package accompanies the paper:
    api/visualization
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Project
 
    citation

@@ -12,40 +12,40 @@ Basic Installation
 
 .. code-block:: bash
 
-   pip install hydra-tod
+   pip install git+https://github.com/zzhang0123/hydra-tod.git
 
-Optional Dependencies
----------------------
+.. Optional Dependencies
+.. ---------------------
 
-The package has several optional dependency groups for different features:
+.. The package has several optional dependency groups for different features:
 
-.. code-block:: bash
+.. .. code-block:: bash
 
-   # MPI parallelization (recommended for multi-TOD analysis)
-   pip install hydra-tod[mpi]
+..    # MPI parallelization (recommended for multi-TOD analysis)
+..    pip install hydra-tod[mpi]
 
-   # HEALPix sky maps
-   pip install hydra-tod[healpix]
+..    # HEALPix sky maps
+..    pip install hydra-tod[healpix]
 
-   # JAX + NumPyro (for NUTS sampling and JIT compilation)
-   pip install hydra-tod[jax]
+..    # JAX + NumPyro (for NUTS sampling and JIT compilation)
+..    pip install hydra-tod[jax]
 
-   # PyTorch (for GPU-accelerated linear solvers)
-   pip install hydra-tod[torch]
+..    # PyTorch (for GPU-accelerated linear solvers)
+..    pip install hydra-tod[torch]
 
-   # emcee (for MCMC noise parameter sampling)
-   pip install hydra-tod[emcee]
+..    # emcee (for MCMC noise parameter sampling)
+..    pip install hydra-tod[emcee]
 
-   # All optional dependencies
-   pip install hydra-tod[all]
+..    # All optional dependencies
+..    pip install hydra-tod[all]
 
 Development Installation
 ------------------------
 
 .. code-block:: bash
 
-   git clone https://github.com/zzhang0123/flicker.git
-   cd flicker
+   git clone https://github.com/zzhang0123/hydra-tod.git
+   cd hydra-tod
    pip install -e ".[dev]"
 
 Conda Environment
