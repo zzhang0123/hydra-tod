@@ -234,6 +234,7 @@
 <span class="sd">hydra_tod.tsys_sampler : System-temperature Gibbs step.</span>
 <span class="sd">hydra_tod.linear_sampler : Underlying GLS and Gaussian sampling machinery.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -256,13 +257,13 @@
     <span class="n">logdet_emulator_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">module_dir</span><span class="p">,</span> <span class="s2">&quot;flicker_logdet_emulator.pkl&quot;</span><span class="p">)</span>
 
     <span class="c1"># Import the class definition before unpickling</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlickerCorrEmulator</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlickerCorrEmulator</span>  <span class="c1"># noqa: F401</span>
 
     <span class="c1"># Load the emulator</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">corr_emulator_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">flicker_cov</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">flicker_cov</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  <span class="c1"># noqa: F811</span>
 
-    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogDetEmulator</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogDetEmulator</span>  <span class="c1"># noqa: F401</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logdet_emulator_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">flicker_logdet</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>

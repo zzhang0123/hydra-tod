@@ -426,7 +426,7 @@ Useful for assessing cumulative beam coverage.</p></li>
 union map, identifying all pixels observed by <em>any</em> scan.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>bool_maps</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><em>NDArray</em><em>[</em><em>np.bool_</em><em>]</em>) – List of boolean HEALPix maps, each of shape <code class="docutils literal notranslate"><span class="pre">(NPIX,)</span></code>.</p>
+<dd class="field-odd"><p><strong>bool_maps</strong> (list of NDArray[<a href="#id2"><span class="problematic" id="id3">np.bool_</span></a>]) – List of boolean HEALPix maps, each of shape <code class="docutils literal notranslate"><span class="pre">(NPIX,)</span></code>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -446,7 +446,7 @@ union map, identifying all pixels observed by <em>any</em> scan.</p>
 intersection map, identifying only pixels observed by <em>all</em> scans.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>bool_maps</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><em>NDArray</em><em>[</em><em>np.bool_</em><em>]</em>) – List of boolean HEALPix maps, each of shape <code class="docutils literal notranslate"><span class="pre">(NPIX,)</span></code>.</p>
+<dd class="field-odd"><p><strong>bool_maps</strong> (list of NDArray[<a href="#id4"><span class="problematic" id="id5">np.bool_</span></a>]) – List of boolean HEALPix maps, each of shape <code class="docutils literal notranslate"><span class="pre">(NPIX,)</span></code>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -503,7 +503,7 @@ convolution model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>full_bool_map</strong> (NDArray[<a href="#id2"><span class="problematic" id="id3">np.bool_</span></a>]) – Boolean HEALPix map of shape <code class="docutils literal notranslate"><span class="pre">(NPIX,)</span></code> indicating the observed
+<li><p><strong>full_bool_map</strong> (NDArray[<a href="#id6"><span class="problematic" id="id7">np.bool_</span></a>]) – Boolean HEALPix map of shape <code class="docutils literal notranslate"><span class="pre">(NPIX,)</span></code> indicating the observed
 pixel footprint. Only True pixels are included in the projection.</p></li>
 <li><p><strong>theta_c</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – HEALPix colatitudes of beam centres in radians, shape <code class="docutils literal notranslate"><span class="pre">(ntime,)</span></code>.</p></li>
 <li><p><strong>phi_c</strong> (<em>NDArray</em><em>[</em><em>np.floating</em><em>]</em>) – HEALPix longitudes of beam centres in radians, shape <code class="docutils literal notranslate"><span class="pre">(ntime,)</span></code>.</p></li>
@@ -670,7 +670,7 @@ optional point source catalogue.</p></li>
 <dd><p>Boolean HEALPix map of observed pixels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>NDArray[<a href="#id4"><span class="problematic" id="id5">np.bool_</span></a>]</p>
+<dd class="field-odd"><p>NDArray[<a href="#id8"><span class="problematic" id="id9">np.bool_</span></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1022,7 +1022,7 @@ pixel set.</p></li>
 <dd><p>Union boolean HEALPix map of observed pixels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>NDArray[<a href="#id6"><span class="problematic" id="id7">np.bool_</span></a>]</p>
+<dd class="field-odd"><p>NDArray[<a href="#id10"><span class="problematic" id="id11">np.bool_</span></a>]</p>
 </dd>
 </dl>
 </dd></dl>

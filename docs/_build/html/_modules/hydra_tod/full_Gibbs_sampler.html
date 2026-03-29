@@ -234,6 +234,7 @@
 <span class="sd">hydra_tod.noise_sampler_fixed_fc : Preferred noise-parameter Gibbs step.</span>
 <span class="sd">hydra_tod.simulation : Generating synthetic TOD for testing.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="c1"># This file contains the full Gibbs sampler for all the parameters in data model,</span>
@@ -252,7 +253,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.tsys_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tsys_coeff_sampler</span><span class="p">,</span> <span class="n">Tsys_sampler_multi_TODs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.linear_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">cg</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">block_diag</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="n">comm</span> <span class="o">=</span> <span class="n">mpiutil</span><span class="o">.</span><span class="n">world</span>
 <span class="n">rank</span> <span class="o">=</span> <span class="n">mpiutil</span><span class="o">.</span><span class="n">rank</span>
@@ -706,9 +706,6 @@
     <span class="k">if</span> <span class="n">local_Tloc_prior_cov_inv_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">local_Tloc_prior_cov_inv_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_TODs</span>
 
-    <span class="n">master_rng_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-    <span class="n">noise_key</span> <span class="o">=</span> <span class="kc">None</span>
-
     <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
     <span class="c1"># Sample the parameters</span>
@@ -1101,7 +1098,6 @@
     <span class="n">Tsky_params</span> <span class="o">=</span> <span class="n">init_Tsky_params</span>
 
     <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_TODs</span><span class="p">):</span>
-        <span class="n">t_list</span> <span class="o">=</span> <span class="n">local_t_lists</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
         <span class="n">local_noise_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">init_noise_params_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
         <span class="n">local_Tloc_samples</span><span class="p">[</span><span class="n">di</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">init_Tloc_params_list</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
         <span class="c1"># Ncov = flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha, white_n_variance=wnoise_var, only_row_0=False)</span>

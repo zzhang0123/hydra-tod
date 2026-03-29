@@ -233,16 +233,16 @@
 <span class="sd">hydra_tod.noise_sampler_fixed_fc : Noise-parameter Gibbs step that</span>
 <span class="sd">    consumes these covariances.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpiutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NDArray</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">gammainc</span><span class="p">,</span> <span class="n">mp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">gammainc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">toeplitz</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">lag_list</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">Parallel</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">cmath</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">quad</span><span class="p">,</span> <span class="n">IntegrationWarning</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
@@ -251,7 +251,9 @@
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">tqdm</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">x</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">tqdm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span>
 
 
 <div class="viewcode-block" id="my_gamma_inc">

@@ -233,18 +233,18 @@
 <span class="sd">hydra_tod.linear_sampler : Underlying GLS and Gaussian sampling machinery.</span>
 <span class="sd">hydra_tod.full_Gibbs_sampler : Orchestrates all Gibbs steps.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NDArray</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpiutil</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">flicker_cov</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.linear_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">cg</span><span class="p">,</span> <span class="n">pytorch_lin_solver</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.linear_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">cg</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.linear_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">iterative_gls</span><span class="p">,</span>
     <span class="n">iterative_gls_mpi_list</span><span class="p">,</span>
-    <span class="n">sample_p</span><span class="p">,</span>
     <span class="n">sample_p_old</span><span class="p">,</span>
     <span class="n">sample_p_v2</span><span class="p">,</span>
 <span class="p">)</span>

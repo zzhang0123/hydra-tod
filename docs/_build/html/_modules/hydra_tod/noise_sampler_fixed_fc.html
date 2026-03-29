@@ -255,14 +255,15 @@
 <span class="sd">hydra_tod.flicker_model : Analytic correlation and covariance functions.</span>
 <span class="sd">hydra_tod.full_Gibbs_sampler : Orchestrates all Gibbs steps.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NDArray</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_toeplitz</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">lag_list</span><span class="p">,</span> <span class="n">log_det_symmetric_toeplitz</span><span class="p">,</span> <span class="n">log_likeli</span><span class="p">,</span> <span class="n">log_likeli_general</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">lag_list</span><span class="p">,</span> <span class="n">log_likeli</span><span class="p">,</span> <span class="n">log_likeli_general</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.mcmc_sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">mcmc_sampler</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jax.scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve</span>
@@ -288,13 +289,13 @@
     <span class="n">logdet_emulator_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">module_dir</span><span class="p">,</span> <span class="s2">&quot;flicker_logdet_emulator.pkl&quot;</span><span class="p">)</span>
 
     <span class="c1"># Import the class definition before unpickling</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlickerCorrEmulator</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlickerCorrEmulator</span>  <span class="c1"># noqa: F401</span>
 
     <span class="c1"># Load the emulator</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">corr_emulator_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">flicker_cov</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
-    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogDetEmulator</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogDetEmulator</span>  <span class="c1"># noqa: F401</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logdet_emulator_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">flicker_logdet</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -398,7 +399,7 @@
             <span class="o">+</span> <span class="n">flicker_logdet_jax</span><span class="p">(</span><span class="n">logf0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">result</span>
-    <span class="k">except</span><span class="p">:</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span></div>
 
 

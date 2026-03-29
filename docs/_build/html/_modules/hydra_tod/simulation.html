@@ -244,6 +244,7 @@
 <span class="sd">    used internally for noise generation.</span>
 <span class="sd">hydra_tod.full_Gibbs_sampler : Consumes the operators produced here.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -255,7 +256,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Leg_poly_proj</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">sim_noise</span><span class="p">,</span> <span class="n">flicker_cov</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.flicker_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">sim_noise</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpiutil</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
 
@@ -500,7 +501,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    bool_maps : list of NDArray[np.bool\_]</span>
+<span class="sd">    bool_maps : list of NDArray[np.bool_]</span>
 <span class="sd">        List of boolean HEALPix maps, each of shape ``(NPIX,)``.</span>
 
 <span class="sd">    Returns</span>
@@ -529,7 +530,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    bool_maps : list of NDArray[np.bool\_]</span>
+<span class="sd">    bool_maps : list of NDArray[np.bool_]</span>
 <span class="sd">        List of boolean HEALPix maps, each of shape ``(NPIX,)``.</span>
 
 <span class="sd">    Returns</span>
