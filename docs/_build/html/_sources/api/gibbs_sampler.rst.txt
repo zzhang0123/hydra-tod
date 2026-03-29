@@ -41,9 +41,6 @@ the tutorial notebooks in the ``examples/`` directory.
    :doc:`simulation` — generating synthetic TOD for input.
    :doc:`/quickstart` — annotated end-to-end example.
 
-API Reference
--------------
-
 .. automodule:: hydra_tod.full_Gibbs_sampler
    :members:
    :undoc-members:

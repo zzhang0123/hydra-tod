@@ -19,9 +19,6 @@ Typical categories of plots include:
 * **PSD comparison** — posterior noise power spectral density compared
   with the truth or prior model.
 
-API Reference
--------------
-
 .. automodule:: hydra_tod.visualisation
    :members:
    :undoc-members:

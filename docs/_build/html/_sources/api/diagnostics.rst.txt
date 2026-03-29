@@ -34,9 +34,6 @@ The three key quantities are:
     Convenience wrapper that computes ESS and split-:math:`\hat{R}` for
     all parameters and optionally produces trace and ACF plots.
 
-API Reference
--------------
-
 .. automodule:: hydra_tod.mcmc_diagnostics
    :members:
    :undoc-members:

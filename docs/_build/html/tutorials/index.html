@@ -19,7 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="API Reference" href="../api/index.html" />
+    <link rel="next" title="Simulation" href="../api/simulation.html" />
     <link rel="prev" title="Flicker Noise Model" href="../theory/flicker_noise.html" /> 
 </head>
 
@@ -53,8 +53,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">Simulating a Single TOD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-gibbs-sampler">Running the Gibbs Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#simulating-a-single-tod">1. Simulating a Single TOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#running-the-full-gibbs-sampler">2. Running the Full Gibbs Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#inspecting-posterior-samples">3. Inspecting Posterior Samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#using-sub-samplers-directly">4. Using Sub-samplers Directly</a></li>
 </ul>
 </li>
 </ul>
@@ -77,7 +79,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorials</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Example Notebooks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#single-tod-analysis">Single-TOD Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#multi-tod-analysis">Multi-TOD Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#flicker-noise-demonstration">Flicker Noise Demonstration</a></li>
@@ -86,86 +88,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/simulation.html">Simulation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.sim_MeerKAT_scan_v2"><code class="docutils literal notranslate"><span class="pre">sim_MeerKAT_scan_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.stacked_beam_map"><code class="docutils literal notranslate"><span class="pre">stacked_beam_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LOR"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LOR()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.reduce_bool_maps_LAND"><code class="docutils literal notranslate"><span class="pre">reduce_bool_maps_LAND()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.gaussian"><code class="docutils literal notranslate"><span class="pre">gaussian()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.generate_Tsky_proj"><code class="docutils literal notranslate"><span class="pre">generate_Tsky_proj()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.TODSimulation"><code class="docutils literal notranslate"><span class="pre">TODSimulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.MultiTODSimulation"><code class="docutils literal notranslate"><span class="pre">MultiTODSimulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/simulation.html#hydra_tod.simulation.eq_coordinates"><code class="docutils literal notranslate"><span class="pre">eq_coordinates()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/gibbs_sampler.html">Gibbs Sampler</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.get_Tsys_operator"><code class="docutils literal notranslate"><span class="pre">get_Tsys_operator()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/gibbs_sampler.html#hydra_tod.full_Gibbs_sampler.TOD_Gibbs_sampler_joint_loc"><code class="docutils literal notranslate"><span class="pre">TOD_Gibbs_sampler_joint_loc()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/flicker_model.html">Flicker Noise Model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.my_gamma_inc"><code class="docutils literal notranslate"><span class="pre">my_gamma_inc()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v1"><code class="docutils literal notranslate"><span class="pre">aux_int_v1()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.aux_int_v2"><code class="docutils literal notranslate"><span class="pre">aux_int_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.aux_calculation"><code class="docutils literal notranslate"><span class="pre">aux_calculation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr"><code class="docutils literal notranslate"><span class="pre">flicker_corr()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_vec"><code class="docutils literal notranslate"><span class="pre">flicker_corr_vec()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_vec"><code class="docutils literal notranslate"><span class="pre">flicker_cov_vec()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov"><code class="docutils literal notranslate"><span class="pre">flicker_cov()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.flicker_corr_full"><code class="docutils literal notranslate"><span class="pre">flicker_corr_full()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.sim_noise"><code class="docutils literal notranslate"><span class="pre">sim_noise()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.flicker_cov_general"><code class="docutils literal notranslate"><span class="pre">flicker_cov_general()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.FNoise_traditional"><code class="docutils literal notranslate"><span class="pre">FNoise_traditional</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.FlickerCorrEmulator"><code class="docutils literal notranslate"><span class="pre">FlickerCorrEmulator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/flicker_model.html#hydra_tod.flicker_model.LogDetEmulator"><code class="docutils literal notranslate"><span class="pre">LogDetEmulator</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/samplers.html">Parameter Samplers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.gain_sampler">Gain Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.tsys_sampler">System Temperature Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.noise_sampler_fixed_fc">Noise Sampler (Fixed Cutoff)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.noise_sampler_old">Noise Sampler (Legacy)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.mcmc_sampler">MCMC Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.nuts_sampler">NUTS Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.local_sampler">Local Parameter Sampler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/samplers.html#module-hydra_tod.bayes_util">Bayesian Utilities</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/linear_algebra.html">Linear Algebra</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/linear_algebra.html#module-hydra_tod.linear_solver">Linear Solvers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/linear_algebra.html#module-hydra_tod.linear_sampler">Linear Sampler</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utilities.html">Utilities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/utilities.html#module-hydra_tod.utils">General Utilities</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utilities.html#module-hydra_tod.mpiutil">MPI Utilities</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/diagnostics.html">MCMC Diagnostics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/diagnostics.html#hydra_tod.mcmc_diagnostics.acf_1d"><code class="docutils literal notranslate"><span class="pre">acf_1d()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/diagnostics.html#hydra_tod.mcmc_diagnostics.ess_1d"><code class="docutils literal notranslate"><span class="pre">ess_1d()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/diagnostics.html#hydra_tod.mcmc_diagnostics.rhat_split"><code class="docutils literal notranslate"><span class="pre">rhat_split()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/diagnostics.html#hydra_tod.mcmc_diagnostics.diagnostics"><code class="docutils literal notranslate"><span class="pre">diagnostics()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/visualization.html">Visualization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.view_samples"><code class="docutils literal notranslate"><span class="pre">view_samples()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.combine_pdfs_to_panels"><code class="docutils literal notranslate"><span class="pre">combine_pdfs_to_panels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram_old"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram_old()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.plot_corner"><code class="docutils literal notranslate"><span class="pre">plot_corner()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.generate_post_map"><code class="docutils literal notranslate"><span class="pre">generate_post_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.view_patch_map"><code class="docutils literal notranslate"><span class="pre">view_patch_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.gnomview_patch"><code class="docutils literal notranslate"><span class="pre">gnomview_patch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.cartview_patch"><code class="docutils literal notranslate"><span class="pre">cartview_patch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.cartview_patch_v2"><code class="docutils literal notranslate"><span class="pre">cartview_patch_v2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#hydra_tod.visualisation.plot_residual_histogram"><code class="docutils literal notranslate"><span class="pre">plot_residual_histogram()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/simulation.html">Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/gibbs_sampler.html">Gibbs Sampler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/flicker_model.html">Flicker Noise Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/samplers.html">Parameter Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/linear_algebra.html">Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/diagnostics.html">MCMC Diagnostics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/visualization.html">Visualization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Project</span></p>
 <ul>
@@ -175,7 +105,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#changelog">Changelog</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-0-2026">v0.1.0 (2026)</a></li>
 </ul>
 </li>
@@ -238,7 +168,7 @@ frequency parameters.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../theory/flicker_noise.html" class="btn btn-neutral float-left" title="Flicker Noise Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../api/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../api/simulation.html" class="btn btn-neutral float-right" title="Simulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

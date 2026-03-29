@@ -46,9 +46,6 @@ respectively.  They are loaded automatically at import time from pickle
 files in the package directory and expose a JAX-compatible interface via
 ``.create_jax()``.
 
-API Reference
--------------
-
 .. automodule:: hydra_tod.flicker_model
    :members:
    :undoc-members:

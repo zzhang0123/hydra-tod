@@ -42,9 +42,6 @@ attributes.
 two overlapping scans used in the ``2×TOD`` analysis of Zhang et al.
 (2026).
 
-API Reference
--------------
-
 .. automodule:: hydra_tod.simulation
    :members:
    :undoc-members:
