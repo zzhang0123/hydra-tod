@@ -15,8 +15,8 @@ jobs:
         with:
           python-version: "3.10"
       - run: pip install black flake8
-      - run: black --check hydra_tod/
-      - run: flake8 hydra_tod/ --max-line-length=120 --ignore=E203,W503,E501
+      - run: black --check hydra_TOD/
+      - run: flake8 hydra_TOD/ --max-line-length=120 --ignore=E203,W503,E501
 
   docs:
     runs-on: ubuntu-latest
