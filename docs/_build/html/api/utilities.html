@@ -88,17 +88,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="simulation.html">Simulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gibbs_sampler.html">Gibbs Sampler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flicker_model.html">Flicker Noise Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="samplers.html">Parameter Samplers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear_algebra.html">Linear Algebra</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Utilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="diagnostics.html">MCMC Diagnostics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="visualization.html">Visualization</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gibbs_sampler.html">Gibbs Sampler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flicker_model.html">Flicker Noise Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="samplers.html">Parameter Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear_algebra.html">Linear Algebra</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diagnostics.html">MCMC Diagnostics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Project</span></p>
 <ul>
@@ -130,7 +127,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
       <li class="breadcrumb-item active">Utilities</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/utilities.rst.txt" rel="nofollow"> View page source</a>
@@ -552,7 +548,7 @@ Subsequent calls are no-ops.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hydra_tod.mpiutil.get_parallel_pool">
-<span class="sig-prename descclassname"><span class="pre">hydra_tod.mpiutil.</span></span><span class="sig-name descname"><span class="pre">get_parallel_pool</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Parallel</span></span></span><a class="reference internal" href="../_modules/hydra_tod/mpiutil.html#get_parallel_pool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.mpiutil.get_parallel_pool" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">hydra_tod.mpiutil.</span></span><span class="sig-name descname"><span class="pre">get_parallel_pool</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">joblib.Parallel</span></span></span><a class="reference internal" href="../_modules/hydra_tod/mpiutil.html#get_parallel_pool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hydra_tod.mpiutil.get_parallel_pool" title="Link to this definition"></a></dt>
 <dd><p>Create a thread-limited joblib parallel pool that respects MPI resources.</p>
 <p>On Linux, the pool size is determined from CPU affinity; on macOS, it is
 computed as <code class="docutils literal notranslate"><span class="pre">floor(total_cores</span> <span class="pre">/</span> <span class="pre">mpi_size)</span> <span class="pre">-</span> <span class="pre">1</span></code>.  At least one thread

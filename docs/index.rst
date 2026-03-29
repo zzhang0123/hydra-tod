@@ -35,11 +35,18 @@ The package accompanies the paper:
    Example Notebooks <tutorials/index>
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: API Reference
    :titlesonly:
 
-   api/index
+   api/simulation
+   api/gibbs_sampler
+   api/flicker_model
+   api/samplers
+   api/linear_algebra
+   api/utilities
+   api/diagnostics
+   api/visualization
 
 .. toctree::
    :maxdepth: 2

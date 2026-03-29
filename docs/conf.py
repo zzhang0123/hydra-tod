@@ -53,6 +53,7 @@ autodoc_mock_imports = [
     "pdf2image",
     "astropy",
     "tqdm",
+    "joblib",
 ]
 
 # Intersphinx mapping
