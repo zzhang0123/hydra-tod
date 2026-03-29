@@ -19,7 +19,6 @@ import numpy as np
 from numpy.typing import NDArray
 import logging
 
-
 rank: int = 0
 size: int = 1
 _comm: Any = None
