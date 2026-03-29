@@ -68,16 +68,16 @@ def view_samples(
         # Add labels and title
         axes[i].set_xlabel("Coefficient")
         axes[i].set_ylabel("Density")
-        axes[i].set_title(f"Parameter {i+1}")
+        axes[i].set_title(f"Parameter {i + 1}")
         axes[i].legend()
 
         # Print numerical comparison for each parameter
-        print(f"\n Parameter {i+1}:")
+        print(f"\n Parameter {i + 1}:")
         print(f"True value: {true_values[i]:.6f}")
         print(f"Mean sampled: {mean[i]:.6f}")
         print(f"Standard deviation: {std[i]:.6f}")
         print(
-            f"Relative error: {abs(mean[i] - true_values[i])/true_values[i]*100:.2f}%"
+            f"Relative error: {abs(mean[i] - true_values[i]) / true_values[i] * 100:.2f}%"
         )
 
     plt.tight_layout()
@@ -514,11 +514,11 @@ def plot_residual_histogram_old(
     # Enhanced text annotation with larger font size
     text_lines = [
         f"$\\mathbf{{{type_str}}}$",
-        f"",
+        "",
         f"All residuals (n={len(residuals)}):",
         f'  16th–84th pct: [{stats_all["p16"]:.3f}, {stats_all["p84"]:.3f}] K',
         f'  Mean ± Std: {stats_all["mean"]:.3f} ± {stats_all["std"]:.3f} K',
-        f"",
+        "",
         f"Common residuals (n={len(residuals_common)}):",
         f'  16th–84th pct: [{stats_common["p16"]:.3f}, {stats_common["p84"]:.3f}] K',
         f'  Mean ± Std: {stats_common["mean"]:.3f} ± {stats_common["std"]:.3f} K',
@@ -1128,7 +1128,6 @@ def cartview_patch(
     grid_vals = full_map[pix_grid].astype(float)
     grid_vals[~observed[pix_grid]] = np.nan
 
-    from mpl_toolkits.axes_grid1 import make_axes_locatable
     import matplotlib.ticker as mticker
 
     # Width fixed at 10 to match scan-pattern panel; colorbar lives inside the
@@ -1538,11 +1537,11 @@ def plot_residual_histogram(
     # Enhanced text annotation with larger font size
     text_lines = [
         f"{type_str}",
-        f"",
+        "",
         f"All pixels (n={len(residuals)}):",
         f'   16th–84th pct: [{stats_all["p16"]:.3f}, {stats_all["p84"]:.3f}] K',
         f'   Mean ± Std: {stats_all["mean"]:.3f} ± {stats_all["std"]:.3f} K',
-        f"",
+        "",
         f"Internal pixels (n={len(residuals_common)}):",
         f'   16th–84th pct: [{stats_common["p16"]:.3f}, {stats_common["p84"]:.3f}] K',
         f'   Mean ± Std: {stats_common["mean"]:.3f} ± {stats_common["std"]:.3f} K',

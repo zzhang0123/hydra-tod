@@ -58,18 +58,18 @@ hydra_tod.gain_sampler : Gain Gibbs step.
 hydra_tod.linear_sampler : Underlying GLS and Gaussian sampling machinery.
 hydra_tod.full_Gibbs_sampler : Orchestrates all Gibbs steps.
 """
+
 from __future__ import annotations
 
 import numpy as np
 from numpy.typing import NDArray
-from typing import Callable, Optional, Sequence
+from typing import Callable
 from . import mpiutil
 from .flicker_model import flicker_cov
-from .linear_solver import cg, pytorch_lin_solver
+from .linear_solver import cg
 from .linear_sampler import (
     iterative_gls,
     iterative_gls_mpi_list,
-    sample_p,
     sample_p_old,
     sample_p_v2,
 )

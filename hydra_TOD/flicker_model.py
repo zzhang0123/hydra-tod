@@ -58,16 +58,16 @@ hydra_tod.utils : :func:`~hydra_tod.utils.log_likeli` (Toeplitz
 hydra_tod.noise_sampler_fixed_fc : Noise-parameter Gibbs step that
     consumes these covariances.
 """
+
 from __future__ import annotations
 
 from . import mpiutil
 import numpy as np
 from numpy.typing import NDArray
 import jax.numpy as jnp
-from mpmath import gammainc, mp
+from mpmath import gammainc
 from scipy.linalg import toeplitz
 from .utils import lag_list
-from joblib import delayed, Parallel
 import cmath
 from scipy.integrate import quad, IntegrationWarning
 import warnings
@@ -76,7 +76,9 @@ from typing import Callable
 try:
     from tqdm import tqdm
 except ImportError:
-    tqdm = lambda x, **kw: x
+
+    def tqdm(x, **kw):
+        return x
 
 
 def my_gamma_inc(

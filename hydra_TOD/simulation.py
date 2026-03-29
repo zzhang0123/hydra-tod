@@ -69,6 +69,7 @@ hydra_tod.flicker_model : :func:`~hydra_tod.flicker_model.sim_noise`
     used internally for noise generation.
 hydra_tod.full_Gibbs_sampler : Consumes the operators produced here.
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -80,7 +81,7 @@ from numpy.typing import NDArray
 from typing import Any
 
 from .utils import Leg_poly_proj
-from .flicker_model import sim_noise, flicker_cov
+from .flicker_model import sim_noise
 from . import mpiutil
 from mpi4py import MPI
 
@@ -314,7 +315,7 @@ def reduce_bool_maps_LOR(
 
     Parameters
     ----------
-    bool_maps : list of NDArray[np.bool\_]
+    bool_maps : list of NDArray[np.bool_]
         List of boolean HEALPix maps, each of shape ``(NPIX,)``.
 
     Returns
@@ -340,7 +341,7 @@ def reduce_bool_maps_LAND(
 
     Parameters
     ----------
-    bool_maps : list of NDArray[np.bool\_]
+    bool_maps : list of NDArray[np.bool_]
         List of boolean HEALPix maps, each of shape ``(NPIX,)``.
 
     Returns

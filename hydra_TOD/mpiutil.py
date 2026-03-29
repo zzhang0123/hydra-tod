@@ -19,8 +19,6 @@ import numpy as np
 from numpy.typing import NDArray
 import logging
 
-# Add near the top with other CPU affinity code
-import os
 
 rank: int = 0
 size: int = 1
@@ -79,7 +77,7 @@ except (ImportError, TypeError, AttributeError):
     rank0 = True
     MPI = None  # type: ignore[assignment]
 
-from joblib import Parallel, delayed
+from joblib import Parallel, delayed  # noqa: E402
 
 
 def get_parallel_pool() -> Parallel:

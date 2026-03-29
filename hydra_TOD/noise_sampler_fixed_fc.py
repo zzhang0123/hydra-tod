@@ -80,14 +80,15 @@ hydra_tod.noise_sampler_old : Legacy emcee-only noise sampler.
 hydra_tod.flicker_model : Analytic correlation and covariance functions.
 hydra_tod.full_Gibbs_sampler : Orchestrates all Gibbs steps.
 """
+
 from __future__ import annotations
 
 import numpy as np
 from numpy.typing import NDArray
-from typing import Any, Callable, Optional, Union
+from typing import Callable, Optional
 
 from scipy.linalg import solve_toeplitz
-from .utils import lag_list, log_det_symmetric_toeplitz, log_likeli, log_likeli_general
+from .utils import lag_list, log_likeli, log_likeli_general
 from .mcmc_sampler import mcmc_sampler
 import jax.numpy as jnp
 from jax.scipy.linalg import solve
@@ -113,13 +114,13 @@ try:
     logdet_emulator_path = os.path.join(module_dir, "flicker_logdet_emulator.pkl")
 
     # Import the class definition before unpickling
-    from .flicker_model import FlickerCorrEmulator
+    from .flicker_model import FlickerCorrEmulator  # noqa: F401
 
     # Load the emulator
     with open(corr_emulator_path, "rb") as f:
         flicker_cov = pickle.load(f)
 
-    from .flicker_model import LogDetEmulator
+    from .flicker_model import LogDetEmulator  # noqa: F401
 
     with open(logdet_emulator_path, "rb") as f:
         flicker_logdet = pickle.load(f)
@@ -221,7 +222,7 @@ def log_likeli_emu(
             + flicker_logdet_jax(logf0, alpha)[0]
         )
         return -0.5 * result
-    except:
+    except Exception:
         return -np.inf
 
 

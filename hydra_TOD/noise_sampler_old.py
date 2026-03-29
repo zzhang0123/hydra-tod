@@ -44,15 +44,15 @@ See Also
 hydra_tod.noise_sampler_fixed_fc : Preferred noise sampler (emcee + NUTS).
 hydra_tod.flicker_model : Analytic correlation and covariance functions.
 """
+
 from __future__ import annotations
 
 import numpy as np
 from numpy.typing import NDArray
 from typing import Callable, Optional
 
-from .utils import lag_list, log_det_symmetric_toeplitz, log_likeli, log_likeli_general
+from .utils import lag_list, log_likeli, log_likeli_general
 from .mcmc_sampler import mcmc_sampler
-import emcee
 
 # if the emulator of the correlation function exists, load it
 # otherwise, use flicker_cov_vec
@@ -65,7 +65,7 @@ try:
     emulator_path = os.path.join(module_dir, "flicker_corr_emulator.pkl")
 
     # Import the class definition before unpickling
-    from .flicker_model import FlickerCorrEmulator
+    from .flicker_model import FlickerCorrEmulator  # noqa: F401
 
     # Load the emulator
     with open(emulator_path, "rb") as f:

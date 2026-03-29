@@ -7,7 +7,8 @@ from typing import Callable, Optional, Union
 
 # from scipy.differentiate import hessian
 import emcee
-import logging, warnings
+import logging
+import warnings
 
 
 def hessian(
@@ -208,7 +209,10 @@ def mcmc_sampler(
     ndim = len(p_guess)
 
     if prior_func is None:
-        prior_function = lambda x: 0
+
+        def prior_function(x):
+            return 0
+
     else:
         prior_function = prior_func
 
@@ -224,7 +228,7 @@ def mcmc_sampler(
 
     n_rounds = 10
     for i in range(n_rounds):
-        logging.info(f"Running MCMC sampler for the {i+1}th time...")
+        logging.info(f"Running MCMC sampler for the {i + 1}th time...")
         sampler.run_mcmc(p0, nsteps, progress=False)
 
         try:  # Estimate the autocorrelation time

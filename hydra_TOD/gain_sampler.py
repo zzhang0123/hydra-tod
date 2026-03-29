@@ -59,6 +59,7 @@ See Also
 hydra_tod.tsys_sampler : System-temperature Gibbs step.
 hydra_tod.linear_sampler : Underlying GLS and Gaussian sampling machinery.
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -81,13 +82,13 @@ try:
     logdet_emulator_path = os.path.join(module_dir, "flicker_logdet_emulator.pkl")
 
     # Import the class definition before unpickling
-    from .flicker_model import FlickerCorrEmulator
+    from .flicker_model import FlickerCorrEmulator  # noqa: F401
 
     # Load the emulator
     with open(corr_emulator_path, "rb") as f:
-        flicker_cov = pickle.load(f)
+        flicker_cov = pickle.load(f)  # noqa: F811
 
-    from .flicker_model import LogDetEmulator
+    from .flicker_model import LogDetEmulator  # noqa: F401
 
     with open(logdet_emulator_path, "rb") as f:
         flicker_logdet = pickle.load(f)

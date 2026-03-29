@@ -59,6 +59,7 @@ hydra_tod.tsys_sampler : Individual system-temperature Gibbs step.
 hydra_tod.noise_sampler_fixed_fc : Preferred noise-parameter Gibbs step.
 hydra_tod.simulation : Generating synthetic TOD for testing.
 """
+
 from __future__ import annotations
 
 # This file contains the full Gibbs sampler for all the parameters in data model,
@@ -77,7 +78,6 @@ from .noise_sampler_old import flicker_noise_sampler
 from .tsys_sampler import Tsys_coeff_sampler, Tsys_sampler_multi_TODs
 from .linear_solver import cg
 from scipy.linalg import block_diag
-from tqdm import tqdm
 
 comm = mpiutil.world
 rank = mpiutil.rank
@@ -526,9 +526,6 @@ def TOD_Gibbs_sampler(
     if local_Tloc_prior_cov_inv_list is None:
         local_Tloc_prior_cov_inv_list = [None] * num_TODs
 
-    master_rng_key = jr.PRNGKey(42)
-    noise_key = None
-
     from tqdm import tqdm
 
     # Sample the parameters
@@ -918,7 +915,6 @@ def TOD_Gibbs_sampler_joint_loc(
     Tsky_params = init_Tsky_params
 
     for di in range(num_TODs):
-        t_list = local_t_lists[di]
         local_noise_samples[di, -1, :] = init_noise_params_list[di]
         local_Tloc_samples[di, -1, :] = init_Tloc_params_list[di]
         # Ncov = flicker_cov(t_list, 10.**logf0, 10.**logfc, alpha, white_n_variance=wnoise_var, only_row_0=False)

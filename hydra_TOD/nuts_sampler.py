@@ -315,7 +315,7 @@ def NUTS_sampler(
         dim = event_shape[0]
 
     def model() -> None:
-        parameters = numpyro.sample(
+        numpyro.sample(
             "parameters",
             FlexiblePosterior(
                 log_likeli_fn,

@@ -47,6 +47,7 @@ hydra_tod.linear_solver : CG solvers consumed by the iterative GLS step.
 hydra_tod.gain_sampler : Uses this module for gain Gibbs steps.
 hydra_tod.tsys_sampler : Uses this module for temperature Gibbs steps.
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable

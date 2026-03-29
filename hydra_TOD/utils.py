@@ -55,6 +55,7 @@ hydra_tod.flicker_model : Produces the covariance first-rows consumed by
 hydra_tod.linear_sampler : Uses :func:`cho_compute_mat_inv` and
     :func:`cho_compute_mat_inv_sqrt`.
 """
+
 from __future__ import annotations
 
 from typing import Callable
@@ -501,7 +502,7 @@ def log_likeli(corr_list: NDArray[np.floating], data: NDArray[np.floating]) -> f
             data, solve_toeplitz(corr_list, data)
         ) + log_det_symmetric_toeplitz(corr_list)
         return -0.5 * result
-    except:
+    except Exception:
         return -np.inf
 
 

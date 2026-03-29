@@ -45,13 +45,14 @@ See Also
 --------
 hydra_tod.linear_sampler : Iterative GLS that calls these solvers.
 """
+
 from __future__ import annotations
 
 # This is exactly the linear_solver in Hydra.
 try:
     from mpi4py.MPI import SUM as MPI_SUM
     from mpi4py.MPI import LAND as MPI_LAND
-except:
+except ImportError:
     pass
 
 from typing import TYPE_CHECKING, Callable
@@ -283,7 +284,6 @@ def collect_linear_sys_blocks(
 
     # Send blocks from root worker
     if myid == 0:
-        reqs = []
         for w in workers_used:
 
             # Get row and column indices for this worker
@@ -538,7 +538,9 @@ def cg(
 
     # Use Amat as the linear operator if function not specified
     if linear_op is None:
-        linear_op = lambda v: Amat @ v
+
+        def linear_op(v):
+            return Amat @ v
 
     # Initialise solution vector
     if x0 is None:
@@ -607,7 +609,7 @@ def cg(
 
             # Increment iteration
             niter += 1
-        except:
+        except Exception:
             raise
 
     if comm is not None:
