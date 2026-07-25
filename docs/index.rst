@@ -12,7 +12,7 @@ The package accompanies the paper:
 
     Zhang, Z., Bull, P., Santos, M. G., & Nasirudin, A. (2026).
     *Joint Bayesian calibration and map-making for intensity mapping experiments.*
-    RAS Techniques and Instruments, rzag024.
+    RAS Techniques and Instruments, 5, rzag024.
 
 .. toctree::
    :maxdepth: 2

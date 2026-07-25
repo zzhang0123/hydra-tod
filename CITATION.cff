@@ -23,11 +23,16 @@ preferred-citation:
     - family-names: Bull
       given-names: Philip
     - family-names: Santos
-      given-names: Mario G
+      given-names: Mario G.
     - family-names: Nasirudin
       given-names: Ainulnabilah
   journal: "RAS Techniques and Instruments"
   year: 2026
+  month: 1
+  volume: 5
   pages: "rzag024"
-  publisher:
-    name: "Oxford University Press"
+  doi: "10.1093/rasti/rzag024"
+  url: "https://ui.adsabs.harvard.edu/abs/2026RASTI...5ag024Z"
+  identifiers:
+    - type: arXiv
+      value: "2509.10992"
