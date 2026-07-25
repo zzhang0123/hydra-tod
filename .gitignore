@@ -1,5 +1,6 @@
 # Claude Code
 CLAUDE.md
+.claudeignore
 
 # Python
 __pycache__/
