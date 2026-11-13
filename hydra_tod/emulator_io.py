@@ -8,12 +8,14 @@ module name to :mod:`hydra_tod.flicker_model`, so the files load from an
 installed package without being regenerated.
 
 Unpickling also imports ``MomentEmu`` and ``scikit-learn``, which the
-emulator objects reference; without them :func:`load_emulator` raises
-:class:`ImportError`.
+emulator objects reference. If they are missing, or replaced by stand-ins
+such as Sphinx autodoc mocks, :func:`load_emulator` raises
+:class:`ImportError`, and the samplers fall back to the exact covariance.
 
 Public API
 ----------
 - :func:`load_emulator` -- unpickle an emulator file.
+- :class:`EmulatorLoadError` -- an emulator could not be rebuilt.
 - :data:`CORR_EMULATOR_FILE` -- correlation-function emulator file name.
 - :data:`LOGDET_EMULATOR_FILE` -- log-determinant emulator file name.
 """
@@ -31,6 +33,23 @@ _PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Module names used when the emulators were pickled -> current module names.
 _LEGACY_MODULES = {"flicker_model": f"{__package__}.flicker_model"}
+
+# Errors raised when the pickled objects cannot be rebuilt in this environment.
+_REBUILD_ERRORS = (
+    pickle.UnpicklingError,
+    TypeError,
+    ValueError,
+    AttributeError,
+    EOFError,
+)
+
+
+class EmulatorLoadError(ImportError):
+    """A bundled emulator could not be rebuilt in this environment.
+
+    Subclasses :class:`ImportError` so that modules treating the emulators
+    as an optional dependency fall back to the exact covariance.
+    """
 
 
 class _PackageUnpickler(pickle.Unpickler):
@@ -65,11 +84,15 @@ def load_emulator(filename: str) -> Any:
         If the file does not exist.
     ImportError
         If a module the pickle references (``MomentEmu``, ``sklearn``)
-        is not installed.
+        is not installed. :class:`EmulatorLoadError` (a subclass) if the
+        modules import but the objects cannot be rebuilt from them.
     """
     if os.path.basename(filename) != filename:
         raise ValueError(
             f"load_emulator takes a file name inside the package, got {filename!r}"
         )
     with open(os.path.join(_PACKAGE_DIR, filename), "rb") as f:
-        return _PackageUnpickler(f).load()
+        try:
+            return _PackageUnpickler(f).load()
+        except _REBUILD_ERRORS as exc:
+            raise EmulatorLoadError(f"cannot rebuild {filename}: {exc}") from exc

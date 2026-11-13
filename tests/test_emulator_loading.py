@@ -8,6 +8,8 @@ module name onto ``hydra_tod.flicker_model``.
 
 import importlib
 import io
+import sys
+import types
 
 import numpy as np
 import pytest
@@ -68,6 +70,28 @@ def test_load_emulator_rejects_paths(filename):
 
     with pytest.raises(ValueError):
         load_emulator(filename)
+
+
+def test_stand_in_dependency_raises_import_error(monkeypatch):
+    """A stand-in MomentEmu (as under Sphinx autodoc mocks) gives ImportError.
+
+    Unpickling then fails with UnpicklingError; the samplers catch only
+    ImportError-family errors, so the loader must convert it.
+    """
+    from hydra_tod.emulator_io import (
+        CORR_EMULATOR_FILE,
+        EmulatorLoadError,
+        load_emulator,
+    )
+
+    stand_in = types.ModuleType("MomentEmu.PolyEmu")
+    stand_in.PolyEmu = object()  # not a class, like an autodoc mock attribute
+    monkeypatch.setitem(sys.modules, "MomentEmu", types.ModuleType("MomentEmu"))
+    monkeypatch.setitem(sys.modules, "MomentEmu.PolyEmu", stand_in)
+
+    with pytest.raises(EmulatorLoadError) as excinfo:
+        load_emulator(CORR_EMULATOR_FILE)
+    assert isinstance(excinfo.value, ImportError)
 
 
 def test_bundled_emulators_load(emulators):
