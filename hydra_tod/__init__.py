@@ -63,6 +63,7 @@ def __getattr__(name):
         "mcmc_sampler",
         "nuts_sampler",
         "local_sampler",
+        "emulator_io",
     }
     if name in _lazy_modules:
         return importlib.import_module(f".{name}", __name__)
@@ -87,5 +88,6 @@ __all__ = [
     "mcmc_sampler",
     "nuts_sampler",
     "local_sampler",
+    "emulator_io",
 ]
 """Public modules available via ``import hydra_tod``."""

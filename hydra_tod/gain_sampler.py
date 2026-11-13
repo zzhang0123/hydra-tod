@@ -72,26 +72,11 @@ from .linear_sampler import sample_p_old, iterative_gls
 from scipy.linalg import toeplitz
 
 try:
-    import pickle
-    import os
     from jax import jit
+    from .emulator_io import CORR_EMULATOR_FILE, LOGDET_EMULATOR_FILE, load_emulator
 
-    # Get the directory where this module is located
-    module_dir = os.path.dirname(os.path.abspath(__file__))
-    corr_emulator_path = os.path.join(module_dir, "flicker_corr_emulator.pkl")
-    logdet_emulator_path = os.path.join(module_dir, "flicker_logdet_emulator.pkl")
-
-    # Import the class definition before unpickling
-    from .flicker_model import FlickerCorrEmulator  # noqa: F401
-
-    # Load the emulator
-    with open(corr_emulator_path, "rb") as f:
-        flicker_cov = pickle.load(f)  # noqa: F811
-
-    from .flicker_model import LogDetEmulator  # noqa: F401
-
-    with open(logdet_emulator_path, "rb") as f:
-        flicker_logdet = pickle.load(f)
+    flicker_cov = load_emulator(CORR_EMULATOR_FILE)  # noqa: F811
+    flicker_logdet = load_emulator(LOGDET_EMULATOR_FILE)
 
     use_emulator = True
     print("Using the emulator for flicker noise correlation function.")

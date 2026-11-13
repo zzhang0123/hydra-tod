@@ -22,20 +22,9 @@ from .nuts_sampler import NUTS_sampler
 from .bayes_util import wrap_with_priors
 
 try:
-    import pickle
-    import os
+    from .emulator_io import CORR_EMULATOR_FILE, load_emulator
 
-    # Get the directory where this module is located
-    module_dir = os.path.dirname(os.path.abspath(__file__))
-    corr_emulator_path = os.path.join(module_dir, "flicker_corr_emulator.pkl")
-    logdet_emulator_path = os.path.join(module_dir, "flicker_logdet_emulator.pkl")
-
-    # Import the class definition before unpickling
-    from .flicker_model import FlickerCorrEmulator  # noqa: F401
-
-    # Load the emulator
-    with open(corr_emulator_path, "rb") as f:
-        flicker_cov = pickle.load(f)
+    flicker_cov = load_emulator(CORR_EMULATOR_FILE)
 except (FileNotFoundError, ImportError, AttributeError) as e:
     print(f"Error loading flicker covariance emulator: {e}")
     flicker_cov = None
