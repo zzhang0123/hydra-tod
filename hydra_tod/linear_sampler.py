@@ -75,6 +75,7 @@ def params_space_oper_and_data(
     N_inv: NDArray[np.floating],
     mu: float | NDArray[np.floating] = 0.0,
     Ninv_sqrt: NDArray[np.floating] | None = None,
+    multiplicative: bool = True,
 ) -> (
     tuple[NDArray[np.floating], NDArray[np.floating]]
     | tuple[NDArray[np.floating], NDArray[np.floating], NDArray[np.floating]]
@@ -88,7 +89,14 @@ def params_space_oper_and_data(
     * ``A = U^T Sigma_inv U``
     * ``b = U^T Sigma_inv (d - mu)``
 
-    where ``Sigma_inv = diag(1/(Up+mu)) N_inv diag(1/(Up+mu))``.
+    where ``Sigma_inv = diag(1/(Up+mu)) N_inv diag(1/(Up+mu))``. With
+    ``multiplicative=False`` the model is additive, ``d = U p + mu + n``,
+    and ``Sigma_inv = N_inv``.
+
+    ``N_inv`` (and ``Ninv_sqrt``) may be the dense ``(M, M)`` matrix or, for
+    uncorrelated noise, its ``(M,)`` diagonal. With a diagonal, each sample
+    is weighted by its own inverse variance, and no ``(M, M)`` array is
+    formed.
 
     Parameters
     ----------
@@ -99,13 +107,20 @@ def params_space_oper_and_data(
     p : NDArray[np.floating]
         Current parameter estimate of shape ``(N,)``.
     N_inv : NDArray[np.floating]
-        Inverse noise covariance, shape ``(M, M)``.
+        Inverse noise covariance, shape ``(M, M)``, or its diagonal,
+        shape ``(M,)``.
     mu : float or NDArray[np.floating], optional
         Offset / mean term. Default is 0.0.
     Ninv_sqrt : NDArray[np.floating] or None, optional
-        Square root of the inverse noise covariance (lower Cholesky factor),
-        shape ``(M, M)``.  If provided, the function also returns
-        ``U^T Sigma_inv_sqrt`` for sampling.
+        A square root ``L`` of the inverse noise covariance with
+        ``L L^T = N_inv`` (e.g. the lower Cholesky factor), shape
+        ``(M, M)``, or ``sqrt(N_inv)`` when ``N_inv`` is a diagonal.  If
+        provided, the function also returns ``U^T Sigma_inv_sqrt`` for
+        sampling.
+    multiplicative : bool, optional
+        ``True`` (default) for ``d = (U p + mu)(1 + n)``; ``False`` for the
+        additive model ``d = U p + mu + n``. ``Sigma_inv`` then does not
+        depend on ``p``, and the argument ``p`` is ignored.
 
     Returns
     -------
@@ -121,7 +136,13 @@ def params_space_oper_and_data(
     ----------
     Zhang et al. (2026), RASTI, rzag024.
     """
-    D_p_inv = 1.0 / (U @ p + mu)
+    D_p_inv = 1.0 / (U @ p + mu) if multiplicative else np.ones(U.shape[0])
+    if np.ndim(N_inv) == 1:  # uncorrelated noise: Sigma_inv is diagonal
+        weighted = U * (N_inv * D_p_inv**2)[:, np.newaxis]
+        if Ninv_sqrt is None:
+            return weighted.T @ U, weighted.T @ (d - mu)
+        T = (U * (D_p_inv * Ninv_sqrt)[:, np.newaxis]).T
+        return weighted.T @ U, weighted.T @ (d - mu), T
     sigma_inv = N_inv * np.outer(D_p_inv, D_p_inv)
     aux = U.T @ sigma_inv
     if Ninv_sqrt is None:
@@ -613,6 +634,7 @@ def sample_p_v2(
     prior_mean: NDArray[np.floating] | None = None,
     solver: Callable[..., NDArray[np.floating]] | None = cg,
     Est_mode: bool = True,
+    rng: np.random.Generator | None = None,
 ) -> NDArray[np.floating]:
     """
     Draw a sample from the posterior using pre-computed normal-equation terms.
@@ -620,7 +642,8 @@ def sample_p_v2(
     This is the preferred sampling interface for the Gibbs sampler, as it
     avoids redundant matrix constructions.  In estimation mode, it returns
     the MAP estimate; in sampling mode, it adds a white-noise realisation
-    to the right-hand side before solving.
+    to the right-hand side before solving. ``A``, ``b`` and the prior
+    arrays are left unchanged.
 
     Parameters
     ----------
@@ -641,6 +664,9 @@ def sample_p_v2(
     Est_mode : bool, optional
         If ``True``, return the MAP estimate (no noise added).  If
         ``False``, draw one posterior sample. Default is ``True``.
+    rng : numpy.random.Generator or None, optional
+        Source of the prior perturbation. ``None`` (default) uses NumPy's
+        global random state, as the rest of the Gibbs sampler does.
 
     Returns
     -------
@@ -651,9 +677,10 @@ def sample_p_v2(
     ----------
     Zhang et al. (2026), RASTI, rzag024.
     """
-    left_op = A
+    gen = np.random if rng is None else rng
+    left_op = np.array(A, dtype=float)  # copies: the prior is added in place
     if Est_mode:
-        right_vec = b
+        right_vec = np.array(b, dtype=float)
     else:
         right_vec = b + A_sqrt_wn
 
@@ -670,7 +697,7 @@ def sample_p_v2(
                 # right_vec += prior_cov_inv * prior_mean + np.diag(np.sqrt(prior_cov_inv)) @ np.random.normal(size=prior_mean.shape)
                 right_vec += prior_cov_inv * prior_mean + np.sqrt(
                     prior_cov_inv
-                ) * np.random.normal(size=prior_mean.shape)
+                ) * gen.normal(size=prior_mean.shape)
         else:
             left_op += prior_cov_inv
             if Est_mode:
@@ -678,7 +705,7 @@ def sample_p_v2(
             else:
                 right_vec += prior_cov_inv @ prior_mean + cholesky(
                     prior_cov_inv
-                ) @ np.random.normal(size=prior_mean.shape)
+                ) @ gen.normal(size=prior_mean.shape)
 
     if solver is None:
         p_sample = solve(left_op, right_vec, assume_a="sym")

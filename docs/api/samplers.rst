@@ -19,6 +19,9 @@ used standalone when only one block of parameters needs to be updated.
    * - :mod:`~hydra_tod.tsys_sampler`
      - System temperature :math:`\mathbf{p}_{\rm loc}`, :math:`\mathbf{p}_{\rm sky}`
      - :func:`~hydra_tod.tsys_sampler.Tsys_sampler_multi_TODs`
+   * - :mod:`~hydra_tod.map_sampler`
+     - :math:`\mathbf{p}_{\rm loc}`, :math:`\mathbf{p}_{\rm sky}` with gains and noise fixed (no Gibbs chain)
+     - :func:`~hydra_tod.map_sampler.sample_map_posterior`
    * - :mod:`~hydra_tod.noise_sampler_fixed_fc`
      - Noise params :math:`(\log f_0, \alpha)` — **preferred**
      - :func:`~hydra_tod.noise_sampler_fixed_fc.flicker_sampler`
@@ -56,6 +59,28 @@ shared sky parameters across multiple TODs via MPI.  Set
    :members:
    :undoc-members:
    :show-inheritance:
+
+Map Sampler (Gains and Noise Fixed)
+-----------------------------------
+
+Posterior draws of the sky and local temperature coefficients with the
+gains and the noise covariance fixed, for callers outside a Gibbs chain
+such as a map-maker. :func:`~hydra_tod.map_sampler.sample_map_posterior`
+takes gain-calibrated TODs, their operators, inverse noise covariances
+(dense, possibly semi-definite, or the diagonal for uncorrelated noise), an
+estimate ``p_hat`` and an optional Gaussian prior precision. It returns
+``n_samples`` draws from
+:math:`\mathcal{N}(\hat{\mathbf p}, (\mathbf A + \mathbf S^{-1})^{-1})`
+and the precision :math:`\mathbf A + \mathbf S^{-1}`. The per-TOD terms
+come from :func:`~hydra_tod.linear_sampler.params_space_oper_and_data` and
+each draw from :func:`~hydra_tod.linear_sampler.sample_p_v2`. With a
+diagonal noise covariance, memory grows linearly with the number of time
+samples. An integer or ``Generator`` ``rng`` leaves NumPy's global state
+untouched. A singular posterior precision raises ``LinAlgError``. The
+function runs on one process, with no MPI reduction.
+
+.. automodule:: hydra_tod.map_sampler
+   :members: sample_map_posterior
 
 Noise Sampler (Fixed Cutoff)
 ----------------------------
