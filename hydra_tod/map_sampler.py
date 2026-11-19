@@ -23,7 +23,7 @@ with :math:`\\boldsymbol{\\Sigma}_i^{-1} = \\mathbf{D}_i^{-1}
 the multiplicative model ``d = (U p + mu)(1 + n)``, or
 :math:`\\boldsymbol{\\Sigma}_i^{-1} = \\mathbf{N}_i^{-1}` for the additive
 model ``d = U p + mu + n``. The per-TOD terms come from
-:func:`~hydra_tod.linear_sampler.params_space_oper_and_data`.
+:func:`~hydra_tod.gls.params_space_oper_and_data`.
 
 Each draw is ``p_hat + delta``, where ``delta`` is one Gaussian constrained
 realisation from :func:`~hydra_tod.linear_sampler.sample_p_v2` with a zero

@@ -38,17 +38,18 @@ If you use this package in your research, please cite:
 __version__ = "0.1.0"
 __author__ = "Zheng Zhang"
 
-# Core modules (lightweight, always available)
+# Lightweight utilities available on package import.
 from . import utils
-from . import flicker_model
-from . import mcmc_diagnostics
 
 
 def __getattr__(name):
-    """Lazy import for modules with heavy dependencies (MPI, JAX, PyTorch)."""
+    """Load submodules on demand, including those with optional dependencies."""
     import importlib
 
     _lazy_modules = {
+        "flicker_model",
+        "gls",
+        "mcmc_diagnostics",
         "mpiutil",
         "linear_solver",
         "linear_sampler",
@@ -72,6 +73,7 @@ def __getattr__(name):
 
 __all__ = [
     "flicker_model",
+    "gls",
     "utils",
     "mcmc_diagnostics",
     "simulation",

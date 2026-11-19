@@ -72,7 +72,7 @@ estimate ``p_hat`` and an optional Gaussian prior precision. It returns
 ``n_samples`` draws from
 :math:`\mathcal{N}(\hat{\mathbf p}, (\mathbf A + \mathbf S^{-1})^{-1})`
 and the precision :math:`\mathbf A + \mathbf S^{-1}`. The per-TOD terms
-come from :func:`~hydra_tod.linear_sampler.params_space_oper_and_data` and
+come from :func:`~hydra_tod.gls.params_space_oper_and_data` and
 each draw from :func:`~hydra_tod.linear_sampler.sample_p_v2`. With a
 diagonal noise covariance, memory grows linearly with the number of time
 samples. An integer or ``Generator`` ``rng`` leaves NumPy's global state

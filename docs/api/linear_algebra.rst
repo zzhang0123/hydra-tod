@@ -1,10 +1,8 @@
 Linear Algebra
 ==============
 
-This page documents the two modules that form the numerical core of
-every Gibbs sampling step: the **linear solvers** consumed by the normal
-equations, and the **linear sampler** that assembles those normal
-equations and draws posterior samples from the resulting Gaussian.
+This page documents normal-equation assembly, linear solvers, and
+posterior sampling for time-ordered data.
 
 Most users will not need to call these functions directly — they are
 invoked through the high-level gain and temperature samplers.  The
@@ -14,6 +12,19 @@ information here is most useful when:
   Apple Silicon);
 * implementing a new Gibbs step that reuses the iterative GLS machinery;
 * debugging convergence of the inner linear solves.
+
+Serial GLS
+----------
+
+:func:`~hydra_tod.gls.params_space_oper_and_data` returns one TOD's
+contribution to the GLS normal equations. It can be imported without
+MPI or JAX. For fixed additive noise, set ``p=None`` and
+``multiplicative=False`` and pass either the dense noise precision or
+the vector of inverse variances.
+For independent TODs with a shared parameter vector, sum the returned
+matrix and right-hand side across TODs and solve the joint system.
+
+.. autofunction:: hydra_tod.gls.params_space_oper_and_data
 
 Linear Solvers
 --------------
