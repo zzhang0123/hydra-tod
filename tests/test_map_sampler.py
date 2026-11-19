@@ -141,6 +141,13 @@ class TestSamplePV2:
         y2 = sample_p_v2(A, b, wn, **kw)
         np.testing.assert_array_equal(y1, y2)
 
+    def test_white_noise_term_required_only_for_sampling(self):
+        A, b = 3.0 * np.eye(4), np.ones(4)
+        estimate = sample_p_v2(A, b, None, solver=None, Est_mode=True)
+        np.testing.assert_allclose(estimate, b / 3.0, rtol=1e-14)
+        with pytest.raises(ValueError, match="A_sqrt_wn is required"):
+            sample_p_v2(A, b, None, solver=None, Est_mode=False)
+
 
 # ---------------------------------------------------------------------- #
 # sample_map_posterior: distribution                                      #
