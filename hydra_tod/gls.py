@@ -87,10 +87,15 @@ def params_space_oper_and_data(
             return weighted.T @ U, weighted.T @ (d - mu)
         T = (U * (D_p_inv * Ninv_sqrt)[:, np.newaxis]).T
         return weighted.T @ U, weighted.T @ (d - mu), T
-    sigma_inv = N_inv * np.outer(D_p_inv, D_p_inv)
+    if multiplicative:
+        sigma_inv = N_inv * np.outer(D_p_inv, D_p_inv)
+    else:  # Sigma_inv = N_inv: scaling by ones would copy the (M, M) array
+        sigma_inv = N_inv
     aux = U.T @ sigma_inv
     if Ninv_sqrt is None:
         return aux @ U, aux @ (d - mu)
-    else:
+    if multiplicative:
         sigma_inv_sqrt = D_p_inv[:, np.newaxis] * Ninv_sqrt
-        return aux @ U, aux @ (d - mu), U.T @ sigma_inv_sqrt
+    else:
+        sigma_inv_sqrt = Ninv_sqrt
+    return aux @ U, aux @ (d - mu), U.T @ sigma_inv_sqrt
