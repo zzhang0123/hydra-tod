@@ -34,7 +34,9 @@ def params_space_oper_and_data(
     ``N_inv`` (and ``Ninv_sqrt``) may be the dense ``(M, M)`` matrix or, for
     uncorrelated noise, its ``(M,)`` diagonal. With a diagonal, each sample
     is weighted by its own inverse variance, and no ``(M, M)`` array is
-    formed.
+    formed. ``U`` may then be a ``scipy.sparse`` array (``csr_array``,
+    ``csc_array`` or ``coo_array``, not the ``*_matrix`` classes), and the
+    two matrices returned are sparse.
 
     Parameters
     ----------

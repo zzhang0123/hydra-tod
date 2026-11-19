@@ -7,6 +7,7 @@ from textwrap import dedent
 
 import numpy as np
 import pytest
+from scipy import sparse
 
 from hydra_tod.gls import params_space_oper_and_data
 
@@ -67,6 +68,37 @@ def test_additive_dense_noise_allocates_no_square_array(with_sqrt):
     np.testing.assert_allclose(terms[1], U.T @ N_inv @ d, rtol=1e-12)
     if with_sqrt:
         np.testing.assert_allclose(terms[2] @ terms[2].T, terms[0], rtol=1e-10)
+
+
+@pytest.mark.parametrize("multiplicative", [False, True])
+@pytest.mark.parametrize("sparse_format", ["csr", "csc", "coo"])
+@pytest.mark.parametrize("shape", [(1, 1), (40, 7), (500, 60)])
+def test_sparse_operator_matches_dense(shape, sparse_format, multiplicative):
+    """With a diagonal ``N_inv``, ``U`` may be a ``scipy.sparse`` array. The
+    matrices returned are then sparse and equal the dense ones."""
+    n, k = shape
+    rng = np.random.default_rng(n + k)
+    dense = rng.uniform(0.5, 2.0, size=(n, k)) * (rng.uniform(size=(n, k)) < 0.3)
+    dense[np.arange(n), rng.integers(0, k, size=n)] = 1.0  # no empty row
+    U = sparse.coo_array(dense).asformat(sparse_format)
+    d = rng.uniform(1.0, 2.0, size=n)
+    w = rng.uniform(0.5, 2.0, size=n)
+    w[::4] = 0.0  # flagged samples
+    p = rng.uniform(1.0, 2.0, size=k) if multiplicative else None
+    kwargs = dict(mu=0.5, Ninv_sqrt=np.sqrt(w), multiplicative=multiplicative)
+
+    expected = params_space_oper_and_data(d, dense, p, w, **kwargs)
+    actual = params_space_oper_and_data(d, U, p, w, **kwargs)
+
+    assert sparse.issparse(actual[0]) and sparse.issparse(actual[2])
+    assert isinstance(actual[1], np.ndarray) and actual[1].shape == (k,)
+    for sparse_term, dense_term in zip(
+        (actual[0], actual[2]), (expected[0], expected[2])
+    ):
+        np.testing.assert_allclose(
+            sparse_term.toarray(), dense_term, rtol=1e-12, atol=1e-12
+        )
+    np.testing.assert_allclose(actual[1], expected[1], rtol=1e-12, atol=1e-12)
 
 
 def test_gls_without_optional_backends():
