@@ -359,6 +359,8 @@ def iterative_gls_mpi_list(
     max_iter: int = 100,
     solver: Callable[..., NDArray[np.floating]] | None = cg,
     p_init: NDArray[np.floating] | None = None,
+    *,
+    draw: bool = True,
 ) -> tuple[
     NDArray[np.floating],
     NDArray[np.floating] | None,
@@ -370,8 +372,8 @@ def iterative_gls_mpi_list(
 
     Each MPI rank holds a local subset of TODs.  The algorithm iteratively
     solves for the shared parameter vector ``p`` by reducing contributions
-    from all ranks, and upon convergence also produces a white-noise draw
-    for subsequent Gibbs sampling.
+    from all ranks. By default it also produces a white-noise draw for
+    subsequent Gibbs sampling.
 
     Parameters
     ----------
@@ -395,6 +397,8 @@ def iterative_gls_mpi_list(
     p_init : NDArray[np.floating] or None, optional
         Initial parameter estimate.  If ``None``, an OLS initialisation is
         performed via MPI reduction.
+    draw : bool, optional
+        Whether to generate the final white-noise term. Default is ``True``.
 
     Returns
     -------
@@ -406,7 +410,7 @@ def iterative_gls_mpi_list(
     UT_Sigma_D : NDArray[np.floating] or None
         Final parameter-space data vector.
     draw_vec : NDArray[np.floating] or None
-        White-noise draw for Gibbs sampling.
+        White-noise draw for Gibbs sampling, or ``None`` when ``draw=False``.
 
     References
     ----------
@@ -509,17 +513,15 @@ def iterative_gls_mpi_list(
 
         p = p_new
 
-    # Compute final covariance (and other products) for posterior sampling
-    UT_Sigma_U, UT_Sigma_D, draw_vec = params_space_oper_and_data_list(
+    final_terms = params_space_oper_and_data_list(
         local_d_list,
         local_U_list,
         p_new,
         local_Ninv_sqrt_list,
         local_mu_list,
-        draw=True,
+        draw=draw,
     )
-
-    return p_new, UT_Sigma_U, UT_Sigma_D, draw_vec
+    return p_new, final_terms[0], final_terms[1], final_terms[2] if draw else None
 
 
 def sample_p(
@@ -629,7 +631,7 @@ def sample_p(
 def sample_p_v2(
     A: NDArray[np.floating],
     b: NDArray[np.floating],
-    A_sqrt_wn: NDArray[np.floating],
+    A_sqrt_wn: NDArray[np.floating] | None,
     prior_cov_inv: NDArray[np.floating] | None = None,
     prior_mean: NDArray[np.floating] | None = None,
     solver: Callable[..., NDArray[np.floating]] | None = cg,
@@ -651,9 +653,9 @@ def sample_p_v2(
         Left-hand side of the normal equations, shape ``(N, N)``.
     b : NDArray[np.floating]
         Right-hand side data vector, shape ``(N,)``.
-    A_sqrt_wn : NDArray[np.floating]
+    A_sqrt_wn : NDArray[np.floating] or None
         White-noise term ``U^T N^{-1/2} w`` where ``w ~ N(0, I)``,
-        shape ``(N,)``.
+        shape ``(N,)``. Required in sampling mode.
     prior_cov_inv : NDArray[np.floating] or None, optional
         Inverse prior covariance.  Can be 1-D (diagonal) or 2-D (full
         matrix).
@@ -682,6 +684,8 @@ def sample_p_v2(
     if Est_mode:
         right_vec = np.array(b, dtype=float)
     else:
+        if A_sqrt_wn is None:
+            raise ValueError("A_sqrt_wn is required in sampling mode.")
         right_vec = b + A_sqrt_wn
 
     if prior_cov_inv is not None:

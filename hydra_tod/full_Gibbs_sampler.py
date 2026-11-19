@@ -174,14 +174,14 @@ def get_Tsys_operator(
     # cumulative sum of glist_total_loc_dims
     rank_offset_list = [0] + np.cumsum(glist_total_loc_dims).tolist()
     local_rank_offset = rank_offset_list[rank]
-    local_loc_dim = [0] + local_loc_dim
+    local_offset_list = [0] + np.cumsum(local_loc_dim).tolist()
 
     local_Tsys_operator_list = []
     for di in range(num_TODs):
         dim_data = local_Tloc_operator_list[di].shape[0]
         dim_params = local_Tloc_operator_list[di].shape[1]
         Tloc_operator = np.zeros((dim_data, global_total_loc_dim))
-        start_ind = local_rank_offset + local_loc_dim[di]
+        start_ind = local_rank_offset + local_offset_list[di]
         end_ind = start_ind + dim_params
         Tloc_operator[:, start_ind:end_ind] = local_Tloc_operator_list[di]
         Tsys_operator = np.hstack((local_Tsky_operator_list[di], Tloc_operator))

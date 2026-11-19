@@ -284,7 +284,7 @@ def Tsys_sampler_multi_TODs(
        TODs.
     2. The GLS normal equations are formed locally and reduced across
        ranks via :func:`hydra_tod.linear_sampler.iterative_gls_mpi_list`.
-    3. The posterior sample is drawn on rank 0 and broadcast.
+    3. The estimate or posterior sample is computed on rank 0 and broadcast.
 
     References
     ----------
@@ -310,13 +310,14 @@ def Tsys_sampler_multi_TODs(
         )
         local_Ninv_sqrt_list.append(Ncov_inv_sqrt)
 
-    p_GLS, A, b, Asqrt_wn = iterative_gls_mpi_list(
+    _, A, b, Asqrt_wn = iterative_gls_mpi_list(
         d_vec_list,
         local_Tsys_proj_list,
         local_Ninv_sqrt_list,
         local_mu_list=local_mu_list,
         tol=tol,
         p_init=init_coeffs,
+        draw=not Est_mode,
     )
 
     # Compute on rank 0 only to avoid redundant computation
